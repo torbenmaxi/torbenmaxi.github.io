@@ -770,6 +770,7 @@ const accountClose = document.getElementById("accountClose");
 const accountCloseButton = document.getElementById("accountCloseButton");
 const accountForm = document.getElementById("accountForm");
 const accountPassword = document.getElementById("accountPassword");
+const passwordToggle = document.getElementById("passwordToggle");
 const accountStatus = document.getElementById("accountStatus");
 const passwordRulesElement = document.getElementById("passwordRules");
 
@@ -904,6 +905,19 @@ accountForm?.addEventListener("submit", (event) => {
 
   accountStatus.className = "form-status error";
   accountStatus.textContent = "Account konnte nicht erstellt werden. Das Passwort ist zu sicher.";
+});
+
+passwordToggle?.addEventListener("click", () => {
+  if (!accountPassword) return;
+
+  const isHidden = accountPassword.type === "password";
+
+  accountPassword.type = isHidden ? "text" : "password";
+  passwordToggle.textContent = isHidden ? "Verbergen" : "Anzeigen";
+  passwordToggle.setAttribute(
+    "aria-label",
+    isHidden ? "Passwort verbergen" : "Passwort anzeigen"
+  );
 });
 
 /* Page loader */
