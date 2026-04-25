@@ -166,11 +166,6 @@ function updateGameDisplay() {
   }
 }
 
-  if (currentPlayerElement) {
-    currentPlayerElement.textContent = currentPlayer;
-  }
-}
-
 function checkWinner() {
   for (const combination of winningCombinations) {
     const [a, b, c] = combination;
