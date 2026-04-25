@@ -972,10 +972,14 @@ passwordToggle?.addEventListener("click", () => {
 
 const pageLoader = document.getElementById("pageLoader");
 
-window.addEventListener("load", () => {
+function hidePageLoader() {
   if (!pageLoader) return;
 
-  window.setTimeout(() => {
-    pageLoader.classList.add("is-hidden");
-  }, 350);
+  pageLoader.classList.add("is-hidden");
+}
+
+window.addEventListener("load", () => {
+  window.setTimeout(hidePageLoader, 350);
 });
+
+window.setTimeout(hidePageLoader, 4000);
