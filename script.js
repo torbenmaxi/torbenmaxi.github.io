@@ -650,47 +650,59 @@ const memory = {
     await this.loadLeaderboard();
   },
 
-  async loadLeaderboard() {
-    if (!supabaseClient || !this.leaderboardElement) return;
+async loadLeaderboard() {
+  if (!supabaseClient || !this.leaderboardElement) return;
 
+  this.leaderboardElement.innerHTML = `
+    <li class="memory-leaderboard-empty">Lädt...</li>
+  `;
+
+  const { data, error } = await supabaseClient
+    .from("memory_scores")
+    .select("player_name, moves, created_at")
+    .order("moves", { ascending: true })
+    .order("created_at", { ascending: true })
+    .limit(100);
+
+  if (error) {
     this.leaderboardElement.innerHTML = `
-      <li class="memory-leaderboard-empty">Lädt...</li>
+      <li class="memory-leaderboard-empty">Bestenliste nicht verfügbar.</li>
+    `;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    this.leaderboardElement.innerHTML = `
+      <li class="memory-leaderboard-empty">Noch keine Scores.</li>
+    `;
+    return;
+  }
+
+  const bestScoresByName = new Map();
+
+  data.forEach((score) => {
+    const normalizedName = score.player_name.trim().toLowerCase();
+
+    if (!bestScoresByName.has(normalizedName)) {
+      bestScoresByName.set(normalizedName, score);
+    }
+  });
+
+  const leaderboardScores = Array.from(bestScoresByName.values()).slice(0, 5);
+
+  this.leaderboardElement.innerHTML = "";
+
+  leaderboardScores.forEach((score) => {
+    const item = document.createElement("li");
+
+    item.innerHTML = `
+      <span>${this.escapeHtml(score.player_name)}</span>
+      <strong>${score.moves}</strong>
     `;
 
-    const { data, error } = await supabaseClient
-      .from("memory_scores")
-      .select("player_name, moves")
-      .order("moves", { ascending: true })
-      .order("created_at", { ascending: true })
-      .limit(5);
-
-    if (error) {
-      this.leaderboardElement.innerHTML = `
-        <li class="memory-leaderboard-empty">Bestenliste nicht verfügbar.</li>
-      `;
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      this.leaderboardElement.innerHTML = `
-        <li class="memory-leaderboard-empty">Noch keine Scores.</li>
-      `;
-      return;
-    }
-
-    this.leaderboardElement.innerHTML = "";
-
-    data.forEach((score) => {
-      const item = document.createElement("li");
-
-      item.innerHTML = `
-        <span>${this.escapeHtml(score.player_name)}</span>
-        <strong>${score.moves}</strong>
-      `;
-
-      this.leaderboardElement.appendChild(item);
-    });
-  },
+    this.leaderboardElement.appendChild(item);
+  });
+},
 
   updateDisplay() {
     const bestScore = this.getBestScore();
