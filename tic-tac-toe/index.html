@@ -4,23 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Tic Tac Toe by Torben</title>
+  <title>Tic Tac Toe · Maxi by Torben</title>
 
-  <link rel="icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/style.css?v=2">
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/style.css?v=5" />
 </head>
 
 <body>
-  <header>
-    <nav class="container">
-      <a href="/" class="logo">Maxi by Torben</a>
+  <header class="site-header">
+    <nav class="container site-nav" aria-label="Hauptnavigation">
+      <a href="/" class="logo" aria-label="Maxi by Torben Startseite">
+        Maxi by Torben
+      </a>
 
       <div class="nav-links">
         <a href="/">Start</a>
         <a href="/#projects">Projekte</a>
         <a href="/#contact">Kontakt</a>
 
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Darkmode aktivieren">
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          type="button"
+          aria-label="Darkmode aktivieren"
+        >
           <span class="theme-toggle-thumb"></span>
         </button>
       </div>
@@ -28,55 +35,58 @@
   </header>
 
   <main class="game-page container">
-    <section class="game-intro">
+    <section class="game-intro" aria-labelledby="game-title">
       <p class="eyebrow">Projekt 01</p>
-      <h1>Tic Tac Toe</h1>
+
+      <h1 id="game-title">Tic Tac Toe</h1>
+
       <p class="hero-text">
         Zwei Spieler, neun Felder, ein Gewinner.
       </p>
     </section>
 
-    <section class="ttt-layout">
+    <section class="ttt-layout" aria-label="Tic Tac Toe Spiel">
       <div class="ttt-panel">
         <div class="ttt-top">
-  <div>
-    <p class="ttt-label">Aktueller Zug</p>
-    <p class="ttt-player" id="currentPlayer">X</p>
-  </div>
+          <div>
+            <p class="ttt-label">Aktueller Zug</p>
+            <p class="ttt-player" id="currentPlayer">X</p>
+          </div>
 
-  <div class="ttt-controls">
-    <label class="ttt-mode">
-      Modus
-      <select id="gameMode">
-        <option value="human">2 Spieler</option>
-        <option value="computer">Gegen Computer</option>
-      </select>
-    </label>
+          <div class="ttt-controls">
+            <label class="ttt-mode" for="gameMode">
+              Modus
+            </label>
 
-    <button class="button button-secondary" id="resetGame" type="button">
-      Neustart
-    </button>
-  </div>
-</div>
+            <select id="gameMode">
+              <option value="human">2 Spieler</option>
+              <option value="computer">Gegen Computer</option>
+            </select>
 
-        <div class="ttt-board" id="board" aria-label="Tic Tac Toe Spielfeld">
-  <button class="ttt-cell" type="button" data-index="0" aria-label="Feld 1"></button>
-  <button class="ttt-cell" type="button" data-index="1" aria-label="Feld 2"></button>
-  <button class="ttt-cell" type="button" data-index="2" aria-label="Feld 3"></button>
-  <button class="ttt-cell" type="button" data-index="3" aria-label="Feld 4"></button>
-  <button class="ttt-cell" type="button" data-index="4" aria-label="Feld 5"></button>
-  <button class="ttt-cell" type="button" data-index="5" aria-label="Feld 6"></button>
-  <button class="ttt-cell" type="button" data-index="6" aria-label="Feld 7"></button>
-  <button class="ttt-cell" type="button" data-index="7" aria-label="Feld 8"></button>
-  <button class="ttt-cell" type="button" data-index="8" aria-label="Feld 9"></button>
-</div>
+            <button class="button button-secondary" id="resetGame" type="button">
+              Neustart
+            </button>
+          </div>
+        </div>
 
-        <p class="ttt-status" id="gameStatus">
+        <div class="ttt-board" id="board" aria-label="Spielfeld">
+          <button class="ttt-cell" type="button" data-index="0" aria-label="Feld 1"></button>
+          <button class="ttt-cell" type="button" data-index="1" aria-label="Feld 2"></button>
+          <button class="ttt-cell" type="button" data-index="2" aria-label="Feld 3"></button>
+          <button class="ttt-cell" type="button" data-index="3" aria-label="Feld 4"></button>
+          <button class="ttt-cell" type="button" data-index="4" aria-label="Feld 5"></button>
+          <button class="ttt-cell" type="button" data-index="5" aria-label="Feld 6"></button>
+          <button class="ttt-cell" type="button" data-index="6" aria-label="Feld 7"></button>
+          <button class="ttt-cell" type="button" data-index="7" aria-label="Feld 8"></button>
+          <button class="ttt-cell" type="button" data-index="8" aria-label="Feld 9"></button>
+        </div>
+
+        <p class="ttt-status" id="gameStatus" aria-live="polite">
           X beginnt.
         </p>
       </div>
 
-      <aside class="ttt-score">
+      <aside class="ttt-score" aria-label="Spielstand">
         <p class="eyebrow">Score</p>
 
         <div class="score-row">
@@ -101,6 +111,6 @@
     </section>
   </main>
 
-  <script src="/script.js?v=2"></script>
+  <script src="/script.js?v=5"></script>
 </body>
 </html>
