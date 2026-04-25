@@ -3,21 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Maxi by Torben</title>
-  <link rel="stylesheet" href="/style.css?v=2">
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/style.css?v=3" />
+
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <link rel="icon" href="/favicon.ico" sizes="any">
 </head>
 
 <body>
-  <header>
-    <nav class="container">
-      <a href="/" class="logo">Maxi by Torben</a>
+  <header class="site-header">
+    <nav class="container site-nav" aria-label="Hauptnavigation">
+      <a href="/" class="logo" aria-label="Maxi by Torben Startseite">
+        Maxi by Torben
+      </a>
 
       <div class="nav-links">
         <a href="#projects">Projekte</a>
         <a href="#contact">Kontakt</a>
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Darkmode aktivieren">
+
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          type="button"
+          aria-label="Darkmode aktivieren"
+        >
           <span class="theme-toggle-thumb"></span>
         </button>
       </div>
@@ -26,102 +37,157 @@
 
   <main>
     <section class="hero container">
-      <div>
-        <p class="eyebrow">Ein Ort für Ideen, Projekte und kleine digitale Experimente.</p>
+      <div class="hero-content">
+        <p class="eyebrow">
+          Ein Ort für Ideen, Projekte und kleine digitale Experimente.
+        </p>
+
         <h1>Ein kleiner Ort im Internet.</h1>
       </div>
 
-      <div>
+      <div class="hero-side">
         <p class="hero-text">
-          ...
+          Persönliche Website, kleine Projekte und Dinge, die einfach ausprobiert
+          werden wollen.
         </p>
 
-        <div class="hero-actions">
-          <a class="button button-primary" href="#projects">Projekte ansehen</a>
-          <a class="button button-secondary" href="#about">Mehr erfahren</a>
+        <div class="hero-actions" aria-label="Schnellzugriff">
+          <a class="button button-primary" href="#projects">
+            Projekte ansehen
+          </a>
+
+          <a class="button button-secondary" href="#contact">
+            Kontakt
+          </a>
         </div>
       </div>
     </section>
 
-    <section id="projects" class="section">
+    <section id="projects" class="section" aria-labelledby="projects-title">
       <div class="container">
         <div class="section-head">
-          <h2>Projekte</h2>
+          <h2 id="projects-title">Projekte</h2>
         </div>
 
         <div class="grid">
           <a class="card" href="/tic-tac-toe/">
-  <span class="card-number">01</span>
-  <div>
-    <h3>Tic Tac Toe</h3>
-    <p>Zwei Spieler, neun Felder, ein Gewinner.</p>
-  </div>
-</a>
+            <span class="card-number">01</span>
+
+            <div>
+              <h3>Tic Tac Toe</h3>
+              <p>Zwei Spieler, neun Felder, ein Gewinner.</p>
+            </div>
+          </a>
 
           <article class="card">
             <span class="card-number">02</span>
+
             <div>
-              <h3>in Arbeit...</h3>
-              <p>...</p>
+              <h3>Kommt bald</h3>
+              <p>Platz für das nächste kleine Projekt.</p>
             </div>
           </article>
 
           <article class="card">
             <span class="card-number">03</span>
+
             <div>
-              <h3>in Arbeit...</h3>
-              <p>...</p>
+              <h3>Kommt bald</h3>
+              <p>Noch eine Idee, die später hier landen kann.</p>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-<section id="contact" class="section">
-  <div class="container contact-layout">
-    <div>
-      <p class="eyebrow">Kontakt</p>
-      <h2>Schreib mir.</h2>
-      <p class="contact-intro">
-        Für Ideen, Fragen oder ein kurzes Hallo.
-      </p>
-    </div>
+    <section id="contact" class="section" aria-labelledby="contact-title">
+      <div class="container contact-layout">
+        <div>
+          <p class="eyebrow">Kontakt</p>
 
-    <form class="contact-form" id="contactForm" action="https://formspree.io/f/xvzdlego" method="POST">
-      <label>
-        Name
-        <input type="text" name="name" placeholder="Dein Name" required>
-      </label>
+          <h2 id="contact-title">Schreib mir.</h2>
 
-      <label>
-        E-Mail
-        <input type="email" name="email" placeholder="du@example.de" required>
-      </label>
+          <p class="contact-intro">
+            Für Ideen, Fragen oder ein kurzes Hallo.
+          </p>
+        </div>
 
-      <label>
-        Nachricht
-        <textarea name="message" rows="6" placeholder="Worum geht’s?" required></textarea>
-      </label>
+        <form
+          class="contact-form"
+          id="contactForm"
+          action="https://formspree.io/f/xvzdlego"
+          method="POST"
+        >
+          <label for="contactName">
+            Name
+          </label>
+          <input
+            id="contactName"
+            type="text"
+            name="name"
+            placeholder="Dein Name"
+            autocomplete="name"
+            required
+          />
 
-      <input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off">
+          <label for="contactEmail">
+            E-Mail
+          </label>
+          <input
+            id="contactEmail"
+            type="email"
+            name="email"
+            placeholder="du@example.de"
+            autocomplete="email"
+            required
+          />
 
-      <div class="cf-turnstile" data-sitekey="0x4AAAAAADDEUylFGy2boS8x"></div>
-      
-      <p class="form-status" id="formStatus" aria-live="polite"></p>
+          <label for="contactMessage">
+            Nachricht
+          </label>
+          <textarea
+            id="contactMessage"
+            name="message"
+            rows="6"
+            placeholder="Worum geht’s?"
+            required
+          ></textarea>
 
-      <button class="button button-primary" type="submit">
-        Nachricht senden
-      </button>
-    </form>
-  </div>
-</section>
+          <input
+            type="text"
+            name="_gotcha"
+            class="honeypot"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+          />
+
+          <div
+            class="cf-turnstile"
+            data-sitekey="0x4AAAAAADDEUylFGy2boS8x"
+          ></div>
+
+          <p class="form-status" id="formStatus" aria-live="polite"></p>
+
+          <button class="button button-primary" type="submit">
+            Nachricht senden
+          </button>
+        </form>
+      </div>
+    </section>
   </main>
 
   <footer>
     <div class="container footer-inner">
-      <span>©2026 Torben Maximilian</span>
+      <span>© 2026 Torben Maximilian</span>
+      <span class="footer-links">
+        <a href="/impressum/">Impressum</a>
+        <span aria-hidden="true">·</span>
+        <a href="/datenschutz/">Datenschutz</a>
+      </span>
     </div>
   </footer>
-  <script src="/script.js?v=2"></script>
+
+  <script src="/script.js?v=3"></script>
 </body>
 </html>
