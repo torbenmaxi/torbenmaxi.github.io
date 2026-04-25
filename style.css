@@ -190,8 +190,19 @@ h1 {
 }
 
 .button-secondary {
+
   border: 1px solid var(--line);
+
   background: color-mix(in srgb, var(--card) 70%, transparent);
+
+  color: var(--text);
+
+}
+
+.button-secondary:hover {
+
+  background: var(--card);
+
 }
 
 .section {
