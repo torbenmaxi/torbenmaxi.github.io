@@ -125,7 +125,10 @@ nav {
   border-radius: 999px;
   background: color-mix(in srgb, var(--card) 70%, transparent);
   cursor: pointer;
-  transition: transform var(--transition), background var(--transition), border-color var(--transition);
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    border-color var(--transition);
 }
 
 .theme-toggle:hover {
@@ -139,7 +142,9 @@ nav {
   display: block;
   border-radius: 999px;
   background: var(--text);
-  transition: transform 0.22s ease, background 0.22s ease;
+  transition:
+    transform 0.22s ease,
+    background 0.22s ease;
 }
 
 body.dark .theme-toggle-thumb {
@@ -230,12 +235,16 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
   border: 0;
+  border-radius: 999px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform var(--transition), background var(--transition), border-color var(--transition), opacity var(--transition);
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    border-color var(--transition),
+    opacity var(--transition);
 }
 
 .button:hover {
@@ -280,7 +289,10 @@ h2 {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--card) 72%, transparent);
-  transition: transform var(--transition), border-color var(--transition), background var(--transition);
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    background var(--transition);
 }
 
 .card:hover {
@@ -348,7 +360,9 @@ h2 {
   background: var(--bg);
   color: var(--text);
   outline: none;
-  transition: border-color var(--transition), background var(--transition);
+  transition:
+    border-color var(--transition),
+    background var(--transition);
 }
 
 .contact-form textarea {
@@ -363,7 +377,7 @@ h2 {
 
 .contact-form input:focus,
 .contact-form textarea:focus,
-.ttt-mode select:focus {
+.ttt-controls select:focus {
   border-color: var(--text);
 }
 
@@ -485,15 +499,28 @@ footer {
   font-size: 13px;
 }
 
-.ttt-mode select {
+.ttt-controls select {
   min-height: 46px;
-  padding: 0 14px;
+  padding: 0 44px 0 16px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--card) 70%, transparent);
+  background:
+    linear-gradient(45deg, transparent 50%, var(--text) 50%),
+    linear-gradient(135deg, var(--text) 50%, transparent 50%),
+    color-mix(in srgb, var(--card) 70%, transparent);
+  background-position:
+    calc(100% - 22px) 50%,
+    calc(100% - 16px) 50%,
+    0 0;
+  background-size:
+    6px 6px,
+    6px 6px,
+    auto;
+  background-repeat: no-repeat;
   color: var(--text);
   outline: none;
   cursor: pointer;
+  appearance: none;
 }
 
 .ttt-board {
@@ -512,7 +539,11 @@ footer {
   font-size: clamp(42px, 9vw, 76px);
   font-weight: 760;
   letter-spacing: -0.08em;
-  transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+  transition:
+    transform 0.16s ease,
+    background 0.16s ease,
+    border-color 0.16s ease,
+    opacity 0.16s ease;
 }
 
 .ttt-cell:hover:not(:disabled) {
@@ -641,7 +672,7 @@ footer {
     flex: 1;
   }
 
-  .ttt-mode select {
+  .ttt-controls select {
     width: 100%;
   }
 }
