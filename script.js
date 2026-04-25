@@ -198,11 +198,11 @@ function finishGame(winnerCombination) {
 
   if (gameStatus) {
     if (getGameMode() === "computer" && winner === computerPlayer) {
-      gameStatus.textContent = "Computer gewinnt. Das war leider sehr sachlich.";
+      gameStatus.textContent = "Computer gewinnt.";
     } else if (getGameMode() === "computer" && winner === humanPlayer) {
-      gameStatus.textContent = "Du gewinnst. Menschheit kurz gerettet.";
+      gameStatus.textContent = "Du gewinnst.";
     } else {
-      gameStatus.textContent = `${winner} gewinnt. Stark gespielt.`;
+      gameStatus.textContent = `${winner} gewinnt.`;
     }
   }
 }
@@ -220,7 +220,7 @@ function finishDraw() {
   });
 
   if (gameStatus) {
-    gameStatus.textContent = "Unentschieden. Sehr diplomatisch.";
+    gameStatus.textContent = "Unentschieden.";
   }
 }
 
