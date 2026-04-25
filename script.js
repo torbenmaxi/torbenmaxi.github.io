@@ -801,9 +801,58 @@ const passwordRules = [
     test: (value) => value.includes("1")
   },
   {
-    text: "Enthält ein Obst oder Gemüse.",
-    test: (value) => /(apfel|banane|birne|tomate|karotte|brokkoli|gurke|mango)/i.test(value)
-  },
+{
+  text: "Enthält eine Obstsorte.",
+  test: (value) => {
+    const fruits = [
+      "apfel",
+      "banane",
+      "birne",
+      "orange",
+      "mandarine",
+      "clementine",
+      "zitrone",
+      "limette",
+      "grapefruit",
+      "mango",
+      "ananas",
+      "kiwi",
+      "papaya",
+      "melone",
+      "wassermelone",
+      "honigmelone",
+      "erdbeere",
+      "himbeere",
+      "brombeere",
+      "heidelbeere",
+      "blaubeere",
+      "johannisbeere",
+      "stachelbeere",
+      "cranberry",
+      "weintraube",
+      "traube",
+      "kirsche",
+      "pfirsich",
+      "nektarine",
+      "aprikose",
+      "pflaume",
+      "zwetschge",
+      "granatapfel",
+      "maracuja",
+      "passionsfrucht",
+      "litschi",
+      "lychee",
+      "kaki",
+      "physalis",
+      "feige",
+      "dattel",
+      "kokosnuss",
+      "avocado"
+    ];
+
+    return fruits.some((fruit) => value.toLowerCase().includes(fruit));
+  }
+},
   {
     text: "Enthält das Wort Maxi, aber nicht am Anfang.",
     test: (value) => /maxi/i.test(value) && !/^maxi/i.test(value)
