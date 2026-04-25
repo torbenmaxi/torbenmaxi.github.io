@@ -159,8 +159,12 @@ function updateGameDisplay() {
       computerThinking ||
       board[index] !== "" ||
       (getGameMode() === "computer" && currentPlayer === computerPlayer);
-    cell.classList.remove("winner");
   });
+
+  if (currentPlayerElement) {
+    currentPlayerElement.textContent = currentPlayer;
+  }
+}
 
   if (currentPlayerElement) {
     currentPlayerElement.textContent = currentPlayer;
