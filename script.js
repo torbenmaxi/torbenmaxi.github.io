@@ -449,7 +449,7 @@ const memory = {
   bestElement: document.getElementById("memoryBest"),
   resetButton: document.getElementById("resetMemory"),
 
-  symbols: ["✦", "●", "▲", "■", "◆", "✚", "☾", "☼"],
+  symbols: ["🍎", "🍌", "🍇", "🍓", "🥕", "🥦", "🌽", "🍅"],
   cards: [],
   openCards: [],
   moves: 0,
