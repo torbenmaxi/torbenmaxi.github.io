@@ -749,6 +749,68 @@ footer {
   opacity: 0.78;
 }
 
+.memory-name-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.memory-name-input {
+  width: 100%;
+  margin-bottom: 18px;
+  padding: 14px 15px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+}
+
+.memory-name-input::placeholder {
+  color: var(--muted);
+}
+
+.memory-name-input:focus {
+  border-color: var(--text);
+}
+
+.memory-leaderboard {
+  margin-top: 24px;
+}
+
+.memory-leaderboard-title {
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.memory-leaderboard ol {
+  display: grid;
+  gap: 10px;
+  list-style-position: inside;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.memory-leaderboard li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.memory-leaderboard strong {
+  color: var(--text);
+}
+
 /* Responsive */
 
 @media (max-width: 820px) {
