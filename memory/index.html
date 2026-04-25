@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Memory · Maxi by Torben</title>
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/style.css?v=9" />
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="container site-nav" aria-label="Hauptnavigation">
+      <a href="/" class="logo" aria-label="Maxi by Torben Startseite">
+        Maxi by Torben
+      </a>
+
+      <div class="nav-links">
+        <a href="/">Start</a>
+        <a href="/#projects">Projekte</a>
+        <a href="/#contact">Kontakt</a>
+
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          type="button"
+          aria-label="Darkmode aktivieren"
+        >
+          <span class="theme-toggle-thumb"></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="game-page container">
+    <section class="game-intro" aria-labelledby="game-title">
+      <p class="eyebrow">Projekt 02</p>
+
+      <h1 id="game-title">Memory</h1>
+
+      <p class="hero-text">
+        Finde alle Paare mit möglichst wenigen Zügen.
+      </p>
+    </section>
+
+    <section class="memory-layout" aria-label="Memory Spiel">
+      <div class="memory-panel">
+        <div class="memory-top">
+          <div>
+            <p class="memory-label">Status</p>
+            <p class="memory-status" id="memoryStatus">
+              Bereit.
+            </p>
+          </div>
+
+          <button class="button button-secondary" id="resetMemory" type="button">
+            Neustart
+          </button>
+        </div>
+
+        <div class="memory-board" id="memoryBoard" aria-label="Spielfeld"></div>
+      </div>
+
+      <aside class="memory-score" aria-label="Spielstand">
+        <p class="eyebrow">Score</p>
+
+        <div class="score-row">
+          <span>Züge</span>
+          <strong id="memoryMoves">0</strong>
+        </div>
+
+        <div class="score-row">
+          <span>Paare</span>
+          <strong id="memoryPairs">0/8</strong>
+        </div>
+
+        <div class="score-row">
+          <span>Bestwert</span>
+          <strong id="memoryBest">–</strong>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="/script.js?v=9"></script>
+</body>
+</html>
