@@ -8,6 +8,8 @@
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="stylesheet" href="/style.css?v=9" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -66,6 +68,18 @@
       <aside class="memory-score" aria-label="Spielstand">
         <p class="eyebrow">Score</p>
 
+        <label class="memory-name-label" for="memoryPlayerName">
+          Name
+        </label>
+        
+        <input
+          class="memory-name-input"
+          id="memoryPlayerName"
+          type="text"
+          placeholder="Dein Name"
+          maxlength="18"
+        />
+
         <div class="score-row">
           <span>Züge</span>
           <strong id="memoryMoves">0</strong>
@@ -79,6 +93,11 @@
         <div class="score-row">
           <span>Bestwert</span>
           <strong id="memoryBest">–</strong>
+        </div>
+
+        <div class="memory-leaderboard">
+          <p class="memory-leaderboard-title">Bestenliste</p>
+          <ol id="memoryLeaderboard"></ol>
         </div>
       </aside>
     </section>
