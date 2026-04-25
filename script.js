@@ -783,7 +783,11 @@ const passwordRules = [
     test: (value) => /\d/.test(value)
   },
   {
-    text: "Die Summe aller Zahlen muss 10 ergeben.",
+    text: "Enthält mindestens einen Großbuchstaben.",
+    test: (value) => /[A-ZÄÖÜ]/.test(value)
+  },
+  {
+    text: "Die Summe aller Zahlen muss genau 10 ergeben.",
     test: (value) => {
       const numbers = value.match(/\d/g) || [];
       const sum = numbers.reduce((total, number) => total + Number(number), 0);
@@ -797,7 +801,7 @@ const passwordRules = [
   },
   {
     text: "Enthält ein Obst oder Gemüse.",
-    test: (value) => /(apfel|banane|birne|tomate|karotte|brokkoli)/i.test(value)
+    test: (value) => /(apfel|banane|birne|tomate|karotte|brokkoli|gurke|mango)/i.test(value)
   },
   {
     text: "Enthält das Wort Maxi, aber nicht am Anfang.",
@@ -816,6 +820,10 @@ const passwordRules = [
 
       return true;
     }
+  },
+  {
+    text: "Enthält ein Satzzeichen, aber kein Ausrufezeichen.",
+    test: (value) => /[.,;:?]/.test(value) && !value.includes("!")
   }
 ];
 
