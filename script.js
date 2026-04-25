@@ -337,6 +337,9 @@ function resetGame() {
   currentPlayer = "X";
   gameOver = false;
   computerThinking = false;
+    cells.forEach((cell) => {
+    cell.classList.remove("winner");
+  });
 
   if (gameStatus) {
     gameStatus.textContent = getGameMode() === "computer"
