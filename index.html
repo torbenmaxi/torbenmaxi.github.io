@@ -86,7 +86,7 @@
       </p>
     </div>
 
-    <form class="contact-form" action="https://formspree.io/f/xvzdlego" method="POST">
+    <form class="contact-form" id="contactForm" action="https://formspree.io/f/xvzdlego" method="POST">
       <label>
         Name
         <input type="text" name="name" placeholder="Dein Name" required>
@@ -105,6 +105,8 @@
       <input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off">
 
       <div class="cf-turnstile" data-sitekey="0x4AAAAAADDEUylFGy2boS8x"></div>
+      
+      <p class="form-status" id="formStatus" aria-live="polite"></p>
 
       <button class="button button-primary" type="submit">
         Nachricht senden
