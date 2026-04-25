@@ -816,6 +816,154 @@ footer {
   margin-bottom: 18px;
 }
 
+/* Account modal */
+
+.account-open {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 15px;
+  transition: color var(--transition);
+}
+
+.account-open:hover {
+  color: var(--text);
+}
+
+.account-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    visibility 0.22s ease;
+}
+
+.account-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.account-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.account-dialog {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  box-shadow: 0 24px 80px color-mix(in srgb, var(--text) 14%, transparent);
+  transform: translateY(10px) scale(0.98);
+  transition: transform 0.22s ease;
+}
+
+.account-modal.is-open .account-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.account-dialog-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.account-dialog h2 {
+  margin-bottom: 14px;
+}
+
+.account-intro {
+  margin-bottom: 24px;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.account-form {
+  display: grid;
+  gap: 10px;
+}
+
+.account-form label {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.account-form input {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 14px 15px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+}
+
+.account-form input::placeholder {
+  color: var(--muted);
+}
+
+.account-form input:focus {
+  border-color: var(--text);
+}
+
+.password-rules {
+  display: grid;
+  gap: 8px;
+  margin: 4px 0 8px;
+}
+
+.password-rule {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.password-rule::before {
+  content: "×";
+  color: var(--error);
+  font-weight: 700;
+}
+
+.password-rule.is-valid {
+  color: var(--text);
+}
+
+.password-rule.is-valid::before {
+  content: "✓";
+  color: var(--success);
+}
+
 /* Responsive */
 
 @media (max-width: 820px) {
