@@ -89,10 +89,15 @@ const resetScoreButton = document.getElementById("resetScore");
 const scoreXElement = document.getElementById("scoreX");
 const scoreOElement = document.getElementById("scoreO");
 const scoreDrawElement = document.getElementById("scoreDraw");
+const gameModeSelect = document.getElementById("gameMode");
 
 let board = ["", "", "", "", "", "", "", "", ""];
 let currentPlayer = "X";
 let gameOver = false;
+let computerThinking = false;
+
+const humanPlayer = "X";
+const computerPlayer = "O";
 
 const winningCombinations = [
   [0, 1, 2],
@@ -104,6 +109,11 @@ const winningCombinations = [
   [0, 4, 8],
   [2, 4, 6]
 ];
+
+function getGameMode() {
+  if (!gameModeSelect) return "human";
+  return gameModeSelect.value;
+}
 
 function getScore() {
   const savedScore = localStorage.getItem("tttScore");
@@ -144,7 +154,11 @@ function updateScoreDisplay() {
 function updateGameDisplay() {
   cells.forEach((cell, index) => {
     cell.textContent = board[index];
-    cell.disabled = gameOver || board[index] !== "";
+    cell.disabled =
+      gameOver ||
+      computerThinking ||
+      board[index] !== "" ||
+      (getGameMode() === "computer" && currentPlayer === computerPlayer);
     cell.classList.remove("winner");
   });
 
@@ -184,7 +198,13 @@ function finishGame(winnerCombination) {
   });
 
   if (gameStatus) {
-    gameStatus.textContent = `${winner} gewinnt. Stark gespielt.`;
+    if (getGameMode() === "computer" && winner === computerPlayer) {
+      gameStatus.textContent = "Computer gewinnt. Das war leider sehr sachlich.";
+    } else if (getGameMode() === "computer" && winner === humanPlayer) {
+      gameStatus.textContent = "Du gewinnst. Menschheit kurz gerettet.";
+    } else {
+      gameStatus.textContent = `${winner} gewinnt. Stark gespielt.`;
+    }
   }
 }
 
@@ -205,13 +225,7 @@ function finishDraw() {
   }
 }
 
-function handleCellClick(event) {
-  const index = Number(event.currentTarget.dataset.index);
-
-  if (gameOver || board[index] !== "") return;
-
-  board[index] = currentPlayer;
-
+function endTurn() {
   const winnerCombination = checkWinner();
 
   if (winnerCombination) {
@@ -229,19 +243,101 @@ function handleCellClick(event) {
   currentPlayer = currentPlayer === "X" ? "O" : "X";
 
   if (gameStatus) {
-    gameStatus.textContent = `${currentPlayer} ist dran.`;
+    if (getGameMode() === "computer" && currentPlayer === computerPlayer) {
+      gameStatus.textContent = "Computer denkt nach...";
+    } else {
+      gameStatus.textContent = `${currentPlayer} ist dran.`;
+    }
   }
 
   updateGameDisplay();
+
+  if (getGameMode() === "computer" && currentPlayer === computerPlayer && !gameOver) {
+    computerThinking = true;
+    updateGameDisplay();
+
+    setTimeout(() => {
+      makeComputerMove();
+      computerThinking = false;
+      updateGameDisplay();
+    }, 450);
+  }
+}
+
+function handleCellClick(event) {
+  const index = Number(event.currentTarget.dataset.index);
+
+  if (gameOver || computerThinking || board[index] !== "") return;
+
+  if (getGameMode() === "computer" && currentPlayer === computerPlayer) return;
+
+  board[index] = currentPlayer;
+  endTurn();
+}
+
+function getAvailableMoves() {
+  return board
+    .map((value, index) => value === "" ? index : null)
+    .filter((index) => index !== null);
+}
+
+function findWinningMove(player) {
+  const availableMoves = getAvailableMoves();
+
+  for (const move of availableMoves) {
+    board[move] = player;
+    const winner = checkWinner();
+    board[move] = "";
+
+    if (winner) {
+      return move;
+    }
+  }
+
+  return null;
+}
+
+function makeComputerMove() {
+  if (gameOver) return;
+
+  let move = findWinningMove(computerPlayer);
+
+  if (move === null) {
+    move = findWinningMove(humanPlayer);
+  }
+
+  if (move === null && board[4] === "") {
+    move = 4;
+  }
+
+  const corners = [0, 2, 6, 8].filter((index) => board[index] === "");
+
+  if (move === null && corners.length > 0) {
+    move = corners[Math.floor(Math.random() * corners.length)];
+  }
+
+  const availableMoves = getAvailableMoves();
+
+  if (move === null && availableMoves.length > 0) {
+    move = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+  }
+
+  if (move !== null) {
+    board[move] = computerPlayer;
+    endTurn();
+  }
 }
 
 function resetGame() {
   board = ["", "", "", "", "", "", "", "", ""];
   currentPlayer = "X";
   gameOver = false;
+  computerThinking = false;
 
   if (gameStatus) {
-    gameStatus.textContent = "X beginnt.";
+    gameStatus.textContent = getGameMode() === "computer"
+      ? "Du beginnst als X."
+      : "X beginnt.";
   }
 
   updateGameDisplay();
@@ -270,6 +366,19 @@ if (boardElement) {
     resetScoreButton.addEventListener("click", resetScore);
   }
 
+  if (gameModeSelect) {
+    gameModeSelect.addEventListener("change", () => {
+      localStorage.setItem("tttMode", getGameMode());
+      resetGame();
+    });
+
+    const savedMode = localStorage.getItem("tttMode");
+
+    if (savedMode === "human" || savedMode === "computer") {
+      gameModeSelect.value = savedMode;
+    }
+  }
+
   updateScoreDisplay();
-  updateGameDisplay();
+  resetGame();
 }
