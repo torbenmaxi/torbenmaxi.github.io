@@ -428,6 +428,20 @@ footer {
   background: rgba(217, 74, 74, 0.08);
 }
 
+.form-status {
+  min-height: 24px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.form-status.success {
+  color: #3aa76d;
+}
+
+.form-status.error {
+  color: #d94a4a;
+}
+
 .honeypot {
   display: none;
 }
