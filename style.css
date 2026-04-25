@@ -521,7 +521,7 @@ footer {
 
 .ttt-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: minmax(0, 1fr) 320px;
   gap: 18px;
   align-items: start;
 }
@@ -999,6 +999,31 @@ footer {
 .password-rule.is-valid::before {
   content: "✓";
   color: var(--success);
+}
+
+@media (max-height: 760px) and (min-width: 821px) {
+  .game-page {
+    padding: 56px 0;
+  }
+
+  .game-intro {
+    margin-bottom: 28px;
+  }
+
+  .ttt-panel,
+  .ttt-score,
+  .memory-panel,
+  .memory-score {
+    padding: 20px;
+  }
+
+  .ttt-board {
+    width: min(100%, 52vh, 500px);
+  }
+
+  .memory-board {
+    width: min(100%, 62vh, 580px);
+  }
 }
 
 /* Responsive */
