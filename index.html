@@ -242,13 +242,24 @@
           Passwort
         </label>
 
-        <input
-          id="accountPassword"
-          type="password"
-          placeholder="Passwort"
-          autocomplete="new-password"
-          required
-        />
+        <div class="password-field">
+          <input
+            id="accountPassword"
+            type="password"
+            placeholder="Passwort"
+            autocomplete="new-password"
+            required
+          />
+        
+          <button
+            class="password-toggle"
+            id="passwordToggle"
+            type="button"
+            aria-label="Passwort anzeigen"
+          >
+            Anzeigen
+          </button>
+        </div>
 
         <div class="password-rules" id="passwordRules"></div>
 
