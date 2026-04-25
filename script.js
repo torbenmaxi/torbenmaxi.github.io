@@ -438,3 +438,15 @@ const ticTacToe = {
 };
 
 ticTacToe.init();
+
+/* Page loader */
+
+const pageLoader = document.getElementById("pageLoader");
+
+window.addEventListener("load", () => {
+  if (!pageLoader) return;
+
+  window.setTimeout(() => {
+    pageLoader.classList.add("is-hidden");
+  }, 350);
+});
