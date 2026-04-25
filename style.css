@@ -789,7 +789,8 @@ footer {
 
   .grid,
   .contact-layout,
-  .ttt-layout {
+  .ttt-layout,
+  .memory-layout {
     grid-template-columns: 1fr;
   }
 
@@ -802,12 +803,15 @@ footer {
   }
 
   .ttt-panel,
-  .ttt-score {
+  .ttt-score,
+  .memory-panel,
+  .memory-score {
     padding: 18px;
     border-radius: 26px;
   }
 
-  .ttt-cell {
+  .ttt-cell,
+  .memory-card {
     border-radius: 18px;
   }
 }
