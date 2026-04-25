@@ -762,6 +762,142 @@ const memory = {
 
 memory.init();
 
+/* Fake account modal */
+
+const accountOpen = document.getElementById("accountOpen");
+const accountModal = document.getElementById("accountModal");
+const accountClose = document.getElementById("accountClose");
+const accountCloseButton = document.getElementById("accountCloseButton");
+const accountForm = document.getElementById("accountForm");
+const accountPassword = document.getElementById("accountPassword");
+const accountStatus = document.getElementById("accountStatus");
+const passwordRulesElement = document.getElementById("passwordRules");
+
+const passwordRules = [
+  {
+    text: "Mindestens 8 Zeichen.",
+    test: (value) => value.length >= 8
+  },
+  {
+    text: "Enthält mindestens eine Zahl.",
+    test: (value) => /\d/.test(value)
+  },
+  {
+    text: "Die Summe aller Zahlen muss 10 ergeben.",
+    test: (value) => {
+      const numbers = value.match(/\d/g) || [];
+      const sum = numbers.reduce((total, number) => total + Number(number), 0);
+
+      return sum === 10;
+    }
+  },
+  {
+    text: "Enthält mindestens eine 1.",
+    test: (value) => value.includes("1")
+  },
+  {
+    text: "Enthält ein Obst oder Gemüse.",
+    test: (value) => /(apfel|banane|birne|tomate|karotte|brokkoli)/i.test(value)
+  },
+  {
+    text: "Enthält das Wort Maxi, aber nicht am Anfang.",
+    test: (value) => /maxi/i.test(value) && !/^maxi/i.test(value)
+  },
+  {
+    text: "Die Länge des Passworts muss eine Primzahl sein.",
+    test: (value) => {
+      const length = value.length;
+
+      if (length < 2) return false;
+
+      for (let i = 2; i < length; i += 1) {
+        if (length % i === 0) return false;
+      }
+
+      return true;
+    }
+  }
+];
+
+function openAccountModal() {
+  if (!accountModal) return;
+
+  accountModal.classList.add("is-open");
+  accountModal.setAttribute("aria-hidden", "false");
+  renderPasswordRules();
+}
+
+function closeAccountModal() {
+  if (!accountModal) return;
+
+  accountModal.classList.remove("is-open");
+  accountModal.setAttribute("aria-hidden", "true");
+}
+
+function renderPasswordRules() {
+  if (!passwordRulesElement || !accountPassword) return;
+
+  const value = accountPassword.value;
+  const visibleRules = passwordRules.filter((rule, index) => {
+    if (index < 2) return true;
+
+    return passwordRules
+      .slice(0, index)
+      .every((previousRule) => previousRule.test(value));
+  });
+
+  passwordRulesElement.innerHTML = "";
+
+  visibleRules.forEach((rule) => {
+    const item = document.createElement("div");
+
+    item.className = "password-rule";
+    item.textContent = rule.text;
+
+    if (rule.test(value)) {
+      item.classList.add("is-valid");
+    }
+
+    passwordRulesElement.appendChild(item);
+  });
+}
+
+accountOpen?.addEventListener("click", openAccountModal);
+accountClose?.addEventListener("click", closeAccountModal);
+accountCloseButton?.addEventListener("click", closeAccountModal);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeAccountModal();
+  }
+});
+
+accountPassword?.addEventListener("input", () => {
+  renderPasswordRules();
+
+  if (accountStatus) {
+    accountStatus.textContent = "";
+    accountStatus.className = "form-status";
+  }
+});
+
+accountForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  if (!accountPassword || !accountStatus) return;
+
+  const isValid = passwordRules.every((rule) => rule.test(accountPassword.value));
+
+  if (!isValid) {
+    accountStatus.className = "form-status error";
+    accountStatus.textContent = "Das Passwort erfüllt noch nicht alle Anforderungen.";
+    return;
+  }
+
+  accountStatus.className = "form-status error";
+  accountStatus.textContent = "Account konnte nicht erstellt werden. Das Passwort ist zu sicher.";
+});
+
 /* Page loader */
 
 const pageLoader = document.getElementById("pageLoader");
