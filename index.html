@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>T-Maxi</title>
-<link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 
 <body>
@@ -95,33 +96,43 @@
       </div>
     </section>
 
-    <section id="contact" class="section">
-      <div class="container">
-        <div class="section-head">
-          <h2>Kontakt</h2>
-          <p>
-            Hier können später Mail, Socials oder ein kleines Kontaktformular stehen.
-          </p>
-        </div>
+<section id="contact" class="section">
+  <div class="container contact-layout">
+    <div>
+      <p class="eyebrow">Kontakt</p>
+      <h2>Schreib mir.</h2>
+      <p class="contact-intro">
+        Für Fragen, Ideen oder kurze Nachrichten. Das Formular ist bewusst schlicht gehalten —
+        mit kleinem Bot-Schutz im Hintergrund.
+      </p>
+    </div>
 
-        <div class="list">
-          <div class="list-item">
-            <span>E-Mail</span>
-            <span>mail@t-maxi.de</span>
-          </div>
+    <form class="contact-form" action="https://formspree.io/f/DEINE_FORM_ID" method="POST">
+      <label>
+        Name
+        <input type="text" name="name" placeholder="Dein Name" required>
+      </label>
 
-          <div class="list-item">
-            <span>Status</span>
-            <span>Website im Aufbau</span>
-          </div>
+      <label>
+        E-Mail
+        <input type="email" name="email" placeholder="du@example.de" required>
+      </label>
 
-          <div class="list-item">
-            <span>Hosting</span>
-            <span>GitHub Pages</span>
-          </div>
-        </div>
-      </div>
-    </section>
+      <label>
+        Nachricht
+        <textarea name="message" rows="6" placeholder="Worum geht’s?" required></textarea>
+      </label>
+
+      <input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off">
+
+      <div class="cf-turnstile" data-sitekey="DEIN_TURNSTILE_SITE_KEY"></div>
+
+      <button class="button button-primary" type="submit">
+        Nachricht senden
+      </button>
+    </form>
+  </div>
+</section>
   </main>
 
   <footer>
