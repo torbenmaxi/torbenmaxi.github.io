@@ -27,6 +27,67 @@ body.dark {
   --header: rgba(15, 15, 14, 0.82);
 }
 
+/* Page loader */
+
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  color: var(--text);
+  transition:
+    opacity 0.45s ease,
+    visibility 0.45s ease;
+}
+
+.page-loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-inner {
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+}
+
+.loader-logo {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.loader-line {
+  width: 140px;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.loader-line::after {
+  content: "";
+  display: block;
+  width: 45%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--text);
+  animation: loader-move 1s ease-in-out infinite;
+}
+
+@keyframes loader-move {
+  0% {
+    transform: translateX(-110%);
+  }
+
+  100% {
+    transform: translateX(260%);
+  }
+}
+
 /* Reset */
 
 * {
