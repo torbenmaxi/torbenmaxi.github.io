@@ -462,17 +462,23 @@ const memory = {
   matchedPairs: 0,
   lockBoard: false,
   scoreSaved: false,
+  pendingScore: null,
 
   init() {
     if (!this.boardElement) return;
 
     this.resetButton?.addEventListener("click", () => this.startGame());
 
-    this.playerNameElement?.addEventListener("input", () => {
+    this.playerNameElement?.addEventListener("input", async () => {
       const playerName = this.getPlayerName();
-
-      if (playerName) {
-        localStorage.setItem("memoryPlayerName", playerName);
+    
+      if (!playerName) return;
+    
+      localStorage.setItem("memoryPlayerName", playerName);
+    
+      if (this.pendingScore && !this.scoreSaved) {
+        await this.saveScore(playerName, this.pendingScore);
+        this.pendingScore = null;
       }
     });
 
@@ -493,6 +499,7 @@ const memory = {
     this.matchedPairs = 0;
     this.lockBoard = false;
     this.scoreSaved = false;
+    this.pendingScore = null;
 
     this.renderBoard();
     this.updateDisplay();
@@ -610,6 +617,7 @@ const memory = {
     const playerName = this.getPlayerName();
 
     if (!playerName) {
+      this.pendingScore = this.moves;
       this.setStatus("Geschafft. Trag einen Namen ein, um den Score zu speichern.");
       return;
     }
