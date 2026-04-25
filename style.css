@@ -376,8 +376,7 @@ h2 {
 }
 
 .contact-form input:focus,
-.contact-form textarea:focus,
-.ttt-controls select:focus {
+.contact-form textarea:focus {
   border-color: var(--text);
 }
 
@@ -486,41 +485,44 @@ footer {
 
 .ttt-controls {
   display: flex;
-  align-items: end;
+  align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 12px;
 }
 
 .ttt-mode {
-  display: grid;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.ttt-controls select {
-  min-height: 46px;
-  padding: 0 44px 0 16px;
+  padding: 4px;
+  display: inline-flex;
+  gap: 4px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background:
-    linear-gradient(45deg, transparent 50%, var(--text) 50%),
-    linear-gradient(135deg, var(--text) 50%, transparent 50%),
-    color-mix(in srgb, var(--card) 70%, transparent);
-  background-position:
-    calc(100% - 22px) 50%,
-    calc(100% - 16px) 50%,
-    0 0;
-  background-size:
-    6px 6px,
-    6px 6px,
-    auto;
-  background-repeat: no-repeat;
-  color: var(--text);
-  outline: none;
+  background: color-mix(in srgb, var(--card) 60%, transparent);
+}
+
+.ttt-mode-option {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
   cursor: pointer;
-  appearance: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    transform var(--transition);
+}
+
+.ttt-mode-option:hover {
+  color: var(--text);
+}
+
+.ttt-mode-option.active {
+  background: var(--accent);
+  color: var(--bg);
 }
 
 .ttt-board {
@@ -669,10 +671,10 @@ footer {
   }
 
   .ttt-mode {
-    flex: 1;
+    width: 100%;
   }
 
-  .ttt-controls select {
-    width: 100%;
+  .ttt-mode-option {
+    flex: 1;
   }
 }
