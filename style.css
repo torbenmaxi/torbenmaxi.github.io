@@ -404,6 +404,16 @@ footer {
   border-color: var(--text);
 }
 
+.contact-form input:invalid:not(:placeholder-shown),
+.contact-form textarea:invalid:not(:placeholder-shown) {
+  border-color: #d94a4a;
+}
+
+.contact-form input[type="email"]:invalid:not(:placeholder-shown) {
+  border-color: #d94a4a;
+  background: rgba(217, 74, 74, 0.08);
+}
+
 .honeypot {
   display: none;
 }
