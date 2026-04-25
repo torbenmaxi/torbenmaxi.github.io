@@ -598,6 +598,8 @@ footer {
 }
 
 .ttt-board {
+  width: min(100%, 58vh, 560px);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
