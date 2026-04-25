@@ -453,6 +453,7 @@ const memory = {
   bestElement: document.getElementById("memoryBest"),
   leaderboardElement: document.getElementById("memoryLeaderboard"),
   playerNameElement: document.getElementById("memoryPlayerName"),
+  saveScoreButton: document.getElementById("saveMemoryScore"),
   resetButton: document.getElementById("resetMemory"),
 
   symbols: ["🍎", "🍐", "🍌", "🍇", "🍓", "🥕", "🥦", "🍅"],
@@ -468,18 +469,16 @@ const memory = {
     if (!this.boardElement) return;
 
     this.resetButton?.addEventListener("click", () => this.startGame());
+    this.saveScoreButton?.addEventListener("click", () => this.savePendingScore());
 
-    this.playerNameElement?.addEventListener("input", async () => {
+    this.playerNameElement?.addEventListener("input", () => {
       const playerName = this.getPlayerName();
-    
-      if (!playerName) return;
-    
-      localStorage.setItem("memoryPlayerName", playerName);
-    
-      if (this.pendingScore && !this.scoreSaved) {
-        await this.saveScore(playerName, this.pendingScore);
-        this.pendingScore = null;
+
+      if (playerName) {
+        localStorage.setItem("memoryPlayerName", playerName);
       }
+
+      this.updateSaveButton();
     });
 
     const savedPlayerName = localStorage.getItem("memoryPlayerName");
@@ -503,6 +502,7 @@ const memory = {
 
     this.renderBoard();
     this.updateDisplay();
+    this.updateSaveButton();
     this.setStatus("Finde das erste Paar.");
   },
 
@@ -605,24 +605,18 @@ const memory = {
     }, 800);
   },
 
-  async finishGame() {
+  finishGame() {
     const bestScore = this.getBestScore();
 
     if (!bestScore || this.moves < bestScore) {
       localStorage.setItem("memoryBest", String(this.moves));
     }
 
+    this.pendingScore = this.moves;
+
     this.updateDisplay();
-
-    const playerName = this.getPlayerName();
-
-    if (!playerName) {
-      this.pendingScore = this.moves;
-      this.setStatus("Geschafft. Trag einen Namen ein, um den Score zu speichern.");
-      return;
-    }
-
-    await this.saveScore(playerName, this.moves);
+    this.updateSaveButton();
+    this.setStatus("Geschafft. Du kannst deinen Score jetzt speichern.");
   },
 
   getPlayerName() {
@@ -635,10 +629,32 @@ const memory = {
     return savedScore ? Number(savedScore) : null;
   },
 
+  updateSaveButton() {
+    if (!this.saveScoreButton) return;
+
+    const playerName = this.getPlayerName();
+    const canSave = Boolean(this.pendingScore && playerName && !this.scoreSaved);
+
+    this.saveScoreButton.disabled = !canSave;
+  },
+
+  async savePendingScore() {
+    const playerName = this.getPlayerName();
+
+    if (!this.pendingScore || !playerName || this.scoreSaved) {
+      return;
+    }
+
+    await this.saveScore(playerName, this.pendingScore);
+    this.pendingScore = null;
+    this.updateSaveButton();
+  },
+
   async saveScore(playerName, moves) {
     if (!supabaseClient || this.scoreSaved) return;
 
     this.scoreSaved = true;
+    this.updateSaveButton();
     this.setStatus("Score wird gespeichert...");
 
     const { error } = await supabaseClient
@@ -651,6 +667,7 @@ const memory = {
     if (error) {
       this.setStatus("Score konnte nicht gespeichert werden.");
       this.scoreSaved = false;
+      this.updateSaveButton();
       return;
     }
 
@@ -658,59 +675,59 @@ const memory = {
     await this.loadLeaderboard();
   },
 
-async loadLeaderboard() {
-  if (!supabaseClient || !this.leaderboardElement) return;
+  async loadLeaderboard() {
+    if (!supabaseClient || !this.leaderboardElement) return;
 
-  this.leaderboardElement.innerHTML = `
-    <li class="memory-leaderboard-empty">Lädt...</li>
-  `;
-
-  const { data, error } = await supabaseClient
-    .from("memory_scores")
-    .select("player_name, moves, created_at")
-    .order("moves", { ascending: true })
-    .order("created_at", { ascending: true })
-    .limit(100);
-
-  if (error) {
     this.leaderboardElement.innerHTML = `
-      <li class="memory-leaderboard-empty">Bestenliste nicht verfügbar.</li>
+      <li class="memory-leaderboard-empty">Lädt...</li>
     `;
-    return;
-  }
 
-  if (!data || data.length === 0) {
-    this.leaderboardElement.innerHTML = `
-      <li class="memory-leaderboard-empty">Noch keine Scores.</li>
-    `;
-    return;
-  }
+    const { data, error } = await supabaseClient
+      .from("memory_scores")
+      .select("player_name, moves, created_at")
+      .order("moves", { ascending: true })
+      .order("created_at", { ascending: true })
+      .limit(100);
 
-  const bestScoresByName = new Map();
-
-  data.forEach((score) => {
-    const normalizedName = score.player_name.trim().toLowerCase();
-
-    if (!bestScoresByName.has(normalizedName)) {
-      bestScoresByName.set(normalizedName, score);
+    if (error) {
+      this.leaderboardElement.innerHTML = `
+        <li class="memory-leaderboard-empty">Bestenliste nicht verfügbar.</li>
+      `;
+      return;
     }
-  });
 
-  const leaderboardScores = Array.from(bestScoresByName.values()).slice(0, 5);
+    if (!data || data.length === 0) {
+      this.leaderboardElement.innerHTML = `
+        <li class="memory-leaderboard-empty">Noch keine Scores.</li>
+      `;
+      return;
+    }
 
-  this.leaderboardElement.innerHTML = "";
+    const bestScoresByName = new Map();
 
-  leaderboardScores.forEach((score) => {
-    const item = document.createElement("li");
+    data.forEach((score) => {
+      const normalizedName = score.player_name.trim().toLowerCase();
 
-    item.innerHTML = `
-      <span>${this.escapeHtml(score.player_name)}</span>
-      <strong>${score.moves}</strong>
-    `;
+      if (!bestScoresByName.has(normalizedName)) {
+        bestScoresByName.set(normalizedName, score);
+      }
+    });
 
-    this.leaderboardElement.appendChild(item);
-  });
-},
+    const leaderboardScores = Array.from(bestScoresByName.values()).slice(0, 5);
+
+    this.leaderboardElement.innerHTML = "";
+
+    leaderboardScores.forEach((score) => {
+      const item = document.createElement("li");
+
+      item.innerHTML = `
+        <span>${this.escapeHtml(score.player_name)}</span>
+        <strong>${score.moves}</strong>
+      `;
+
+      this.leaderboardElement.appendChild(item);
+    });
+  },
 
   updateDisplay() {
     const bestScore = this.getBestScore();
