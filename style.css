@@ -811,6 +811,11 @@ footer {
   color: var(--text);
 }
 
+.memory-save-button {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
 /* Responsive */
 
 @media (max-width: 820px) {
