@@ -102,12 +102,13 @@ const ticTacToe = {
   scoreXElement: document.getElementById("scoreX"),
   scoreOElement: document.getElementById("scoreO"),
   scoreDrawElement: document.getElementById("scoreDraw"),
-  modeSelect: document.getElementById("gameMode"),
+  modeButtons: Array.from(document.querySelectorAll(".ttt-mode-option")),
 
   board: ["", "", "", "", "", "", "", "", ""],
   currentPlayer: "X",
   gameOver: false,
   computerThinking: false,
+  mode: "human",
 
   humanPlayer: "X",
   computerPlayer: "O",
@@ -133,25 +134,43 @@ const ticTacToe = {
     this.resetGameButton?.addEventListener("click", () => this.resetGame());
     this.resetScoreButton?.addEventListener("click", () => this.resetScore());
 
-    if (this.modeSelect) {
-      const savedMode = localStorage.getItem("tttMode");
+    const savedMode = localStorage.getItem("tttMode");
 
-      if (savedMode === "human" || savedMode === "computer") {
-        this.modeSelect.value = savedMode;
-      }
+    if (savedMode === "human" || savedMode === "computer") {
+      this.setMode(savedMode);
+    } else {
+      this.setMode("human");
+    }
 
-      this.modeSelect.addEventListener("change", () => {
-        localStorage.setItem("tttMode", this.getMode());
+    this.modeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const mode = button.dataset.mode;
+
+        if (mode !== "human" && mode !== "computer") return;
+
+        this.setMode(mode);
+        localStorage.setItem("tttMode", mode);
         this.resetGame();
       });
-    }
+    });
 
     this.updateScoreDisplay();
     this.resetGame();
   },
 
   getMode() {
-    return this.modeSelect?.value || "human";
+    return this.mode;
+  },
+
+  setMode(mode) {
+    this.mode = mode;
+
+    this.modeButtons.forEach((button) => {
+      const isActive = button.dataset.mode === mode;
+
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
   },
 
   getScore() {
@@ -323,8 +342,8 @@ const ticTacToe = {
     if (
       this.gameOver ||
       this.computerThinking ||
-      this.board[index] !== "" ||
-      Number.isNaN(index)
+      Number.isNaN(index) ||
+      this.board[index] !== ""
     ) {
       return;
     }
