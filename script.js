@@ -439,6 +439,184 @@ const ticTacToe = {
 
 ticTacToe.init();
 
+/* Memory */
+
+const memory = {
+  boardElement: document.getElementById("memoryBoard"),
+  statusElement: document.getElementById("memoryStatus"),
+  movesElement: document.getElementById("memoryMoves"),
+  pairsElement: document.getElementById("memoryPairs"),
+  bestElement: document.getElementById("memoryBest"),
+  resetButton: document.getElementById("resetMemory"),
+
+  symbols: ["✦", "●", "▲", "■", "◆", "✚", "☾", "☼"],
+  cards: [],
+  openCards: [],
+  moves: 0,
+  matchedPairs: 0,
+  lockBoard: false,
+
+  init() {
+    if (!this.boardElement) return;
+
+    this.resetButton?.addEventListener("click", () => this.startGame());
+
+    this.startGame();
+  },
+
+  startGame() {
+    this.cards = this.shuffleCards();
+    this.openCards = [];
+    this.moves = 0;
+    this.matchedPairs = 0;
+    this.lockBoard = false;
+
+    this.renderBoard();
+    this.updateDisplay();
+    this.setStatus("Finde das erste Paar.");
+  },
+
+  shuffleCards() {
+    const cardValues = [...this.symbols, ...this.symbols];
+
+    return cardValues
+      .map((symbol, index) => ({
+        id: index,
+        symbol,
+        isOpen: false,
+        isMatched: false
+      }))
+      .sort(() => Math.random() - 0.5);
+  },
+
+  renderBoard() {
+    this.boardElement.innerHTML = "";
+
+    this.cards.forEach((card, index) => {
+      const button = document.createElement("button");
+
+      button.className = "memory-card";
+      button.type = "button";
+      button.dataset.index = String(index);
+      button.setAttribute("aria-label", "Karte aufdecken");
+
+      button.addEventListener("click", () => this.handleCardClick(index));
+
+      this.boardElement.appendChild(button);
+    });
+
+    this.updateCards();
+  },
+
+  updateCards() {
+    const cardButtons = this.boardElement.querySelectorAll(".memory-card");
+
+    cardButtons.forEach((button, index) => {
+      const card = this.cards[index];
+      const isVisible = card.isOpen || card.isMatched;
+
+      button.textContent = isVisible ? card.symbol : "";
+      button.disabled = this.lockBoard || card.isOpen || card.isMatched;
+
+      button.classList.toggle("is-open", card.isOpen);
+      button.classList.toggle("is-matched", card.isMatched);
+    });
+  },
+
+  handleCardClick(index) {
+    const card = this.cards[index];
+
+    if (this.lockBoard || card.isOpen || card.isMatched) return;
+
+    card.isOpen = true;
+    this.openCards.push(card);
+
+    this.updateCards();
+
+    if (this.openCards.length === 2) {
+      this.moves += 1;
+      this.checkPair();
+      this.updateDisplay();
+    }
+  },
+
+  checkPair() {
+    const [firstCard, secondCard] = this.openCards;
+
+    if (firstCard.symbol === secondCard.symbol) {
+      firstCard.isMatched = true;
+      secondCard.isMatched = true;
+
+      this.matchedPairs += 1;
+      this.openCards = [];
+
+      this.setStatus("Paar gefunden.");
+      this.updateCards();
+
+      if (this.matchedPairs === this.symbols.length) {
+        this.finishGame();
+      }
+
+      return;
+    }
+
+    this.lockBoard = true;
+    this.setStatus("Leider kein Paar.");
+
+    window.setTimeout(() => {
+      firstCard.isOpen = false;
+      secondCard.isOpen = false;
+
+      this.openCards = [];
+      this.lockBoard = false;
+
+      this.setStatus("Weiter geht’s.");
+      this.updateCards();
+    }, 800);
+  },
+
+  finishGame() {
+    const bestScore = this.getBestScore();
+
+    if (!bestScore || this.moves < bestScore) {
+      localStorage.setItem("memoryBest", String(this.moves));
+      this.setStatus("Neuer Bestwert.");
+    } else {
+      this.setStatus("Geschafft.");
+    }
+
+    this.updateDisplay();
+  },
+
+  getBestScore() {
+    const savedScore = localStorage.getItem("memoryBest");
+    return savedScore ? Number(savedScore) : null;
+  },
+
+  updateDisplay() {
+    const bestScore = this.getBestScore();
+
+    if (this.movesElement) {
+      this.movesElement.textContent = String(this.moves);
+    }
+
+    if (this.pairsElement) {
+      this.pairsElement.textContent = `${this.matchedPairs}/${this.symbols.length}`;
+    }
+
+    if (this.bestElement) {
+      this.bestElement.textContent = bestScore ? String(bestScore) : "–";
+    }
+  },
+
+  setStatus(message) {
+    if (!this.statusElement) return;
+    this.statusElement.textContent = message;
+  }
+};
+
+memory.init();
+
 /* Page loader */
 
 const pageLoader = document.getElementById("pageLoader");
