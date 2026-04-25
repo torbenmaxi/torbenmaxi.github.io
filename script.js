@@ -1,3 +1,7 @@
+"use strict";
+
+/* Theme */
+
 const themeToggle = document.getElementById("themeToggle");
 const savedTheme = localStorage.getItem("theme");
 
@@ -5,7 +9,7 @@ if (savedTheme === "dark") {
   document.body.classList.add("dark");
 }
 
-function updateThemeButton() {
+function updateThemeToggle() {
   if (!themeToggle) return;
 
   const isDark = document.body.classList.contains("dark");
@@ -16,31 +20,40 @@ function updateThemeButton() {
   );
 }
 
-updateThemeButton();
-
 if (themeToggle) {
+  updateThemeToggle();
+
   themeToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark");
 
     const isDark = document.body.classList.contains("dark");
     localStorage.setItem("theme", isDark ? "dark" : "light");
 
-    updateThemeButton();
+    updateThemeToggle();
   });
 }
 
+/* Contact form */
+
 const contactForm = document.getElementById("contactForm");
 const formStatus = document.getElementById("formStatus");
+
+function setFormStatus(message, type = "") {
+  if (!formStatus) return;
+
+  formStatus.className = type ? `form-status ${type}` : "form-status";
+  formStatus.textContent = message;
+}
 
 if (contactForm && formStatus) {
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const submitButton = contactForm.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton?.textContent || "Nachricht senden";
     const formData = new FormData(contactForm);
 
-    formStatus.className = "form-status";
-    formStatus.textContent = "Wird gesendet...";
+    setFormStatus("Wird gesendet...");
 
     if (submitButton) {
       submitButton.disabled = true;
@@ -56,331 +69,353 @@ if (contactForm && formStatus) {
         }
       });
 
-      if (response.ok) {
-        contactForm.reset();
-        formStatus.className = "form-status success";
-        formStatus.textContent = "Nachricht gesendet. Danke dir.";
-
-        if (typeof turnstile !== "undefined") {
-          turnstile.reset();
-        }
-      } else {
-        formStatus.className = "form-status error";
-        formStatus.textContent = "Hat leider nicht geklappt. Versuch es bitte nochmal.";
+      if (!response.ok) {
+        throw new Error("Form submit failed");
       }
-    } catch (error) {
-      formStatus.className = "form-status error";
-      formStatus.textContent = "Verbindung fehlgeschlagen. Versuch es bitte nochmal.";
+
+      contactForm.reset();
+      setFormStatus("Nachricht gesendet. Danke dir.", "success");
+
+      if (typeof turnstile !== "undefined") {
+        turnstile.reset();
+      }
+    } catch {
+      setFormStatus("Hat leider nicht geklappt. Versuch es bitte nochmal.", "error");
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
     }
-
-    if (submitButton) {
-      submitButton.disabled = false;
-      submitButton.textContent = "Nachricht senden";
-    }
   });
 }
 
-const boardElement = document.getElementById("board");
-const cells = document.querySelectorAll(".ttt-cell");
-const currentPlayerElement = document.getElementById("currentPlayer");
-const gameStatus = document.getElementById("gameStatus");
-const resetGameButton = document.getElementById("resetGame");
-const resetScoreButton = document.getElementById("resetScore");
-const scoreXElement = document.getElementById("scoreX");
-const scoreOElement = document.getElementById("scoreO");
-const scoreDrawElement = document.getElementById("scoreDraw");
-const gameModeSelect = document.getElementById("gameMode");
+/* Tic Tac Toe */
 
-let board = ["", "", "", "", "", "", "", "", ""];
-let currentPlayer = "X";
-let gameOver = false;
-let computerThinking = false;
+const ticTacToe = {
+  boardElement: document.getElementById("board"),
+  cells: Array.from(document.querySelectorAll(".ttt-cell")),
+  currentPlayerElement: document.getElementById("currentPlayer"),
+  statusElement: document.getElementById("gameStatus"),
+  resetGameButton: document.getElementById("resetGame"),
+  resetScoreButton: document.getElementById("resetScore"),
+  scoreXElement: document.getElementById("scoreX"),
+  scoreOElement: document.getElementById("scoreO"),
+  scoreDrawElement: document.getElementById("scoreDraw"),
+  modeSelect: document.getElementById("gameMode"),
 
-const humanPlayer = "X";
-const computerPlayer = "O";
+  board: ["", "", "", "", "", "", "", "", ""],
+  currentPlayer: "X",
+  gameOver: false,
+  computerThinking: false,
 
-const winningCombinations = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6]
-];
+  humanPlayer: "X",
+  computerPlayer: "O",
 
-function getGameMode() {
-  if (!gameModeSelect) return "human";
-  return gameModeSelect.value;
-}
+  winningCombinations: [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ],
 
-function getScore() {
-  const savedScore = localStorage.getItem("tttScore");
+  init() {
+    if (!this.boardElement) return;
 
-  if (!savedScore) {
-    return {
-      X: 0,
-      O: 0,
-      draw: 0
-    };
-  }
-
-  try {
-    return JSON.parse(savedScore);
-  } catch {
-    return {
-      X: 0,
-      O: 0,
-      draw: 0
-    };
-  }
-}
-
-function saveScore(score) {
-  localStorage.setItem("tttScore", JSON.stringify(score));
-}
-
-function updateScoreDisplay() {
-  if (!scoreXElement || !scoreOElement || !scoreDrawElement) return;
-
-  const score = getScore();
-
-  scoreXElement.textContent = score.X;
-  scoreOElement.textContent = score.O;
-  scoreDrawElement.textContent = score.draw;
-}
-
-function updateGameDisplay() {
-  cells.forEach((cell, index) => {
-    cell.textContent = board[index];
-    cell.disabled =
-      gameOver ||
-      computerThinking ||
-      board[index] !== "" ||
-      (getGameMode() === "computer" && currentPlayer === computerPlayer);
-  });
-
-  if (currentPlayerElement) {
-    currentPlayerElement.textContent = currentPlayer;
-  }
-}
-
-function checkWinner() {
-  for (const combination of winningCombinations) {
-    const [a, b, c] = combination;
-
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return combination;
-    }
-  }
-
-  return null;
-}
-
-function finishGame(winnerCombination) {
-  gameOver = true;
-
-  const winner = board[winnerCombination[0]];
-  const score = getScore();
-
-  score[winner] += 1;
-  saveScore(score);
-  updateScoreDisplay();
-
-  winnerCombination.forEach((index) => {
-    cells[index].classList.add("winner");
-  });
-
-  cells.forEach((cell) => {
-    cell.disabled = true;
-  });
-
-  if (gameStatus) {
-    if (getGameMode() === "computer" && winner === computerPlayer) {
-      gameStatus.textContent = "Computer gewinnt.";
-    } else if (getGameMode() === "computer" && winner === humanPlayer) {
-      gameStatus.textContent = "Du gewinnst.";
-    } else {
-      gameStatus.textContent = `${winner} gewinnt.`;
-    }
-  }
-}
-
-function finishDraw() {
-  gameOver = true;
-
-  const score = getScore();
-  score.draw += 1;
-  saveScore(score);
-  updateScoreDisplay();
-
-  cells.forEach((cell) => {
-    cell.disabled = true;
-  });
-
-  if (gameStatus) {
-    gameStatus.textContent = "Unentschieden.";
-  }
-}
-
-function endTurn() {
-  const winnerCombination = checkWinner();
-
-  if (winnerCombination) {
-    updateGameDisplay();
-    finishGame(winnerCombination);
-    return;
-  }
-
-  if (board.every((cell) => cell !== "")) {
-    updateGameDisplay();
-    finishDraw();
-    return;
-  }
-
-  currentPlayer = currentPlayer === "X" ? "O" : "X";
-
-  if (gameStatus) {
-    if (getGameMode() === "computer" && currentPlayer === computerPlayer) {
-      gameStatus.textContent = "Computer denkt nach...";
-    } else {
-      gameStatus.textContent = `${currentPlayer} ist dran.`;
-    }
-  }
-
-  updateGameDisplay();
-
-  if (getGameMode() === "computer" && currentPlayer === computerPlayer && !gameOver) {
-    computerThinking = true;
-    updateGameDisplay();
-
-    setTimeout(() => {
-      makeComputerMove();
-      computerThinking = false;
-      updateGameDisplay();
-    }, 450);
-  }
-}
-
-function handleCellClick(event) {
-  const index = Number(event.currentTarget.dataset.index);
-
-  if (gameOver || computerThinking || board[index] !== "") return;
-
-  if (getGameMode() === "computer" && currentPlayer === computerPlayer) return;
-
-  board[index] = currentPlayer;
-  endTurn();
-}
-
-function getAvailableMoves() {
-  return board
-    .map((value, index) => value === "" ? index : null)
-    .filter((index) => index !== null);
-}
-
-function findWinningMove(player) {
-  const availableMoves = getAvailableMoves();
-
-  for (const move of availableMoves) {
-    board[move] = player;
-    const winner = checkWinner();
-    board[move] = "";
-
-    if (winner) {
-      return move;
-    }
-  }
-
-  return null;
-}
-
-function makeComputerMove() {
-  if (gameOver) return;
-
-  let move = findWinningMove(computerPlayer);
-
-  if (move === null) {
-    move = findWinningMove(humanPlayer);
-  }
-
-  if (move === null && board[4] === "") {
-    move = 4;
-  }
-
-  const corners = [0, 2, 6, 8].filter((index) => board[index] === "");
-
-  if (move === null && corners.length > 0) {
-    move = corners[Math.floor(Math.random() * corners.length)];
-  }
-
-  const availableMoves = getAvailableMoves();
-
-  if (move === null && availableMoves.length > 0) {
-    move = availableMoves[Math.floor(Math.random() * availableMoves.length)];
-  }
-
-  if (move !== null) {
-    board[move] = computerPlayer;
-    endTurn();
-  }
-}
-
-function resetGame() {
-  board = ["", "", "", "", "", "", "", "", ""];
-  currentPlayer = "X";
-  gameOver = false;
-  computerThinking = false;
-    cells.forEach((cell) => {
-    cell.classList.remove("winner");
-  });
-
-  if (gameStatus) {
-    gameStatus.textContent = getGameMode() === "computer"
-      ? "Du beginnst als X."
-      : "X beginnt.";
-  }
-
-  updateGameDisplay();
-}
-
-function resetScore() {
-  saveScore({
-    X: 0,
-    O: 0,
-    draw: 0
-  });
-
-  updateScoreDisplay();
-}
-
-if (boardElement) {
-  cells.forEach((cell) => {
-    cell.addEventListener("click", handleCellClick);
-  });
-
-  if (resetGameButton) {
-    resetGameButton.addEventListener("click", resetGame);
-  }
-
-  if (resetScoreButton) {
-    resetScoreButton.addEventListener("click", resetScore);
-  }
-
-  if (gameModeSelect) {
-    gameModeSelect.addEventListener("change", () => {
-      localStorage.setItem("tttMode", getGameMode());
-      resetGame();
+    this.cells.forEach((cell) => {
+      cell.addEventListener("click", (event) => this.handleCellClick(event));
     });
 
-    const savedMode = localStorage.getItem("tttMode");
+    this.resetGameButton?.addEventListener("click", () => this.resetGame());
+    this.resetScoreButton?.addEventListener("click", () => this.resetScore());
 
-    if (savedMode === "human" || savedMode === "computer") {
-      gameModeSelect.value = savedMode;
+    if (this.modeSelect) {
+      const savedMode = localStorage.getItem("tttMode");
+
+      if (savedMode === "human" || savedMode === "computer") {
+        this.modeSelect.value = savedMode;
+      }
+
+      this.modeSelect.addEventListener("change", () => {
+        localStorage.setItem("tttMode", this.getMode());
+        this.resetGame();
+      });
     }
-  }
 
-  updateScoreDisplay();
-  resetGame();
-}
+    this.updateScoreDisplay();
+    this.resetGame();
+  },
+
+  getMode() {
+    return this.modeSelect?.value || "human";
+  },
+
+  getScore() {
+    const fallbackScore = {
+      X: 0,
+      O: 0,
+      draw: 0
+    };
+
+    const savedScore = localStorage.getItem("tttScore");
+
+    if (!savedScore) {
+      return fallbackScore;
+    }
+
+    try {
+      return {
+        ...fallbackScore,
+        ...JSON.parse(savedScore)
+      };
+    } catch {
+      return fallbackScore;
+    }
+  },
+
+  saveScore(score) {
+    localStorage.setItem("tttScore", JSON.stringify(score));
+  },
+
+  updateScoreDisplay() {
+    const score = this.getScore();
+
+    if (this.scoreXElement) this.scoreXElement.textContent = score.X;
+    if (this.scoreOElement) this.scoreOElement.textContent = score.O;
+    if (this.scoreDrawElement) this.scoreDrawElement.textContent = score.draw;
+  },
+
+  updateDisplay() {
+    this.cells.forEach((cell, index) => {
+      const isComputerTurn =
+        this.getMode() === "computer" &&
+        this.currentPlayer === this.computerPlayer;
+
+      cell.textContent = this.board[index];
+      cell.disabled =
+        this.gameOver ||
+        this.computerThinking ||
+        this.board[index] !== "" ||
+        isComputerTurn;
+    });
+
+    if (this.currentPlayerElement) {
+      this.currentPlayerElement.textContent = this.currentPlayer;
+    }
+  },
+
+  setStatus(message) {
+    if (!this.statusElement) return;
+    this.statusElement.textContent = message;
+  },
+
+  checkWinner() {
+    for (const combination of this.winningCombinations) {
+      const [a, b, c] = combination;
+
+      if (
+        this.board[a] &&
+        this.board[a] === this.board[b] &&
+        this.board[a] === this.board[c]
+      ) {
+        return combination;
+      }
+    }
+
+    return null;
+  },
+
+  finishGame(winnerCombination) {
+    this.gameOver = true;
+
+    const winner = this.board[winnerCombination[0]];
+    const score = this.getScore();
+
+    score[winner] += 1;
+    this.saveScore(score);
+    this.updateScoreDisplay();
+
+    winnerCombination.forEach((index) => {
+      this.cells[index].classList.add("winner");
+    });
+
+    this.cells.forEach((cell) => {
+      cell.disabled = true;
+    });
+
+    if (this.getMode() === "computer" && winner === this.computerPlayer) {
+      this.setStatus("Computer gewinnt.");
+      return;
+    }
+
+    if (this.getMode() === "computer" && winner === this.humanPlayer) {
+      this.setStatus("Du gewinnst.");
+      return;
+    }
+
+    this.setStatus(`${winner} gewinnt.`);
+  },
+
+  finishDraw() {
+    this.gameOver = true;
+
+    const score = this.getScore();
+    score.draw += 1;
+
+    this.saveScore(score);
+    this.updateScoreDisplay();
+
+    this.cells.forEach((cell) => {
+      cell.disabled = true;
+    });
+
+    this.setStatus("Unentschieden.");
+  },
+
+  endTurn() {
+    const winnerCombination = this.checkWinner();
+
+    if (winnerCombination) {
+      this.updateDisplay();
+      this.finishGame(winnerCombination);
+      return;
+    }
+
+    if (this.board.every(Boolean)) {
+      this.updateDisplay();
+      this.finishDraw();
+      return;
+    }
+
+    this.currentPlayer = this.currentPlayer === "X" ? "O" : "X";
+
+    if (this.getMode() === "computer" && this.currentPlayer === this.computerPlayer) {
+      this.setStatus("Computer denkt nach...");
+    } else {
+      this.setStatus(`${this.currentPlayer} ist dran.`);
+    }
+
+    this.updateDisplay();
+
+    if (
+      this.getMode() === "computer" &&
+      this.currentPlayer === this.computerPlayer &&
+      !this.gameOver
+    ) {
+      this.computerThinking = true;
+      this.updateDisplay();
+
+      window.setTimeout(() => {
+        this.makeComputerMove();
+        this.computerThinking = false;
+        this.updateDisplay();
+      }, 450);
+    }
+  },
+
+  handleCellClick(event) {
+    const index = Number(event.currentTarget.dataset.index);
+
+    if (
+      this.gameOver ||
+      this.computerThinking ||
+      this.board[index] !== "" ||
+      Number.isNaN(index)
+    ) {
+      return;
+    }
+
+    if (this.getMode() === "computer" && this.currentPlayer === this.computerPlayer) {
+      return;
+    }
+
+    this.board[index] = this.currentPlayer;
+    this.endTurn();
+  },
+
+  getAvailableMoves() {
+    return this.board
+      .map((value, index) => (value === "" ? index : null))
+      .filter((index) => index !== null);
+  },
+
+  findWinningMove(player) {
+    for (const move of this.getAvailableMoves()) {
+      this.board[move] = player;
+
+      const winner = this.checkWinner();
+
+      this.board[move] = "";
+
+      if (winner) {
+        return move;
+      }
+    }
+
+    return null;
+  },
+
+  makeComputerMove() {
+    if (this.gameOver) return;
+
+    let move = this.findWinningMove(this.computerPlayer);
+
+    if (move === null) {
+      move = this.findWinningMove(this.humanPlayer);
+    }
+
+    if (move === null && this.board[4] === "") {
+      move = 4;
+    }
+
+    const corners = [0, 2, 6, 8].filter((index) => this.board[index] === "");
+
+    if (move === null && corners.length > 0) {
+      move = corners[Math.floor(Math.random() * corners.length)];
+    }
+
+    const availableMoves = this.getAvailableMoves();
+
+    if (move === null && availableMoves.length > 0) {
+      move = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+    }
+
+    if (move !== null) {
+      this.board[move] = this.computerPlayer;
+      this.endTurn();
+    }
+  },
+
+  resetGame() {
+    this.board = ["", "", "", "", "", "", "", "", ""];
+    this.currentPlayer = "X";
+    this.gameOver = false;
+    this.computerThinking = false;
+
+    this.cells.forEach((cell) => {
+      cell.classList.remove("winner");
+    });
+
+    this.setStatus(
+      this.getMode() === "computer" ? "Du beginnst als X." : "X beginnt."
+    );
+
+    this.updateDisplay();
+  },
+
+  resetScore() {
+    this.saveScore({
+      X: 0,
+      O: 0,
+      draw: 0
+    });
+
+    this.updateScoreDisplay();
+  }
+};
+
+ticTacToe.init();
