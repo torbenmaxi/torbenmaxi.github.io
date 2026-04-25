@@ -29,7 +29,15 @@
       <div class="nav-links">
         <a href="#projects">Projekte</a>
         <a href="#contact">Kontakt</a>
-
+      
+        <button
+          class="account-open"
+          id="accountOpen"
+          type="button"
+        >
+          Account
+        </button>
+      
         <button
           class="theme-toggle"
           id="themeToggle"
@@ -191,6 +199,68 @@
     </div>
   </footer>
 
+  <div class="account-modal" id="accountModal" aria-hidden="true">
+    <div class="account-modal-backdrop" id="accountClose"></div>
+
+    <div
+      class="account-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="accountTitle"
+    >
+      <button
+        class="account-dialog-close"
+        id="accountCloseButton"
+        type="button"
+        aria-label="Fenster schließen"
+      >
+        ×
+      </button>
+
+      <p class="eyebrow">Account</p>
+
+      <h2 id="accountTitle">Account erstellen</h2>
+
+      <p class="account-intro">
+        Wähle einen Benutzernamen und ein sicheres Passwort.
+      </p>
+
+      <form class="account-form" id="accountForm">
+        <label for="accountUsername">
+          Benutzername
+        </label>
+
+        <input
+          id="accountUsername"
+          type="text"
+          placeholder="Benutzername"
+          autocomplete="username"
+          required
+        />
+
+        <label for="accountPassword">
+          Passwort
+        </label>
+
+        <input
+          id="accountPassword"
+          type="password"
+          placeholder="Passwort"
+          autocomplete="new-password"
+          required
+        />
+
+        <div class="password-rules" id="passwordRules"></div>
+
+        <p class="form-status" id="accountStatus" aria-live="polite"></p>
+
+        <button class="button button-primary" type="submit">
+          Account erstellen
+        </button>
+      </form>
+    </div>
+  </div>
+  
   <script src="/script.js?v=8"></script>
 </body>
 </html>
