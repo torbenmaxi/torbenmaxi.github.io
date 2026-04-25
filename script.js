@@ -441,27 +441,49 @@ ticTacToe.init();
 
 /* Memory */
 
+const supabaseUrl = "https://ubjthqzvxzqmqiqxdxog.supabase.co";
+const supabaseKey = "sb_publishable_2b1qOP4_bp0wsNcWPvY5gA_GnH8bw5m";
+const supabaseClient = window.supabase?.createClient(supabaseUrl, supabaseKey);
+
 const memory = {
   boardElement: document.getElementById("memoryBoard"),
   statusElement: document.getElementById("memoryStatus"),
   movesElement: document.getElementById("memoryMoves"),
   pairsElement: document.getElementById("memoryPairs"),
   bestElement: document.getElementById("memoryBest"),
+  leaderboardElement: document.getElementById("memoryLeaderboard"),
+  playerNameElement: document.getElementById("memoryPlayerName"),
   resetButton: document.getElementById("resetMemory"),
 
-  symbols: ["🍎", "🍌", "🍇", "🍓", "🥕", "🥦", "🌽", "🍅"],
+  symbols: ["🍎", "🍐", "🍌", "🍇", "🍓", "🥕", "🥦", "🍅"],
   cards: [],
   openCards: [],
   moves: 0,
   matchedPairs: 0,
   lockBoard: false,
+  scoreSaved: false,
 
   init() {
     if (!this.boardElement) return;
 
     this.resetButton?.addEventListener("click", () => this.startGame());
 
+    this.playerNameElement?.addEventListener("input", () => {
+      const playerName = this.getPlayerName();
+
+      if (playerName) {
+        localStorage.setItem("memoryPlayerName", playerName);
+      }
+    });
+
+    const savedPlayerName = localStorage.getItem("memoryPlayerName");
+
+    if (this.playerNameElement && savedPlayerName) {
+      this.playerNameElement.value = savedPlayerName;
+    }
+
     this.startGame();
+    this.loadLeaderboard();
   },
 
   startGame() {
@@ -470,6 +492,7 @@ const memory = {
     this.moves = 0;
     this.matchedPairs = 0;
     this.lockBoard = false;
+    this.scoreSaved = false;
 
     this.renderBoard();
     this.updateDisplay();
@@ -575,22 +598,98 @@ const memory = {
     }, 800);
   },
 
-  finishGame() {
+  async finishGame() {
     const bestScore = this.getBestScore();
 
     if (!bestScore || this.moves < bestScore) {
       localStorage.setItem("memoryBest", String(this.moves));
-      this.setStatus("Neuer Bestwert.");
-    } else {
-      this.setStatus("Geschafft.");
     }
 
     this.updateDisplay();
+
+    const playerName = this.getPlayerName();
+
+    if (!playerName) {
+      this.setStatus("Geschafft. Trag einen Namen ein, um den Score zu speichern.");
+      return;
+    }
+
+    await this.saveScore(playerName, this.moves);
+  },
+
+  getPlayerName() {
+    const playerName = this.playerNameElement?.value.trim() || "";
+    return playerName.slice(0, 18);
   },
 
   getBestScore() {
     const savedScore = localStorage.getItem("memoryBest");
     return savedScore ? Number(savedScore) : null;
+  },
+
+  async saveScore(playerName, moves) {
+    if (!supabaseClient || this.scoreSaved) return;
+
+    this.scoreSaved = true;
+    this.setStatus("Score wird gespeichert...");
+
+    const { error } = await supabaseClient
+      .from("memory_scores")
+      .insert({
+        player_name: playerName,
+        moves
+      });
+
+    if (error) {
+      this.setStatus("Score konnte nicht gespeichert werden.");
+      this.scoreSaved = false;
+      return;
+    }
+
+    this.setStatus("Score gespeichert.");
+    await this.loadLeaderboard();
+  },
+
+  async loadLeaderboard() {
+    if (!supabaseClient || !this.leaderboardElement) return;
+
+    this.leaderboardElement.innerHTML = `
+      <li class="memory-leaderboard-empty">Lädt...</li>
+    `;
+
+    const { data, error } = await supabaseClient
+      .from("memory_scores")
+      .select("player_name, moves")
+      .order("moves", { ascending: true })
+      .order("created_at", { ascending: true })
+      .limit(5);
+
+    if (error) {
+      this.leaderboardElement.innerHTML = `
+        <li class="memory-leaderboard-empty">Bestenliste nicht verfügbar.</li>
+      `;
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      this.leaderboardElement.innerHTML = `
+        <li class="memory-leaderboard-empty">Noch keine Scores.</li>
+      `;
+      return;
+    }
+
+    this.leaderboardElement.innerHTML = "";
+
+    data.forEach((score) => {
+      const item = document.createElement("li");
+
+      item.innerHTML = `
+        <span>${this.escapeHtml(score.player_name)}</span>
+        <strong>${score.moves}</strong>
+      `;
+
+      this.leaderboardElement.appendChild(item);
+    });
   },
 
   updateDisplay() {
@@ -612,6 +711,15 @@ const memory = {
   setStatus(message) {
     if (!this.statusElement) return;
     this.statusElement.textContent = message;
+  },
+
+  escapeHtml(value) {
+    return value
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 };
 
