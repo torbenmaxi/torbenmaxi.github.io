@@ -9,7 +9,7 @@ function updateThemeButton() {
   if (!themeToggle) return;
 
   const isDark = document.body.classList.contains("dark");
-  themeToggle.textContent = isDark ? "☀️" : "🌙";
+  themeToggle.textContent = isDark ? "☼" : "☾";
   themeToggle.setAttribute(
     "aria-label",
     isDark ? "Lightmode aktivieren" : "Darkmode aktivieren"
