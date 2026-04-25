@@ -674,7 +674,7 @@ footer {
 
 .memory-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: minmax(0, 1fr) 320px;
   gap: 18px;
   align-items: start;
 }
@@ -709,6 +709,8 @@ footer {
 }
 
 .memory-board {
+  width: min(100%, 68vh, 640px);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
