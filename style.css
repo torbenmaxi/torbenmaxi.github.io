@@ -299,6 +299,17 @@ h2 {
   gap: 12px;
 }
 
+.hero-animation {
+  width: min(190px, 50vw);
+  margin-bottom: 24px;
+}
+
+.hero-animation lottie-player {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* Buttons */
 
 .button {
