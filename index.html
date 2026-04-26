@@ -206,17 +206,14 @@
     <div class="container footer-inner">
       <span>© 2026 Torben Maximilian</span>
       <div class="like-widget">
-        <span class="like-heart-wrap">
-          <dotlottie-wc
-            class="like-animation"
-            id="likeButton"
-            src="https://lottie.host/05fc6f8f-e1fc-48bf-9c93-5f596d21ce94/roWbhYb4IB.lottie"
-            stateMachineId="StateMachine1"
-            aria-label="Website liken"
-          ></dotlottie-wc>
-      
-          <span class="like-heart-fallback" aria-hidden="true">♥</span>
-        </span>
+        <button
+          class="like-heart-button"
+          id="likeButton"
+          type="button"
+          aria-label="Website liken"
+        >
+          <span class="like-heart-icon" aria-hidden="true">♥</span>
+        </button>
       
         <span id="likeText">Gefällt mir</span>
         <strong id="likeCount">0</strong>
