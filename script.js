@@ -960,6 +960,77 @@ passwordToggle?.addEventListener("click", () => {
   );
 });
 
+/* Like button */
+
+const likeButton = document.getElementById("likeButton");
+const likeText = document.getElementById("likeText");
+const likeCount = document.getElementById("likeCount");
+
+const likeSlug = "home";
+
+function getLocalLikeState() {
+  return localStorage.getItem("websiteLiked") === "true";
+}
+
+function setLocalLikeState(isLiked) {
+  localStorage.setItem("websiteLiked", String(isLiked));
+}
+
+function updateLikeButton(isLiked) {
+  if (!likeButton || !likeText) return;
+
+  likeButton.classList.toggle("is-liked", isLiked);
+  likeText.textContent = isLiked ? "Gefällt dir" : "Gefällt mir";
+
+  likeButton.setAttribute(
+    "aria-label",
+    isLiked ? "Like entfernen" : "Website liken"
+  );
+}
+
+async function loadLikeCount() {
+  if (!supabaseClient || !likeCount) return;
+
+  const { data, error } = await supabaseClient
+    .from("site_likes")
+    .select("like_count")
+    .eq("slug", likeSlug)
+    .single();
+
+  if (error || !data) return;
+
+  likeCount.textContent = String(data.like_count);
+}
+
+async function changeLikeCount(delta) {
+  if (!supabaseClient || !likeCount) return;
+
+  const { data, error } = await supabaseClient.rpc("change_site_like", {
+    target_slug: likeSlug,
+    delta
+  });
+
+  if (error || data === null) return;
+
+  likeCount.textContent = String(data);
+}
+
+if (likeButton) {
+  updateLikeButton(getLocalLikeState());
+  loadLikeCount();
+
+  likeButton.addEventListener("click", async () => {
+    const wasLiked = getLocalLikeState();
+    const isLiked = !wasLiked;
+    const delta = isLiked ? 1 : -1;
+
+    setLocalLikeState(isLiked);
+    updateLikeButton(isLiked);
+
+    await changeLikeCount(delta);
+  });
+}
+
 /* Page loader */
 
 const pageLoader = document.getElementById("pageLoader");
