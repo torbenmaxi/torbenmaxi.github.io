@@ -300,13 +300,14 @@ h2 {
 }
 
 .hero-side {
-  display: grid;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .hero-animation {
   width: min(145px, 42vw);
-  margin-bottom: 22px;
+  margin: 0 0 22px 28px;
 }
 
 .hero-animation lottie-player {
