@@ -187,6 +187,13 @@ nav {
 
 /* Theme toggle */
 
+.theme-toggle-wrap {
+  width: 62px;
+  height: 36px;
+  display: block;
+  overflow: hidden;
+}
+
 .theme-toggle {
   width: 62px;
   height: 36px;
