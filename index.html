@@ -9,6 +9,10 @@
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="stylesheet" href="/style.css?v=8" />
 
+  <script
+    src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
+    defer
+  ></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 
@@ -61,7 +65,16 @@
       </div>
 
       <div class="hero-side">
-
+        <div class="hero-animation" aria-hidden="true">
+          <lottie-player
+            src="/assets/animations/avocado.json"
+            background="transparent"
+            speed="1"
+            loop
+            autoplay
+          ></lottie-player>
+        </div>
+      
         <div class="hero-actions" aria-label="Schnellzugriff">
           <a class="button button-primary" href="#projects">
             Projekte ansehen
