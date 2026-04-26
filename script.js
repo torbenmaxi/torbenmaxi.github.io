@@ -962,13 +962,12 @@ passwordToggle?.addEventListener("click", () => {
 
 /* Like button */
 
-const likeCanvas = document.getElementById("likeCanvas");
+const likeButton = document.getElementById("likeButton");
 const likeText = document.getElementById("likeText");
 const likeCount = document.getElementById("likeCount");
 const likeWidget = document.querySelector(".like-widget");
 
 const likeSlug = "home";
-let likeAnimation = null;
 
 function getLocalLikeState() {
   return localStorage.getItem("websiteLiked") === "true";
@@ -979,16 +978,15 @@ function setLocalLikeState(isLiked) {
 }
 
 function updateLikeButton(isLiked) {
-  if (!likeText) return;
+  if (!likeButton || !likeText) return;
 
   likeWidget?.classList.toggle("is-liked", isLiked);
   likeText.textContent = isLiked ? "Gefällt dir" : "Gefällt mir";
-}
 
-function syncLikeAnimation(isLiked) {
-  if (!likeAnimation) return;
-
-  likeAnimation.stateMachineSetBooleanInput("like_dislike", isLiked);
+  likeButton.setAttribute(
+    "aria-label",
+    isLiked ? "Like entfernen" : "Website liken"
+  );
 }
 
 async function loadLikeCount() {
@@ -1024,34 +1022,17 @@ async function changeLikeCount(delta) {
   likeCount.textContent = String(data);
 }
 
-if (likeCanvas && window.DotLottie) {
-  likeAnimation = new window.DotLottie({
-    canvas: likeCanvas,
-    src: "https://lottie.host/05fc6f8f-e1fc-48bf-9c93-5f596d21ce94/roWbhYb4IB.lottie",
-    autoplay: true,
-    loop: false,
-    stateMachineId: "StateMachine1"
-  });
-
-  const isLikedOnLoad = getLocalLikeState();
-
-  updateLikeButton(isLikedOnLoad);
+if (likeButton) {
+  updateLikeButton(getLocalLikeState());
   loadLikeCount();
 
-  likeAnimation.addEventListener("load", () => {
-    likeAnimation.stateMachineLoad("StateMachine1");
-    likeAnimation.stateMachineStart();
-    syncLikeAnimation(isLikedOnLoad);
-  });
-
-  likeCanvas.addEventListener("click", async () => {
+  likeButton.addEventListener("click", async () => {
     const wasLiked = getLocalLikeState();
     const isLiked = !wasLiked;
     const delta = isLiked ? 1 : -1;
 
     setLocalLikeState(isLiked);
     updateLikeButton(isLiked);
-    syncLikeAnimation(isLiked);
 
     await changeLikeCount(delta);
   });
