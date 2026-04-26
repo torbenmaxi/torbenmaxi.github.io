@@ -206,13 +206,11 @@
     <div class="container footer-inner">
       <span>© 2026 Torben Maximilian</span>
       <div class="like-widget">
-        <dotlottie-wc
+        <canvas
           class="like-animation"
-          id="likeButton"
-          src="https://lottie.host/05fc6f8f-e1fc-48bf-9c93-5f596d21ce94/roWbhYb4IB.lottie"
-          stateMachineId="StateMachine1"
+          id="likeCanvas"
           aria-label="Website liken"
-        ></dotlottie-wc>
+        ></canvas>
       
         <span id="likeText">Gefällt mir</span>
         <strong id="likeCount">0</strong>
@@ -299,6 +297,7 @@
   </div>
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web@0.44.0/dist/dotlottie-web.js"></script>
   <script src="/script.js?v=9"></script>
 </body>
 </html>
