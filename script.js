@@ -1017,10 +1017,27 @@ async function changeLikeCount(delta) {
 }
 
 if (likeButton) {
-  updateLikeButton(getLocalLikeState());
+  const isLikedOnLoad = getLocalLikeState();
+
+  updateLikeButton(isLikedOnLoad);
   loadLikeCount();
 
+  let isSyncingLikeAnimation = false;
+
+  if (isLikedOnLoad) {
+    isSyncingLikeAnimation = true;
+
+    window.setTimeout(() => {
+      likeButton.click();
+      setLocalLikeState(true);
+      updateLikeButton(true);
+      isSyncingLikeAnimation = false;
+    }, 600);
+  }
+
   likeButton.addEventListener("click", async () => {
+    if (isSyncingLikeAnimation) return;
+
     const wasLiked = getLocalLikeState();
     const isLiked = !wasLiked;
     const delta = isLiked ? 1 : -1;
