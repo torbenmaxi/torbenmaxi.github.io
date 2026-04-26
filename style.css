@@ -209,7 +209,7 @@ nav {
   background: var(--card);
 }
 
-.theme-toggle lottie-player {
+.theme-toggle dotlottie-wc {
   width: 86px;
   height: 54px;
   display: block;
