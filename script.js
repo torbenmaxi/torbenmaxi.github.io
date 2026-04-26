@@ -3,7 +3,6 @@
 /* Theme */
 
 const themeToggle = document.getElementById("themeToggle");
-const themeToggleAnimation = document.getElementById("themeToggleAnimation");
 const savedTheme = localStorage.getItem("theme");
 
 if (savedTheme === "dark") {
@@ -26,14 +25,11 @@ if (themeToggle) {
 
   themeToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark");
-  
+
     const isDark = document.body.classList.contains("dark");
     localStorage.setItem("theme", isDark ? "dark" : "light");
-  
+
     updateThemeToggle();
-  
-    themeToggleAnimation?.stop();
-    themeToggleAnimation?.play();
   });
 }
 
