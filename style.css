@@ -188,8 +188,8 @@ nav {
 /* Theme toggle */
 
 .theme-toggle {
-  width: 72px;
-  height: 42px;
+  width: 62px;
+  height: 36px;
   padding: 0;
   display: grid;
   place-items: center;
@@ -197,7 +197,7 @@ nav {
   border-radius: 999px;
   background: color-mix(in srgb, var(--card) 70%, transparent);
   cursor: pointer;
-  overflow: visible;
+  overflow: hidden;
   transition:
     transform var(--transition),
     background var(--transition),
@@ -210,8 +210,8 @@ nav {
 }
 
 .theme-toggle dotlottie-wc {
-  width: 86px;
-  height: 54px;
+  width: 62px;
+  height: 36px;
   display: block;
   pointer-events: none;
 }
