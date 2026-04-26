@@ -506,47 +506,28 @@ footer {
 
 /* Like button */
 
-.like-button {
+.like-widget {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 38px;
-  padding: 4px 12px 4px 6px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--card) 70%, transparent);
   color: var(--muted);
-  cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1;
-  transition:
-    transform var(--transition),
-    background var(--transition),
-    color var(--transition),
-    border-color var(--transition);
-}
-
-.like-button:hover {
-  transform: translateY(-1px);
-  background: var(--card);
-  color: var(--text);
 }
 
 .like-animation {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   display: block;
-  flex: 0 0 32px;
-  overflow: hidden;
+  cursor: pointer;
 }
 
-.like-button strong {
+.like-widget strong {
   color: var(--text);
   font-size: 14px;
 }
 
-.like-button.is-liked {
+.like-widget.is-liked {
   color: var(--text);
 }
 
