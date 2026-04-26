@@ -312,9 +312,9 @@ h2 {
   margin: 0 0 22px 28px;
 }
 
-.hero-animation lottie-player {
+.hero-animation dotlottie-wc {
   width: 100%;
-  height: auto;
+  height: 145px;
   display: block;
 }
 
