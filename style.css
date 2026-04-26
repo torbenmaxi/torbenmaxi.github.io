@@ -185,18 +185,6 @@ nav {
   color: var(--text);
 }
 
-.logo-with-animation {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.logo-with-animation lottie-player {
-  width: 34px;
-  height: 34px;
-  display: block;
-}
-
 /* Theme toggle */
 
 .theme-toggle {
