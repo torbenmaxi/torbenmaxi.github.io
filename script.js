@@ -962,12 +962,13 @@ passwordToggle?.addEventListener("click", () => {
 
 /* Like button */
 
-const likeButton = document.getElementById("likeButton");
+const likeCanvas = document.getElementById("likeCanvas");
 const likeText = document.getElementById("likeText");
 const likeCount = document.getElementById("likeCount");
 const likeWidget = document.querySelector(".like-widget");
 
 const likeSlug = "home";
+let likeAnimation = null;
 
 function getLocalLikeState() {
   return localStorage.getItem("websiteLiked") === "true";
@@ -978,15 +979,16 @@ function setLocalLikeState(isLiked) {
 }
 
 function updateLikeButton(isLiked) {
-  if (!likeButton || !likeText) return;
+  if (!likeText) return;
 
   likeWidget?.classList.toggle("is-liked", isLiked);
   likeText.textContent = isLiked ? "Gefällt dir" : "Gefällt mir";
+}
 
-  likeButton.setAttribute(
-    "aria-label",
-    isLiked ? "Like entfernen" : "Website liken"
-  );
+function syncLikeAnimation(isLiked) {
+  if (!likeAnimation) return;
+
+  likeAnimation.stateMachineSetBooleanInput("like_dislike", isLiked);
 }
 
 async function loadLikeCount() {
@@ -998,7 +1000,10 @@ async function loadLikeCount() {
     .eq("slug", likeSlug)
     .single();
 
-  if (error || !data) return;
+  if (error || !data) {
+    console.error("Like-Anzahl konnte nicht geladen werden:", error);
+    return;
+  }
 
   likeCount.textContent = String(data.like_count);
 }
@@ -1011,39 +1016,42 @@ async function changeLikeCount(delta) {
     delta
   });
 
-  if (error || data === null) return;
+  if (error || data === null) {
+    console.error("Like konnte nicht gespeichert werden:", error);
+    return;
+  }
 
   likeCount.textContent = String(data);
 }
 
-if (likeButton) {
+if (likeCanvas && window.DotLottie) {
+  likeAnimation = new window.DotLottie({
+    canvas: likeCanvas,
+    src: "https://lottie.host/05fc6f8f-e1fc-48bf-9c93-5f596d21ce94/roWbhYb4IB.lottie",
+    autoplay: true,
+    loop: false,
+    stateMachineId: "StateMachine1"
+  });
+
   const isLikedOnLoad = getLocalLikeState();
 
   updateLikeButton(isLikedOnLoad);
   loadLikeCount();
 
-  let isSyncingLikeAnimation = false;
+  likeAnimation.addEventListener("load", () => {
+    likeAnimation.stateMachineLoad("StateMachine1");
+    likeAnimation.stateMachineStart();
+    syncLikeAnimation(isLikedOnLoad);
+  });
 
-  if (isLikedOnLoad) {
-    isSyncingLikeAnimation = true;
-
-    window.setTimeout(() => {
-      likeButton.click();
-      setLocalLikeState(true);
-      updateLikeButton(true);
-      isSyncingLikeAnimation = false;
-    }, 600);
-  }
-
-  likeButton.addEventListener("click", async () => {
-    if (isSyncingLikeAnimation) return;
-
+  likeCanvas.addEventListener("click", async () => {
     const wasLiked = getLocalLikeState();
     const isLiked = !wasLiked;
     const delta = isLiked ? 1 : -1;
 
     setLocalLikeState(isLiked);
     updateLikeButton(isLiked);
+    syncLikeAnimation(isLiked);
 
     await changeLikeCount(delta);
   });
