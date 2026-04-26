@@ -965,6 +965,7 @@ passwordToggle?.addEventListener("click", () => {
 const likeButton = document.getElementById("likeButton");
 const likeText = document.getElementById("likeText");
 const likeCount = document.getElementById("likeCount");
+const likeWidget = document.querySelector(".like-widget");
 
 const likeSlug = "home";
 
@@ -979,7 +980,7 @@ function setLocalLikeState(isLiked) {
 function updateLikeButton(isLiked) {
   if (!likeButton || !likeText) return;
 
-  likeButton.classList.toggle("is-liked", isLiked);
+  likeWidget?.classList.toggle("is-liked", isLiked);
   likeText.textContent = isLiked ? "Gefällt dir" : "Gefällt mir";
 
   likeButton.setAttribute(
