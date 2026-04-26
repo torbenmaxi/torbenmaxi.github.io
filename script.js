@@ -1030,10 +1030,14 @@ if (likeButton) {
     const wasLiked = getLocalLikeState();
     const isLiked = !wasLiked;
     const delta = isLiked ? 1 : -1;
-
+  
     setLocalLikeState(isLiked);
     updateLikeButton(isLiked);
-
+  
+    likeButton.classList.remove("is-popping");
+    void likeButton.offsetWidth;
+    likeButton.classList.add("is-popping");
+  
     await changeLikeCount(delta);
   });
 }
