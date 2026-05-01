@@ -29,6 +29,14 @@ if (themeToggle) {
 
 const contactForm = document.getElementById("contactForm");
 const formStatus = document.getElementById("formStatus");
+const turnstileBox = document.getElementById("turnstileBox");
+
+const turnstileSiteKey = "0x4AAAAAADDEUylFGy2boS8x";
+
+let turnstileLoading = false;
+let turnstileLoaded = false;
+let turnstileWidgetId = null;
+let contactSubmitPending = false;
 
 function setFormStatus(message, type = "") {
   if (!formStatus) return;
@@ -37,72 +45,154 @@ function setFormStatus(message, type = "") {
   formStatus.textContent = message;
 }
 
+function loadTurnstileScript() {
+  return new Promise((resolve, reject) => {
+    if (window.turnstile) {
+      turnstileLoaded = true;
+      resolve();
+      return;
+    }
+
+    if (turnstileLoading) {
+      const checkTurnstile = window.setInterval(() => {
+        if (window.turnstile) {
+          window.clearInterval(checkTurnstile);
+          turnstileLoaded = true;
+          resolve();
+        }
+      }, 100);
+
+      window.setTimeout(() => {
+        window.clearInterval(checkTurnstile);
+        reject(new Error("Turnstile loading timeout"));
+      }, 8000);
+
+      return;
+    }
+
+    turnstileLoading = true;
+
+    const script = document.createElement("script");
+
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+
+    script.onload = () => {
+      turnstileLoaded = true;
+      resolve();
+    };
+
+    script.onerror = () => {
+      reject(new Error("Turnstile failed to load"));
+    };
+
+    document.head.appendChild(script);
+  });
+}
+
+function getTurnstileToken() {
+  const tokenField = contactForm?.querySelector('[name="cf-turnstile-response"]');
+  return tokenField?.value || "";
+}
+
+async function sendContactForm() {
+  if (!contactForm) return;
+
+  const submitButton = contactForm.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton?.textContent || "Nachricht senden";
+  const formData = new FormData(contactForm);
+
+  setFormStatus("Wird gesendet...");
+
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Sendet...";
+  }
+
+  try {
+    const response = await fetch(contactForm.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Form submit failed");
+    }
+
+    contactForm.reset();
+    setFormStatus("Nachricht gesendet. Danke dir.", "success");
+
+    if (window.turnstile && turnstileWidgetId !== null) {
+      window.turnstile.reset(turnstileWidgetId);
+    }
+  } catch {
+    setFormStatus("Hat leider nicht geklappt. Versuch es bitte nochmal.", "error");
+  } finally {
+    contactSubmitPending = false;
+
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+    }
+  }
+}
+
+async function prepareTurnstileAndSubmit() {
+  if (!turnstileBox) {
+    await sendContactForm();
+    return;
+  }
+
+  setFormStatus("Sicherheitsprüfung wird geladen...");
+
+  try {
+    await loadTurnstileScript();
+
+    if (turnstileWidgetId === null) {
+      turnstileWidgetId = window.turnstile.render(turnstileBox, {
+        sitekey: turnstileSiteKey,
+        callback: async () => {
+          if (!contactSubmitPending) return;
+
+          await sendContactForm();
+        },
+        "expired-callback": () => {
+          contactSubmitPending = false;
+          setFormStatus("Sicherheitsprüfung abgelaufen. Bitte nochmal senden.", "error");
+        },
+        "error-callback": () => {
+          contactSubmitPending = false;
+          setFormStatus("Sicherheitsprüfung fehlgeschlagen. Bitte nochmal versuchen.", "error");
+        }
+      });
+    }
+
+    const existingToken = getTurnstileToken();
+
+    if (existingToken) {
+      await sendContactForm();
+      return;
+    }
+
+    contactSubmitPending = true;
+    setFormStatus("Bitte kurz die Sicherheitsprüfung bestätigen.");
+  } catch {
+    contactSubmitPending = false;
+    setFormStatus("Sicherheitsprüfung konnte nicht geladen werden.", "error");
+  }
+}
+
 if (contactForm && formStatus) {
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const submitButton = contactForm.querySelector('button[type="submit"]');
-    const originalButtonText = submitButton?.textContent || "Nachricht senden";
-    const formData = new FormData(contactForm);
-
-    setFormStatus("Wird gesendet...");
-
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = "Sendet...";
-    }
-
-    try {
-      const response = await fetch(contactForm.action, {
-        method: "POST",
-        body: formData,
-        headers: {
-          Accept: "application/json"
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error("Form submit failed");
-      }
-
-      contactForm.reset();
-      setFormStatus("Nachricht gesendet. Danke dir.", "success");
-
-      if (typeof turnstile !== "undefined") {
-        turnstile.reset();
-      }
-    } catch {
-      setFormStatus("Hat leider nicht geklappt. Versuch es bitte nochmal.", "error");
-    } finally {
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = originalButtonText;
-      }
-    }
+    await prepareTurnstileAndSubmit();
   });
 }
-
-/* Lazy load Turnstile */
-
-let turnstileLoaded = false;
-
-function loadTurnstile() {
-  if (turnstileLoaded) return;
-
-  turnstileLoaded = true;
-
-  const script = document.createElement("script");
-
-  script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-  script.async = true;
-  script.defer = true;
-
-  document.head.appendChild(script);
-}
-
-document
-  .getElementById("contactForm")
-  ?.addEventListener("focusin", loadTurnstile, { once: true });
 
 /* Tic Tac Toe */
 
