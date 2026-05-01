@@ -72,9 +72,14 @@
   <main>
     <section class="hero container">
       <div class="hero-content">
-        <p class="eyebrow">
+        <button
+          class="eyebrow hero-secret-trigger"
+          id="adminTrigger"
+          type="button"
+          aria-label="Secret öffnen"
+        >
           Hello, world.
-        </p>
+        </button>
 
         <h1>Ein kleiner Ort im Internet.</h1>
       </div>
@@ -315,6 +320,56 @@
           Account erstellen
         </button>
       </form>
+    </div>
+  </div>
+
+  <div class="admin-console" id="adminConsole" aria-hidden="true">
+    <div class="admin-console-backdrop" id="adminClose"></div>
+  
+    <div
+      class="admin-console-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="adminTitle"
+    >
+      <button
+        class="admin-console-close"
+        id="adminCloseButton"
+        type="button"
+        aria-label="Admin Console schließen"
+      >
+        ×
+      </button>
+  
+      <p class="eyebrow">Secret Mode</p>
+  
+      <h2 id="adminTitle">Admin Console</h2>
+  
+      <p class="admin-console-text">
+        Willkommen im absolut offiziellen Kontrollzentrum.
+      </p>
+  
+      <div class="admin-console-actions">
+        <button class="button button-secondary" id="adminChaos" type="button">
+          Chaos-Modus
+        </button>
+  
+        <button class="button button-secondary" id="adminTiny" type="button">
+          Mini-Seite
+        </button>
+  
+        <button class="button button-secondary" id="adminRain" type="button">
+          Regen
+        </button>
+  
+        <button class="button button-primary" id="adminReset" type="button">
+          Alles normal
+        </button>
+      </div>
+  
+      <p class="admin-console-status" id="adminStatus">
+        Zugriff gewährt.
+      </p>
     </div>
   </div>
   
