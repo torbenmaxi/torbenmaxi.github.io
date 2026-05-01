@@ -1154,6 +1154,56 @@ if (likeButton) {
   });
 }
 
+/* Active visitors */
+
+const activeVisitors = document.getElementById("activeVisitors");
+
+function getActiveVisitorId() {
+  let visitorId = sessionStorage.getItem("activeVisitorId");
+
+  if (!visitorId) {
+    visitorId = crypto.randomUUID();
+    sessionStorage.setItem("activeVisitorId", visitorId);
+  }
+
+  return visitorId;
+}
+
+async function updateActiveVisitors() {
+  if (!supabaseClient || !activeVisitors) return;
+
+  const visitorId = getActiveVisitorId();
+
+  await supabaseClient
+    .from("site_active_visitors")
+    .upsert({
+      visitor_id: visitorId,
+      last_seen_at: new Date().toISOString()
+    });
+
+  const activeSince = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+
+  const { count, error } = await supabaseClient
+    .from("site_active_visitors")
+    .select("*", {
+      count: "exact",
+      head: true
+    })
+    .gte("last_seen_at", activeSince);
+
+  if (error) {
+    console.error("Aktive Besucher konnten nicht geladen werden:", error);
+    return;
+  }
+
+  activeVisitors.textContent = `Aktiv: ${count}`;
+}
+
+if (activeVisitors) {
+  updateActiveVisitors();
+  window.setInterval(updateActiveVisitors, 30000);
+}
+
 /* Page loader */
 
 const pageLoader = document.getElementById("pageLoader");
