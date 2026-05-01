@@ -499,6 +499,12 @@ h2 {
   display: none;
 }
 
+.turnstile-box {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+}
+
 /* Footer */
 
 footer {
