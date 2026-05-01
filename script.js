@@ -1244,6 +1244,7 @@ function setAdminStatus(message) {
 
 function resetSecretEffects() {
   document.body.classList.remove("chaos-mode", "tiny-mode", "rain-mode");
+  stopRain();
   setAdminStatus("Alles wieder normal.");
 }
 
@@ -1277,10 +1278,105 @@ adminTiny?.addEventListener("click", () => {
 
 adminRain?.addEventListener("click", () => {
   document.body.classList.toggle("rain-mode");
-  setAdminStatus("Regen umgeschaltet.");
+
+  if (document.body.classList.contains("rain-mode")) {
+    startRain();
+    setAdminStatus("Regen aktiviert.");
+  } else {
+    stopRain();
+    setAdminStatus("Regen deaktiviert.");
+  }
 });
 
 adminReset?.addEventListener("click", resetSecretEffects);
+
+/* Rain effect */
+
+const rainCanvas = document.getElementById("rainCanvas");
+const rainContext = rainCanvas?.getContext("2d");
+
+let rainDrops = [];
+let rainAnimationFrame = null;
+
+function resizeRainCanvas() {
+  if (!rainCanvas || !rainContext) return;
+
+  const pixelRatio = window.devicePixelRatio || 1;
+
+  rainCanvas.width = window.innerWidth * pixelRatio;
+  rainCanvas.height = window.innerHeight * pixelRatio;
+
+  rainCanvas.style.width = `${window.innerWidth}px`;
+  rainCanvas.style.height = `${window.innerHeight}px`;
+
+  rainContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+}
+
+function createRainDrops() {
+  const dropCount = Math.min(180, Math.floor(window.innerWidth / 6));
+
+  rainDrops = Array.from({ length: dropCount }, () => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    length: 12 + Math.random() * 22,
+    speed: 7 + Math.random() * 9,
+    opacity: 0.12 + Math.random() * 0.28,
+    width: 0.7 + Math.random() * 1.1,
+    drift: -1.8 + Math.random() * 0.8
+  }));
+}
+
+function drawRain() {
+  if (!rainCanvas || !rainContext) return;
+
+  rainContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+  rainDrops.forEach((drop) => {
+    rainContext.beginPath();
+    rainContext.strokeStyle = `rgba(170, 190, 210, ${drop.opacity})`;
+    rainContext.lineWidth = drop.width;
+    rainContext.moveTo(drop.x, drop.y);
+    rainContext.lineTo(drop.x + drop.drift * drop.length, drop.y + drop.length);
+    rainContext.stroke();
+
+    drop.x += drop.drift;
+    drop.y += drop.speed;
+
+    if (drop.y > window.innerHeight + drop.length) {
+      drop.x = Math.random() * window.innerWidth;
+      drop.y = -drop.length;
+    }
+
+    if (drop.x < -40) {
+      drop.x = window.innerWidth + 40;
+    }
+  });
+
+  rainAnimationFrame = window.requestAnimationFrame(drawRain);
+}
+
+function startRain() {
+  if (!rainCanvas || rainAnimationFrame) return;
+
+  resizeRainCanvas();
+  createRainDrops();
+  drawRain();
+}
+
+function stopRain() {
+  if (!rainAnimationFrame || !rainContext) return;
+
+  window.cancelAnimationFrame(rainAnimationFrame);
+  rainAnimationFrame = null;
+  rainContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+}
+
+window.addEventListener("resize", () => {
+  if (!document.body.classList.contains("rain-mode")) return;
+
+  resizeRainCanvas();
+  createRainDrops();
+});
 
 /* Page loader */
 
