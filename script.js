@@ -82,6 +82,28 @@ if (contactForm && formStatus) {
   });
 }
 
+/* Lazy load Turnstile */
+
+let turnstileLoaded = false;
+
+function loadTurnstile() {
+  if (turnstileLoaded) return;
+
+  turnstileLoaded = true;
+
+  const script = document.createElement("script");
+
+  script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+  script.async = true;
+  script.defer = true;
+
+  document.head.appendChild(script);
+}
+
+document
+  .getElementById("contactForm")
+  ?.addEventListener("focusin", loadTurnstile, { once: true });
+
 /* Tic Tac Toe */
 
 const ticTacToe = {
