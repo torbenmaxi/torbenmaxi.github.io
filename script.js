@@ -1204,6 +1204,84 @@ if (activeVisitors) {
   window.setInterval(updateActiveVisitors, 30000);
 }
 
+/* Secret admin console */
+
+const adminTrigger = document.getElementById("adminTrigger");
+const adminConsole = document.getElementById("adminConsole");
+const adminClose = document.getElementById("adminClose");
+const adminCloseButton = document.getElementById("adminCloseButton");
+const adminChaos = document.getElementById("adminChaos");
+const adminTiny = document.getElementById("adminTiny");
+const adminRain = document.getElementById("adminRain");
+const adminReset = document.getElementById("adminReset");
+const adminStatus = document.getElementById("adminStatus");
+
+let adminClickCount = 0;
+let adminClickTimer = null;
+
+function openAdminConsole() {
+  if (!adminConsole) return;
+
+  adminConsole.classList.add("is-open");
+  adminConsole.setAttribute("aria-hidden", "false");
+
+  if (adminStatus) {
+    adminStatus.textContent = "Zugriff gewährt.";
+  }
+}
+
+function closeAdminConsole() {
+  if (!adminConsole) return;
+
+  adminConsole.classList.remove("is-open");
+  adminConsole.setAttribute("aria-hidden", "true");
+}
+
+function setAdminStatus(message) {
+  if (!adminStatus) return;
+  adminStatus.textContent = message;
+}
+
+function resetSecretEffects() {
+  document.body.classList.remove("chaos-mode", "tiny-mode", "rain-mode");
+  setAdminStatus("Alles wieder normal.");
+}
+
+adminTrigger?.addEventListener("click", () => {
+  adminClickCount += 1;
+
+  window.clearTimeout(adminClickTimer);
+
+  adminClickTimer = window.setTimeout(() => {
+    adminClickCount = 0;
+  }, 1200);
+
+  if (adminClickCount >= 5) {
+    adminClickCount = 0;
+    openAdminConsole();
+  }
+});
+
+adminClose?.addEventListener("click", closeAdminConsole);
+adminCloseButton?.addEventListener("click", closeAdminConsole);
+
+adminChaos?.addEventListener("click", () => {
+  document.body.classList.toggle("chaos-mode");
+  setAdminStatus("Chaos-Modus umgeschaltet.");
+});
+
+adminTiny?.addEventListener("click", () => {
+  document.body.classList.toggle("tiny-mode");
+  setAdminStatus("Mini-Seite umgeschaltet.");
+});
+
+adminRain?.addEventListener("click", () => {
+  document.body.classList.toggle("rain-mode");
+  setAdminStatus("Regen umgeschaltet.");
+});
+
+adminReset?.addEventListener("click", resetSecretEffects);
+
 /* Page loader */
 
 const pageLoader = document.getElementById("pageLoader");
