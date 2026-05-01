@@ -535,6 +535,28 @@ footer {
   color: var(--text);
 }
 
+.footer-stats {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.active-visitors {
+  min-height: 38px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
 /* Like button */
 
 .like-widget {
