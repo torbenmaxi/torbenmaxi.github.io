@@ -4,16 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Memory · Maxi by Torben</title>
+  <title>Tic Tac Toe · Maxi by Torben</title>
+
+  <meta
+    name="description"
+    content="Spiele Tic Tac Toe auf Maxi by Torben."
+  />
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/style.css?v=9" />
-
-  <script
-    src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js"
-    type="module"
-  ></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="/style.css?v=12" />
 </head>
 
 <body>
@@ -28,95 +27,107 @@
         <a href="/#projects">Projekte</a>
         <a href="/#contact">Kontakt</a>
 
-        <span class="theme-toggle-wrap">
-          <dotlottie-wc
-            class="theme-toggle"
-            id="themeToggle"
-            src="https://lottie.host/6b1bf924-64da-46de-aa09-726e6e8d4c2b/2du8Zw5Kyu.lottie"
-            stateMachineId="StateMachine1"
-            aria-label="Darkmode aktivieren"
-          ></dotlottie-wc>
-        </span>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          type="button"
+          aria-label="Darkmode aktivieren"
+        >
+          <span class="theme-toggle-icon theme-toggle-sun" aria-hidden="true"></span>
+          <span class="theme-toggle-icon theme-toggle-moon" aria-hidden="true"></span>
+          <span class="theme-toggle-thumb" aria-hidden="true"></span>
+        </button>
       </div>
     </nav>
   </header>
 
   <main class="game-page container">
     <section class="game-intro" aria-labelledby="game-title">
-      <p class="eyebrow">Projekt 02</p>
+      <p class="eyebrow">Projekt 01</p>
 
-      <h1 id="game-title">Memory</h1>
+      <h1 id="game-title">Tic Tac Toe</h1>
 
       <p class="hero-text">
-        Finde alle Paare.
+        Zwei Spieler, neun Felder, ein Gewinner.
       </p>
     </section>
 
-    <section class="memory-layout" aria-label="Memory Spiel">
-      <div class="memory-panel">
-        <div class="memory-top">
+    <section class="ttt-layout" aria-label="Tic Tac Toe Spiel">
+      <div class="ttt-panel">
+        <div class="ttt-top">
           <div>
-            <p class="memory-label">Status</p>
-            <p class="memory-status" id="memoryStatus">
-              Bereit.
-            </p>
+            <p class="ttt-label">Aktueller Zug</p>
+            <p class="ttt-player" id="currentPlayer">X</p>
           </div>
 
-          <button class="button button-secondary" id="resetMemory" type="button">
-            Neustart
-          </button>
+          <div class="ttt-controls">
+            <div class="ttt-mode" aria-label="Spielmodus">
+              <button
+                class="ttt-mode-option active"
+                type="button"
+                data-mode="human"
+              >
+                2 Spieler
+              </button>
+
+              <button
+                class="ttt-mode-option"
+                type="button"
+                data-mode="computer"
+              >
+                Computer
+              </button>
+            </div>
+
+            <button class="button button-secondary" id="resetGame" type="button">
+              Neustart
+            </button>
+          </div>
         </div>
 
-        <div class="memory-board" id="memoryBoard" aria-label="Spielfeld"></div>
+        <div class="ttt-board" id="board" aria-label="Spielfeld">
+          <button class="ttt-cell" type="button" data-index="0" aria-label="Feld 1"></button>
+          <button class="ttt-cell" type="button" data-index="1" aria-label="Feld 2"></button>
+          <button class="ttt-cell" type="button" data-index="2" aria-label="Feld 3"></button>
+          <button class="ttt-cell" type="button" data-index="3" aria-label="Feld 4"></button>
+          <button class="ttt-cell" type="button" data-index="4" aria-label="Feld 5"></button>
+          <button class="ttt-cell" type="button" data-index="5" aria-label="Feld 6"></button>
+          <button class="ttt-cell" type="button" data-index="6" aria-label="Feld 7"></button>
+          <button class="ttt-cell" type="button" data-index="7" aria-label="Feld 8"></button>
+          <button class="ttt-cell" type="button" data-index="8" aria-label="Feld 9"></button>
+        </div>
+
+        <p class="ttt-status" id="gameStatus" aria-live="polite">
+          X beginnt.
+        </p>
       </div>
 
-      <aside class="memory-score" aria-label="Spielstand">
+      <aside class="ttt-score" aria-label="Spielstand">
         <p class="eyebrow">Score</p>
 
-        <label class="memory-name-label" for="memoryPlayerName">
-          Name
-        </label>
-        
-        <input
-          class="memory-name-input"
-          id="memoryPlayerName"
-          type="text"
-          placeholder="Dein Name"
-          maxlength="18"
-        />
+        <div class="score-row">
+          <span>Spieler X</span>
+          <strong id="scoreX">0</strong>
+        </div>
 
-        <button
-          class="button button-secondary memory-save-button"
-          id="saveMemoryScore"
-          type="button"
-          disabled
-        >
-          Score speichern
+        <div class="score-row">
+          <span>Spieler O</span>
+          <strong id="scoreO">0</strong>
+        </div>
+
+        <div class="score-row">
+          <span>Unentschieden</span>
+          <strong id="scoreDraw">0</strong>
+        </div>
+
+        <button class="button button-primary score-reset" id="resetScore" type="button">
+          Score zurücksetzen
         </button>
-        
-        <div class="score-row">
-          <span>Züge</span>
-          <strong id="memoryMoves">0</strong>
-        </div>
-
-        <div class="score-row">
-          <span>Paare</span>
-          <strong id="memoryPairs">0/8</strong>
-        </div>
-
-        <div class="score-row">
-          <span>Bestwert</span>
-          <strong id="memoryBest">–</strong>
-        </div>
-
-        <div class="memory-leaderboard">
-          <p class="memory-leaderboard-title">Bestenliste</p>
-          <ol id="memoryLeaderboard"></ol>
-        </div>
       </aside>
     </section>
   </main>
 
-  <script src="/script.js?v=9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="/script.js?v=11" defer></script>
 </body>
 </html>
