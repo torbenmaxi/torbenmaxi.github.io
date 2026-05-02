@@ -21,28 +21,32 @@ function updateThemeToggle() {
 }
 
 function syncThemeToggleAnimation() {
-  if (!themeToggle || savedTheme !== "dark") return;
+  if (!themeToggle || typeof themeToggle.stateMachineSetBooleanInput !== "function") {
+    return;
+  }
 
-  window.setTimeout(() => {
-    themeToggle.click();
+  const isDark = document.body.classList.contains("dark");
 
-    document.body.classList.add("dark");
-    localStorage.setItem("theme", "dark");
-    updateThemeToggle();
-  }, 400);
+  themeToggle.stateMachineSetBooleanInput("isDark", isDark);
 }
 
 if (themeToggle) {
   updateThemeToggle();
-  syncThemeToggleAnimation();
+
+  themeToggle.addEventListener("load", () => {
+    syncThemeToggleAnimation();
+  });
 
   themeToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
+    window.setTimeout(() => {
+      document.body.classList.toggle("dark");
 
-    const isDark = document.body.classList.contains("dark");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+      const isDark = document.body.classList.contains("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
 
-    updateThemeToggle();
+      updateThemeToggle();
+      syncThemeToggleAnimation();
+    }, 0);
   });
 }
 
