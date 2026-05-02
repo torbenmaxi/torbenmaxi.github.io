@@ -20,8 +20,21 @@ function updateThemeToggle() {
   );
 }
 
+function syncThemeToggleAnimation() {
+  if (!themeToggle || savedTheme !== "dark") return;
+
+  window.setTimeout(() => {
+    themeToggle.click();
+
+    document.body.classList.add("dark");
+    localStorage.setItem("theme", "dark");
+    updateThemeToggle();
+  }, 400);
+}
+
 if (themeToggle) {
   updateThemeToggle();
+  syncThemeToggleAnimation();
 
   themeToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark");
