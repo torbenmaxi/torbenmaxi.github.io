@@ -8,7 +8,7 @@
 
   <meta
     name="description"
-    content="Ein kleiner Ort im Internet von Torben Maximilian."
+    content="Kleine Webprojekte, Spiele und Experimente von Torben."
   />
 
   <script type="application/ld+json">
@@ -22,7 +22,7 @@
   </script>
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/style.css?v=8" />
+  <link rel="stylesheet" href="/style.css?v=11" />
 
   <script
     src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js"
@@ -38,18 +38,16 @@
     </div>
   </div>
 
-  <canvas class="rain-canvas" id="rainCanvas" aria-hidden="true"></canvas>
-  
   <header class="site-header">
     <nav class="container site-nav" aria-label="Hauptnavigation">
-    <a href="/" class="logo" aria-label="Maxi by Torben Startseite">
-      Maxi by Torben
-    </a>
+      <a href="/" class="logo" aria-label="Maxi by Torben Startseite">
+        Maxi by Torben
+      </a>
 
       <div class="nav-links">
         <a href="#projects">Projekte</a>
         <a href="#contact">Kontakt</a>
-      
+
         <button
           class="account-open"
           id="accountOpen"
@@ -57,16 +55,17 @@
         >
           Account
         </button>
-      
-        <span class="theme-toggle-wrap">
-          <dotlottie-wc
-            class="theme-toggle"
-            id="themeToggle"
-            src="https://lottie.host/6b1bf924-64da-46de-aa09-726e6e8d4c2b/2du8Zw5Kyu.lottie"
-            stateMachineId="StateMachine1"
-            aria-label="Darkmode aktivieren"
-          ></dotlottie-wc>
-        </span>
+
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          type="button"
+          aria-label="Darkmode aktivieren"
+        >
+          <span class="theme-toggle-icon theme-toggle-sun" aria-hidden="true"></span>
+          <span class="theme-toggle-icon theme-toggle-moon" aria-hidden="true"></span>
+          <span class="theme-toggle-thumb" aria-hidden="true"></span>
+        </button>
       </div>
     </nav>
   </header>
@@ -74,14 +73,9 @@
   <main>
     <section class="hero container">
       <div class="hero-content">
-        <button
-          class="eyebrow hero-secret-trigger"
-          id="adminTrigger"
-          type="button"
-          aria-label="Secret öffnen"
-        >
+        <p class="eyebrow">
           Hello, world.
-        </button>
+        </p>
 
         <h1>Ein kleiner Ort im Internet.</h1>
       </div>
@@ -95,7 +89,7 @@
             loop
           ></dotlottie-wc>
         </div>
-      
+
         <div class="hero-actions" aria-label="Schnellzugriff">
           <a class="button button-primary" href="#projects">
             Projekte ansehen
@@ -126,7 +120,7 @@
 
           <a class="card" href="/memory/">
             <span class="card-number">02</span>
-          
+
             <div>
               <h3>Memory</h3>
               <p>Finde alle Paare.</p>
@@ -225,6 +219,7 @@
   <footer>
     <div class="container footer-inner">
       <span>© 2026 Torben Maximilian</span>
+
       <div class="footer-stats">
         <div class="like-widget">
           <button
@@ -235,15 +230,16 @@
           >
             <span class="like-heart-icon" aria-hidden="true">♥</span>
           </button>
-      
+
           <span id="likeText">Gefällt mir</span>
           <strong id="likeCount">0</strong>
         </div>
-      
+
         <span class="active-visitors" id="activeVisitors">
           Aktiv: –
         </span>
       </div>
+
       <span class="footer-links">
         <a>Impressum</a>
         <span aria-hidden="true">·</span>
@@ -303,7 +299,7 @@
             autocomplete="new-password"
             required
           />
-        
+
           <button
             class="password-toggle"
             id="passwordToggle"
@@ -325,57 +321,7 @@
     </div>
   </div>
 
-  <div class="admin-console" id="adminConsole" aria-hidden="true">
-    <div class="admin-console-backdrop" id="adminClose"></div>
-  
-    <div
-      class="admin-console-panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="adminTitle"
-    >
-      <button
-        class="admin-console-close"
-        id="adminCloseButton"
-        type="button"
-        aria-label="Admin Console schließen"
-      >
-        ×
-      </button>
-  
-      <p class="eyebrow">Secret Mode</p>
-  
-      <h2 id="adminTitle">Admin Console</h2>
-  
-      <p class="admin-console-text">
-        Willkommen im absolut offiziellen Kontrollzentrum.
-      </p>
-  
-      <div class="admin-console-actions">
-        <button class="button button-secondary" id="adminChaos" type="button">
-          Chaos-Modus
-        </button>
-  
-        <button class="button button-secondary" id="adminTiny" type="button">
-          Mini-Seite
-        </button>
-  
-        <button class="button button-secondary" id="adminRain" type="button">
-          Regen
-        </button>
-  
-        <button class="button button-primary" id="adminReset" type="button">
-          Alles normal
-        </button>
-      </div>
-  
-      <p class="admin-console-status" id="adminStatus">
-        Zugriff gewährt.
-      </p>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/script.js?v=9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="/script.js?v=11" defer></script>
 </body>
 </html>
