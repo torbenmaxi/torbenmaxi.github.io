@@ -26,13 +26,6 @@ function setThemeToggleState() {
   const isDark = document.body.classList.contains("dark");
 
   try {
-    themeToggle.dotLottie.stateMachineLoad("StateMachine1");
-    themeToggle.dotLottie.stateMachineStart();
-  } catch {
-    // State Machine ist eventuell schon geladen/gestartet.
-  }
-
-  try {
     themeToggle.dotLottie.stateMachineSetBooleanInput("isDark", isDark);
     return true;
   } catch {
@@ -68,10 +61,9 @@ if (themeToggle) {
     const isDark = document.body.classList.contains("dark");
 
     localStorage.setItem("theme", isDark ? "dark" : "light");
-
     updateThemeToggle();
 
-    window.setTimeout(setThemeToggleState, 80);
+    window.setTimeout(setThemeToggleState, 50);
   });
 }
 
