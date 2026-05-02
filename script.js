@@ -3,6 +3,11 @@
 /* Theme */
 
 const themeToggle = document.getElementById("themeToggle");
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme === "dark") {
+  document.body.classList.add("dark");
+}
 
 function updateThemeToggle() {
   if (!themeToggle) return;
@@ -16,11 +21,14 @@ function updateThemeToggle() {
 }
 
 if (themeToggle) {
-  document.body.classList.remove("dark");
   updateThemeToggle();
 
   themeToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark");
+
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+
     updateThemeToggle();
   });
 }
