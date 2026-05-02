@@ -20,40 +20,8 @@ function updateThemeToggle() {
   );
 }
 
-function setThemeToggleState() {
-  if (!themeToggle?.dotLottie) return false;
-
-  const isDark = document.body.classList.contains("dark");
-
-  try {
-    themeToggle.dotLottie.stateMachineSetBooleanInput("isDark", isDark);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function syncThemeToggleWhenReady() {
-  let attempts = 0;
-
-  const syncInterval = window.setInterval(() => {
-    attempts += 1;
-
-    const didSync = setThemeToggleState();
-
-    if (didSync || attempts >= 30) {
-      window.clearInterval(syncInterval);
-    }
-  }, 150);
-}
-
 if (themeToggle) {
   updateThemeToggle();
-
-  themeToggle.addEventListener("ready", syncThemeToggleWhenReady);
-  themeToggle.addEventListener("load", syncThemeToggleWhenReady);
-
-  syncThemeToggleWhenReady();
 
   themeToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark");
@@ -62,8 +30,6 @@ if (themeToggle) {
 
     localStorage.setItem("theme", isDark ? "dark" : "light");
     updateThemeToggle();
-
-    window.setTimeout(setThemeToggleState, 50);
   });
 }
 
@@ -585,11 +551,13 @@ const ticTacToe = {
 
 ticTacToe.init();
 
-/* Memory */
+/* Supabase */
 
 const supabaseUrl = "https://ubjthqzvxzqmqiqxdxog.supabase.co";
 const supabaseKey = "sb_publishable_2b1qOP4_bp0wsNcWPvY5gA_GnH8bw5m";
 const supabaseClient = window.supabase?.createClient(supabaseUrl, supabaseKey);
+
+/* Memory */
 
 const memory = {
   boardElement: document.getElementById("memoryBoard"),
@@ -1184,14 +1152,14 @@ if (likeButton) {
     const wasLiked = getLocalLikeState();
     const isLiked = !wasLiked;
     const delta = isLiked ? 1 : -1;
-  
+
     setLocalLikeState(isLiked);
     updateLikeButton(isLiked);
-  
+
     likeButton.classList.remove("is-popping");
     void likeButton.offsetWidth;
     likeButton.classList.add("is-popping");
-  
+
     await changeLikeCount(delta);
   });
 }
@@ -1200,11 +1168,19 @@ if (likeButton) {
 
 const activeVisitors = document.getElementById("activeVisitors");
 
+function createVisitorId() {
+  if (window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 function getActiveVisitorId() {
   let visitorId = sessionStorage.getItem("activeVisitorId");
 
   if (!visitorId) {
-    visitorId = crypto.randomUUID();
+    visitorId = createVisitorId();
     sessionStorage.setItem("activeVisitorId", visitorId);
   }
 
@@ -1246,180 +1222,6 @@ if (activeVisitors) {
   window.setInterval(updateActiveVisitors, 30000);
 }
 
-/* Secret admin console */
-
-const adminTrigger = document.getElementById("adminTrigger");
-const adminConsole = document.getElementById("adminConsole");
-const adminClose = document.getElementById("adminClose");
-const adminCloseButton = document.getElementById("adminCloseButton");
-const adminChaos = document.getElementById("adminChaos");
-const adminTiny = document.getElementById("adminTiny");
-const adminRain = document.getElementById("adminRain");
-const adminReset = document.getElementById("adminReset");
-const adminStatus = document.getElementById("adminStatus");
-
-let adminClickCount = 0;
-let adminClickTimer = null;
-
-function openAdminConsole() {
-  if (!adminConsole) return;
-
-  adminConsole.classList.add("is-open");
-  adminConsole.setAttribute("aria-hidden", "false");
-
-  if (adminStatus) {
-    adminStatus.textContent = "Zugriff gewährt.";
-  }
-}
-
-function closeAdminConsole() {
-  if (!adminConsole) return;
-
-  adminConsole.classList.remove("is-open");
-  adminConsole.setAttribute("aria-hidden", "true");
-}
-
-function setAdminStatus(message) {
-  if (!adminStatus) return;
-  adminStatus.textContent = message;
-}
-
-function resetSecretEffects() {
-  document.body.classList.remove("chaos-mode", "tiny-mode", "rain-mode");
-  stopRain();
-  setAdminStatus("Alles wieder normal.");
-}
-
-adminTrigger?.addEventListener("click", () => {
-  adminClickCount += 1;
-
-  window.clearTimeout(adminClickTimer);
-
-  adminClickTimer = window.setTimeout(() => {
-    adminClickCount = 0;
-  }, 1200);
-
-  if (adminClickCount >= 5) {
-    adminClickCount = 0;
-    openAdminConsole();
-  }
-});
-
-adminClose?.addEventListener("click", closeAdminConsole);
-adminCloseButton?.addEventListener("click", closeAdminConsole);
-
-adminChaos?.addEventListener("click", () => {
-  document.body.classList.toggle("chaos-mode");
-  setAdminStatus("Chaos-Modus umgeschaltet.");
-});
-
-adminTiny?.addEventListener("click", () => {
-  document.body.classList.toggle("tiny-mode");
-  setAdminStatus("Mini-Seite umgeschaltet.");
-});
-
-adminRain?.addEventListener("click", () => {
-  document.body.classList.toggle("rain-mode");
-
-  if (document.body.classList.contains("rain-mode")) {
-    startRain();
-    setAdminStatus("Regen aktiviert.");
-  } else {
-    stopRain();
-    setAdminStatus("Regen deaktiviert.");
-  }
-});
-
-adminReset?.addEventListener("click", resetSecretEffects);
-
-/* Rain effect */
-
-const rainCanvas = document.getElementById("rainCanvas");
-const rainContext = rainCanvas?.getContext("2d");
-
-let rainDrops = [];
-let rainAnimationFrame = null;
-
-function resizeRainCanvas() {
-  if (!rainCanvas || !rainContext) return;
-
-  const pixelRatio = window.devicePixelRatio || 1;
-
-  rainCanvas.width = window.innerWidth * pixelRatio;
-  rainCanvas.height = window.innerHeight * pixelRatio;
-
-  rainCanvas.style.width = `${window.innerWidth}px`;
-  rainCanvas.style.height = `${window.innerHeight}px`;
-
-  rainContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-}
-
-function createRainDrops() {
-  const dropCount = Math.min(180, Math.floor(window.innerWidth / 6));
-
-  rainDrops = Array.from({ length: dropCount }, () => ({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    length: 12 + Math.random() * 22,
-    speed: 7 + Math.random() * 9,
-    opacity: 0.12 + Math.random() * 0.28,
-    width: 0.7 + Math.random() * 1.1,
-    drift: -1.8 + Math.random() * 0.8
-  }));
-}
-
-function drawRain() {
-  if (!rainCanvas || !rainContext) return;
-
-  rainContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-  rainDrops.forEach((drop) => {
-    rainContext.beginPath();
-    rainContext.strokeStyle = `rgba(170, 190, 210, ${drop.opacity})`;
-    rainContext.lineWidth = drop.width;
-    rainContext.moveTo(drop.x, drop.y);
-    rainContext.lineTo(drop.x + drop.drift * drop.length, drop.y + drop.length);
-    rainContext.stroke();
-
-    drop.x += drop.drift;
-    drop.y += drop.speed;
-
-    if (drop.y > window.innerHeight + drop.length) {
-      drop.x = Math.random() * window.innerWidth;
-      drop.y = -drop.length;
-    }
-
-    if (drop.x < -40) {
-      drop.x = window.innerWidth + 40;
-    }
-  });
-
-  rainAnimationFrame = window.requestAnimationFrame(drawRain);
-}
-
-function startRain() {
-  if (!rainCanvas || rainAnimationFrame) return;
-
-  resizeRainCanvas();
-  createRainDrops();
-  drawRain();
-}
-
-function stopRain() {
-  if (!rainAnimationFrame || !rainContext) return;
-
-  window.cancelAnimationFrame(rainAnimationFrame);
-  rainAnimationFrame = null;
-  rainContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
-}
-
-window.addEventListener("resize", () => {
-  if (!document.body.classList.contains("rain-mode")) return;
-
-  resizeRainCanvas();
-  createRainDrops();
-});
-
 /* Page loader */
 
 const pageLoader = document.getElementById("pageLoader");
@@ -1430,8 +1232,8 @@ function hidePageLoader() {
   pageLoader.classList.add("is-hidden");
 }
 
-window.addEventListener("load", () => {
-  window.setTimeout(hidePageLoader, 350);
+document.addEventListener("DOMContentLoaded", () => {
+  window.setTimeout(hidePageLoader, 450);
 });
 
-window.setTimeout(hidePageLoader, 4000);
+window.setTimeout(hidePageLoader, 2500);
