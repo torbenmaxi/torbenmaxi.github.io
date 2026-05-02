@@ -20,20 +20,14 @@ function updateThemeToggle() {
   );
 }
 
-function setThemeToggleInput(name, value) {
+function setThemeToggleState() {
   if (!themeToggle?.dotLottie) return false;
 
-  themeToggle.dotLottie.stateMachineSetBooleanInput(name, value);
-  return true;
-}
-
-function syncThemeToggleAnimation() {
   const isDark = document.body.classList.contains("dark");
 
-  const didSetInstantSync = setThemeToggleInput("instantSync", true);
-  const didSetTheme = setThemeToggleInput("isDark", isDark);
+  themeToggle.dotLottie.stateMachineSetBooleanInput("isDark", isDark);
 
-  return didSetInstantSync && didSetTheme;
+  return true;
 }
 
 function syncThemeToggleWhenReady() {
@@ -42,7 +36,7 @@ function syncThemeToggleWhenReady() {
   const syncInterval = window.setInterval(() => {
     attempts += 1;
 
-    const didSync = syncThemeToggleAnimation();
+    const didSync = setThemeToggleState();
 
     if (didSync || attempts >= 20) {
       window.clearInterval(syncInterval);
@@ -59,8 +53,6 @@ if (themeToggle) {
   syncThemeToggleWhenReady();
 
   themeToggle.addEventListener("click", () => {
-    setThemeToggleInput("instantSync", false);
-
     document.body.classList.toggle("dark");
 
     const isDark = document.body.classList.contains("dark");
@@ -69,9 +61,7 @@ if (themeToggle) {
 
     updateThemeToggle();
 
-    window.setTimeout(() => {
-      setThemeToggleInput("isDark", isDark);
-    }, 0);
+    window.setTimeout(setThemeToggleState, 0);
   });
 }
 
