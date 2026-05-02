@@ -6,13 +6,13 @@
 
   <title>Tic Tac Toe · Maxi by Torben</title>
 
+  <meta
+    name="description"
+    content="Spiele Tic Tac Toe auf Maxi by Torben."
+  />
+
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/style.css?v=8" />
-  
-  <script
-    src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js"
-    type="module"
-  ></script>
+  <link rel="stylesheet" href="/style.css?v=12" />
 </head>
 
 <body>
@@ -27,15 +27,16 @@
         <a href="/#projects">Projekte</a>
         <a href="/#contact">Kontakt</a>
 
-        <span class="theme-toggle-wrap">
-          <dotlottie-wc
-            class="theme-toggle"
-            id="themeToggle"
-            src="https://lottie.host/6b1bf924-64da-46de-aa09-726e6e8d4c2b/2du8Zw5Kyu.lottie"
-            stateMachineId="StateMachine1"
-            aria-label="Darkmode aktivieren"
-          ></dotlottie-wc>
-        </span>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          type="button"
+          aria-label="Darkmode aktivieren"
+        >
+          <span class="theme-toggle-icon theme-toggle-sun" aria-hidden="true"></span>
+          <span class="theme-toggle-icon theme-toggle-moon" aria-hidden="true"></span>
+          <span class="theme-toggle-thumb" aria-hidden="true"></span>
+        </button>
       </div>
     </nav>
   </header>
@@ -126,6 +127,7 @@
     </section>
   </main>
 
-  <script src="/script.js?v=9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="/script.js?v=11" defer></script>
 </body>
 </html>
