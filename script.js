@@ -25,9 +25,19 @@ function setThemeToggleState() {
 
   const isDark = document.body.classList.contains("dark");
 
-  themeToggle.dotLottie.stateMachineSetBooleanInput("isDark", isDark);
+  try {
+    themeToggle.dotLottie.stateMachineLoad("StateMachine1");
+    themeToggle.dotLottie.stateMachineStart();
+  } catch {
+    // State Machine ist eventuell schon geladen/gestartet.
+  }
 
-  return true;
+  try {
+    themeToggle.dotLottie.stateMachineSetBooleanInput("isDark", isDark);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function syncThemeToggleWhenReady() {
@@ -38,7 +48,7 @@ function syncThemeToggleWhenReady() {
 
     const didSync = setThemeToggleState();
 
-    if (didSync || attempts >= 20) {
+    if (didSync || attempts >= 30) {
       window.clearInterval(syncInterval);
     }
   }, 150);
@@ -61,7 +71,7 @@ if (themeToggle) {
 
     updateThemeToggle();
 
-    window.setTimeout(setThemeToggleState, 0);
+    window.setTimeout(setThemeToggleState, 80);
   });
 }
 
