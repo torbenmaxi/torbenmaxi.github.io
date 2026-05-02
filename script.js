@@ -20,14 +20,20 @@ function updateThemeToggle() {
   );
 }
 
-function syncThemeToggleAnimation() {
+function setThemeToggleInput(name, value) {
   if (!themeToggle?.dotLottie) return false;
 
+  themeToggle.dotLottie.stateMachineSetBooleanInput(name, value);
+  return true;
+}
+
+function syncThemeToggleAnimation() {
   const isDark = document.body.classList.contains("dark");
 
-  themeToggle.dotLottie.stateMachineSetBooleanInput("isDark", isDark);
+  const didSetInstantSync = setThemeToggleInput("instantSync", true);
+  const didSetTheme = setThemeToggleInput("isDark", isDark);
 
-  return true;
+  return didSetInstantSync && didSetTheme;
 }
 
 function syncThemeToggleWhenReady() {
@@ -53,6 +59,8 @@ if (themeToggle) {
   syncThemeToggleWhenReady();
 
   themeToggle.addEventListener("click", () => {
+    setThemeToggleInput("instantSync", false);
+
     document.body.classList.toggle("dark");
 
     const isDark = document.body.classList.contains("dark");
@@ -61,7 +69,9 @@ if (themeToggle) {
 
     updateThemeToggle();
 
-    window.setTimeout(syncThemeToggleAnimation, 50);
+    window.setTimeout(() => {
+      setThemeToggleInput("isDark", isDark);
+    }, 0);
   });
 }
 
