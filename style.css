@@ -695,7 +695,8 @@ footer {
   animation: like-pop 0.24s ease;
 }
 
-.like-popup-later {
+.like-popup-later,
+.like-popup-no {
   min-height: 38px;
   padding: 0 12px;
   border: 0;
@@ -710,7 +711,8 @@ footer {
     color var(--transition);
 }
 
-.like-popup-later:hover {
+.like-popup-later:hover,
+.like-popup-no:hover {
   background: color-mix(in srgb, var(--card) 70%, var(--bg));
   color: var(--text);
 }
