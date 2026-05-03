@@ -133,6 +133,7 @@ async function sendContactForm() {
 
     contactForm.reset();
     setFormStatus("Nachricht gesendet. Danke dir.", "success");
+    turnstileBox?.classList.remove("is-visible");
 
     if (window.turnstile && turnstileWidgetId !== null) {
       window.turnstile.reset(turnstileWidgetId);
@@ -155,6 +156,7 @@ async function prepareTurnstileAndSubmit() {
     return;
   }
 
+  turnstileBox?.classList.add("is-visible");
   setFormStatus("Sicherheitsprüfung wird geladen...");
 
   try {
