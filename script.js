@@ -33,6 +33,25 @@ if (themeToggle) {
   });
 }
 
+/* Leave warning */
+
+let shouldWarnBeforeLeave = false;
+
+function enableLeaveWarning() {
+  shouldWarnBeforeLeave = true;
+}
+
+function disableLeaveWarning() {
+  shouldWarnBeforeLeave = false;
+}
+
+window.addEventListener("beforeunload", (event) => {
+  if (!shouldWarnBeforeLeave) return;
+
+  event.preventDefault();
+  event.returnValue = "";
+});
+
 /* Contact form */
 
 const contactForm = document.getElementById("contactForm");
@@ -132,6 +151,7 @@ async function sendContactForm() {
     }
 
     contactForm.reset();
+    disableLeaveWarning();
     setFormStatus("Nachricht gesendet. Danke dir.", "success");
     turnstileBox?.classList.remove("is-visible");
 
@@ -203,6 +223,10 @@ if (contactForm && formStatus) {
     await prepareTurnstileAndSubmit();
   });
 }
+
+contactForm?.addEventListener("input", () => {
+  enableLeaveWarning();
+});
 
 /* Tic Tac Toe */
 
