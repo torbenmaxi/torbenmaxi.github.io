@@ -1112,6 +1112,7 @@ passwordToggle?.addEventListener("click", () => {
 
 const likePopup = document.getElementById("likePopup");
 const likePopupLater = document.getElementById("likePopupLater");
+const likePopupNo = document.getElementById("likePopupNo");
 const likeButton = document.getElementById("likeButton");
 const likeText = document.getElementById("likeText");
 const likeCount = document.getElementById("likeCount");
@@ -1172,18 +1173,25 @@ async function changeLikeCount(delta) {
   likeCount.textContent = String(data);
 }
 
-function showLikePopupLater() {
+function showLikePopupLater(delay = 8000) {
   if (!likePopup) return;
 
-  const popupDismissed = localStorage.getItem("likePopupDismissed") === "true";
+  const popupBlocked = localStorage.getItem("likePopupBlocked") === "true";
   const alreadyLiked = getLocalLikeState();
+  const snoozedUntil = Number(localStorage.getItem("likePopupSnoozedUntil") || 0);
 
-  if (popupDismissed || alreadyLiked) return;
+  if (popupBlocked || alreadyLiked || Date.now() < snoozedUntil) return;
 
   window.setTimeout(() => {
+    const stillBlocked = localStorage.getItem("likePopupBlocked") === "true";
+    const stillLiked = getLocalLikeState();
+    const stillSnoozedUntil = Number(localStorage.getItem("likePopupSnoozedUntil") || 0);
+
+    if (stillBlocked || stillLiked || Date.now() < stillSnoozedUntil) return;
+
     likePopup.classList.add("is-visible");
     likePopup.setAttribute("aria-hidden", "false");
-  }, 8000);
+  }, delay);
 }
 
 function hideLikePopup() {
@@ -1212,15 +1220,24 @@ if (likeButton) {
     await changeLikeCount(delta);
 
     if (isLiked) {
-      localStorage.setItem("likePopupDismissed", "true");
+      localStorage.setItem("likePopupBlocked", "true");
       window.setTimeout(hideLikePopup, 500);
     }
   });
 
   showLikePopupLater();
-
+  
   likePopupLater?.addEventListener("click", () => {
-    localStorage.setItem("likePopupDismissed", "true");
+    const fiveMinutes = Date.now() + 5 * 60 * 1000;
+  
+    localStorage.setItem("likePopupSnoozedUntil", String(fiveMinutes));
+    hideLikePopup();
+  
+    showLikePopupLater(5 * 60 * 1000);
+  });
+  
+  likePopupNo?.addEventListener("click", () => {
+    localStorage.setItem("likePopupBlocked", "true");
     hideLikePopup();
   });
 }
