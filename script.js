@@ -1300,6 +1300,125 @@ if (activeVisitors) {
   window.setInterval(updateActiveVisitors, 30000);
 }
 
+/* Stats modal */
+
+const statsOpen = document.getElementById("statsOpen");
+const statsModal = document.getElementById("statsModal");
+const statsClose = document.getElementById("statsClose");
+const statsCloseButton = document.getElementById("statsCloseButton");
+const statsLikeCount = document.getElementById("statsLikeCount");
+const statsPageViews = document.getElementById("statsPageViews");
+const statsDaysOnline = document.getElementById("statsDaysOnline");
+const statsUpdated = document.getElementById("statsUpdated");
+
+const websiteLaunchDate = new Date("2026-04-26T00:00:00");
+
+function openStatsModal() {
+  if (!statsModal) return;
+
+  statsModal.classList.add("is-open");
+  statsModal.setAttribute("aria-hidden", "false");
+
+  updateStatsPanel();
+}
+
+function closeStatsModal() {
+  if (!statsModal) return;
+
+  statsModal.classList.remove("is-open");
+  statsModal.setAttribute("aria-hidden", "true");
+}
+
+function getSessionId() {
+  let sessionId = sessionStorage.getItem("siteSessionId");
+
+  if (!sessionId) {
+    sessionId = createVisitorId();
+    sessionStorage.setItem("siteSessionId", sessionId);
+  }
+
+  return sessionId;
+}
+
+async function recordPageView() {
+  if (!supabaseClient) return;
+
+  await supabaseClient.from("site_pageviews").insert({
+    page: window.location.pathname,
+    session_id: getSessionId()
+  });
+}
+
+async function loadPageViewCount() {
+  if (!supabaseClient || !statsPageViews) return;
+
+  const { count, error } = await supabaseClient
+    .from("site_pageviews")
+    .select("*", {
+      count: "exact",
+      head: true
+    });
+
+  if (error) {
+    console.error("Aufrufe konnten nicht geladen werden:", error);
+    return;
+  }
+
+  statsPageViews.textContent = String(count || 0);
+}
+
+async function loadStatsLikeCount() {
+  if (!supabaseClient || !statsLikeCount) return;
+
+  const { data, error } = await supabaseClient
+    .from("site_likes")
+    .select("like_count")
+    .eq("slug", likeSlug)
+    .single();
+
+  if (error || !data) {
+    console.error("Stats-Likes konnten nicht geladen werden:", error);
+    return;
+  }
+
+  statsLikeCount.textContent = String(data.like_count);
+}
+
+function updateDaysOnline() {
+  if (!statsDaysOnline) return;
+
+  const now = Date.now();
+  const daysOnline = Math.max(
+    1,
+    Math.floor((now - websiteLaunchDate.getTime()) / (24 * 60 * 60 * 1000))
+  );
+
+  statsDaysOnline.textContent = `${daysOnline} Tage`;
+}
+
+async function updateStatsPanel() {
+  updateDaysOnline();
+
+  await Promise.all([
+    loadStatsLikeCount(),
+    loadPageViewCount(),
+    updateActiveVisitors()
+  ]);
+
+  if (statsUpdated) {
+    statsUpdated.textContent = `Zuletzt aktualisiert: ${new Date().toLocaleTimeString("de-DE", {
+      hour: "2-digit",
+      minute: "2-digit"
+    })}`;
+  }
+}
+
+statsOpen?.addEventListener("click", openStatsModal);
+statsClose?.addEventListener("click", closeStatsModal);
+statsCloseButton?.addEventListener("click", closeStatsModal);
+
+recordPageView();
+
 /* Page loader */
 
 const pageLoader = document.getElementById("pageLoader");
