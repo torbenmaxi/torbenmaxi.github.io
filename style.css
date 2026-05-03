@@ -597,11 +597,11 @@ footer {
   right: 20px;
   bottom: 20px;
   z-index: 1000;
-  width: min(360px, calc(100% - 40px));
-  padding: 16px;
+  width: min(340px, calc(100% - 40px));
+  padding: 18px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--card);
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--card) 94%, transparent);
   box-shadow: 0 18px 60px color-mix(in srgb, var(--text) 14%, transparent);
   opacity: 0;
   visibility: hidden;
@@ -623,33 +623,34 @@ footer {
 }
 
 .like-popup p {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   color: var(--text);
-  font-size: 15px;
-  font-weight: 650;
-  letter-spacing: -0.02em;
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
 }
 
 .like-popup-actions {
-  display: flex;
-  align-items: center;
+  display: grid;
   gap: 10px;
-  flex-wrap: wrap;
 }
 
 .like-widget {
-  min-height: 38px;
-  padding: 4px 12px 4px 8px;
+  width: 100%;
+  min-height: 50px;
+  padding: 6px 14px 6px 10px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--bg) 54%, transparent);
+  background: color-mix(in srgb, var(--bg) 58%, transparent);
   color: var(--muted);
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: left;
   transition:
     transform var(--transition),
     background var(--transition),
@@ -664,11 +665,14 @@ footer {
 }
 
 .like-heart-icon {
-  font-size: 28px;
+  width: 34px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 32px;
   line-height: 1;
   color: transparent;
-  -webkit-text-stroke: 1.7px var(--muted);
-  text-stroke: 1.7px var(--muted);
+  -webkit-text-stroke: 1.6px var(--muted);
+  text-stroke: 1.6px var(--muted);
   transition:
     transform 0.18s ease,
     color 0.18s ease,
@@ -687,25 +691,28 @@ footer {
 }
 
 .like-widget strong {
+  margin-left: auto;
   color: var(--text);
-  font-size: 14px;
+  font-size: 16px;
 }
 
-.like-widget.is-popping .like-heart-icon {
-  animation: like-pop 0.24s ease;
+.like-popup-secondary {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .like-popup-later,
 .like-popup-no {
-  min-height: 38px;
-  padding: 0 12px;
+  min-height: 34px;
+  padding: 0 10px;
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 650;
   transition:
     background var(--transition),
     color var(--transition);
@@ -713,8 +720,12 @@ footer {
 
 .like-popup-later:hover,
 .like-popup-no:hover {
-  background: color-mix(in srgb, var(--card) 70%, var(--bg));
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
   color: var(--text);
+}
+
+.like-widget.is-popping .like-heart-icon {
+  animation: like-pop 0.24s ease;
 }
 
 @keyframes like-pop {
