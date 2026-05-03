@@ -220,25 +220,7 @@
     <div class="container footer-inner">
       <span>© 2026 Torben Maximilian</span>
 
-      <div class="footer-stats">
-        <div class="like-widget">
-          <button
-            class="like-heart-button"
-            id="likeButton"
-            type="button"
-            aria-label="Website liken"
-          >
-            <span class="like-heart-icon" aria-hidden="true">♥</span>
-          </button>
-
-          <span id="likeText">Gefällt mir</span>
-          <strong id="likeCount">0</strong>
-        </div>
-
-        <span class="active-visitors" id="activeVisitors">
-          Aktiv: –
-        </span>
-      </div>
+      <span></span>
 
       <span class="footer-links">
         <a>Impressum</a>
@@ -248,6 +230,31 @@
     </div>
   </footer>
 
+  <div class="like-popup" id="likePopup" aria-hidden="true">
+    <p>Gefällt dir die Website?</p>
+  
+    <div class="like-popup-actions">
+      <button
+        class="like-widget"
+        id="likeButton"
+        type="button"
+        aria-label="Website liken"
+      >
+        <span class="like-heart-icon" aria-hidden="true">♥</span>
+        <span id="likeText">Gefällt mir</span>
+        <strong id="likeCount">0</strong>
+      </button>
+  
+      <button
+        class="like-popup-later"
+        id="likePopupLater"
+        type="button"
+      >
+        Vielleicht später
+      </button>
+    </div>
+  </div>
+  
   <div class="account-modal" id="accountModal" aria-hidden="true">
     <div class="account-modal-backdrop" id="accountClose"></div>
 
