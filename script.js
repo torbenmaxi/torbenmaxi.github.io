@@ -1066,6 +1066,7 @@ accountCloseButton?.addEventListener("click", closeAccountModal);
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeAccountModal();
+    closeStatsModal();
   }
 });
 
@@ -1155,6 +1156,9 @@ async function loadLikeCount() {
   }
 
   likeCount.textContent = String(data.like_count);
+  if (statsLikeCount) {
+    statsLikeCount.textContent = String(data.like_count);
+  }
 }
 
 async function changeLikeCount(delta) {
@@ -1171,6 +1175,9 @@ async function changeLikeCount(delta) {
   }
 
   likeCount.textContent = String(data);
+  if (statsLikeCount) {
+    statsLikeCount.textContent = String(data);
+  }
 }
 
 function showLikePopupLater(delay = 8000) {
@@ -1292,7 +1299,7 @@ async function updateActiveVisitors() {
     return;
   }
 
-  activeVisitors.textContent = `Aktiv: ${count}`;
+  activeVisitors.textContent = String(count);
 }
 
 if (activeVisitors) {
