@@ -1110,6 +1110,8 @@ passwordToggle?.addEventListener("click", () => {
 
 /* Like button */
 
+const likePopup = document.getElementById("likePopup");
+const likePopupLater = document.getElementById("likePopupLater");
 const likeButton = document.getElementById("likeButton");
 const likeText = document.getElementById("likeText");
 const likeCount = document.getElementById("likeCount");
@@ -1170,6 +1172,27 @@ async function changeLikeCount(delta) {
   likeCount.textContent = String(data);
 }
 
+function showLikePopupLater() {
+  if (!likePopup) return;
+
+  const popupDismissed = localStorage.getItem("likePopupDismissed") === "true";
+  const alreadyLiked = getLocalLikeState();
+
+  if (popupDismissed || alreadyLiked) return;
+
+  window.setTimeout(() => {
+    likePopup.classList.add("is-visible");
+    likePopup.setAttribute("aria-hidden", "false");
+  }, 8000);
+}
+
+function hideLikePopup() {
+  if (!likePopup) return;
+
+  likePopup.classList.remove("is-visible");
+  likePopup.setAttribute("aria-hidden", "true");
+}
+
 if (likeButton) {
   updateLikeButton(getLocalLikeState());
   loadLikeCount();
@@ -1187,6 +1210,18 @@ if (likeButton) {
     likeButton.classList.add("is-popping");
 
     await changeLikeCount(delta);
+
+    if (isLiked) {
+      localStorage.setItem("likePopupDismissed", "true");
+      window.setTimeout(hideLikePopup, 500);
+    }
+  });
+
+  showLikePopupLater();
+
+  likePopupLater?.addEventListener("click", () => {
+    localStorage.setItem("likePopupDismissed", "true");
+    hideLikePopup();
   });
 }
 
