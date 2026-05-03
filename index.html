@@ -219,16 +219,79 @@
   <footer>
     <div class="container footer-inner">
       <span>© 2026 Torben Maximilian</span>
-
-      <span></span>
-
+  
+      <button
+        class="stats-open"
+        id="statsOpen"
+        type="button"
+        aria-label="Website-Statistiken öffnen"
+      >
+        Stats
+      </button>
+  
       <span class="footer-links">
-        <a>Impressum</a>
+        <a href="/impressum/">Impressum</a>
         <span aria-hidden="true">·</span>
-        <a>Datenschutz</a>
+        <a href="/datenschutz/">Datenschutz</a>
       </span>
     </div>
   </footer>
+
+  <div class="stats-modal" id="statsModal" aria-hidden="true">
+    <div class="stats-modal-backdrop" id="statsClose"></div>
+  
+    <div
+      class="stats-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="statsTitle"
+    >
+      <button
+        class="stats-dialog-close"
+        id="statsCloseButton"
+        type="button"
+        aria-label="Statistiken schließen"
+      >
+        ×
+      </button>
+  
+      <p class="eyebrow">Website Stats</p>
+  
+      <h2 id="statsTitle">Kleine Zahlen.</h2>
+  
+      <div class="stats-grid">
+        <article class="stats-card stats-card-wide">
+          <span class="stats-label">Website</span>
+          <strong class="stats-value">Maxi by Torben</strong>
+          <span class="stats-subline">Ein kleiner Ort im Internet.</span>
+        </article>
+  
+        <article class="stats-card">
+          <span class="stats-label">Likes</span>
+          <strong class="stats-value" id="statsLikeCount">–</strong>
+        </article>
+  
+        <article class="stats-card">
+          <span class="stats-label">Gerade aktiv</span>
+          <strong class="stats-value" id="activeVisitors">–</strong>
+        </article>
+  
+        <article class="stats-card">
+          <span class="stats-label">Aufrufe</span>
+          <strong class="stats-value" id="statsPageViews">–</strong>
+        </article>
+  
+        <article class="stats-card">
+          <span class="stats-label">Online seit</span>
+          <strong class="stats-value" id="statsDaysOnline">–</strong>
+        </article>
+      </div>
+  
+      <p class="stats-note" id="statsUpdated">
+        Wird geladen...
+      </p>
+    </div>
+  </div>
 
   <div class="like-popup" id="likePopup" aria-hidden="true">
     <p>Gefällt dir die Website?</p>
