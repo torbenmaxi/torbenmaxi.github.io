@@ -590,53 +590,81 @@ footer {
   font-weight: 600;
 }
 
-/* Like button */
+/* Like popup */
+
+.like-popup {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  width: min(360px, calc(100% - 40px));
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  box-shadow: 0 18px 60px color-mix(in srgb, var(--text) 14%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px) scale(0.98);
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    visibility 0.22s ease,
+    transform 0.22s ease,
+    background var(--theme-transition),
+    border-color var(--theme-transition);
+}
+
+.like-popup.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.like-popup p {
+  margin-bottom: 12px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.like-popup-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 
 .like-widget {
-  justify-self: center;
   min-height: 38px;
-  padding: 4px 12px 4px 6px;
+  padding: 4px 12px 4px 8px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--card) 70%, transparent);
+  background: color-mix(in srgb, var(--bg) 54%, transparent);
   color: var(--muted);
+  cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1;
   transition:
+    transform var(--transition),
     background var(--transition),
     color var(--transition),
     border-color var(--transition);
 }
 
 .like-widget:hover {
-  background: var(--card);
-}
-
-.like-heart-button {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  transition:
-    transform var(--transition),
-    color var(--transition);
-}
-
-.like-heart-button:hover {
-  transform: translateY(-1px) scale(1.04);
+  transform: translateY(-1px);
+  background: var(--bg);
   color: var(--text);
 }
 
 .like-heart-icon {
-  font-size: 30px;
+  font-size: 28px;
   line-height: 1;
   color: transparent;
   -webkit-text-stroke: 1.7px var(--muted);
@@ -663,8 +691,28 @@ footer {
   font-size: 14px;
 }
 
-.like-heart-button.is-popping .like-heart-icon {
+.like-widget.is-popping .like-heart-icon {
   animation: like-pop 0.24s ease;
+}
+
+.like-popup-later {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.like-popup-later:hover {
+  background: color-mix(in srgb, var(--card) 70%, var(--bg));
+  color: var(--text);
 }
 
 @keyframes like-pop {
