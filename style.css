@@ -43,6 +43,10 @@ body.dark {
     visibility 0.45s ease;
 }
 
+body.loader-disabled .page-loader {
+  display: none;
+}
+
 .page-loader.is-hidden {
   opacity: 0;
   visibility: hidden;
