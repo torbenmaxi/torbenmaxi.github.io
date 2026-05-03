@@ -1225,15 +1225,25 @@ if (activeVisitors) {
 /* Page loader */
 
 const pageLoader = document.getElementById("pageLoader");
+const loaderAlreadyShown = sessionStorage.getItem("pageLoaderShown") === "true";
+const loaderStartTime = Date.now();
+const minimumLoaderTime = 900;
 
 function hidePageLoader() {
   if (!pageLoader) return;
 
-  pageLoader.classList.add("is-hidden");
+  const elapsedTime = Date.now() - loaderStartTime;
+  const remainingTime = Math.max(minimumLoaderTime - elapsedTime, 0);
+
+  window.setTimeout(() => {
+    pageLoader.classList.add("is-hidden");
+    sessionStorage.setItem("pageLoaderShown", "true");
+  }, remainingTime);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  window.setTimeout(hidePageLoader, 450);
-});
-
-window.setTimeout(hidePageLoader, 2500);
+if (loaderAlreadyShown) {
+  document.body.classList.add("loader-disabled");
+} else {
+  document.addEventListener("DOMContentLoaded", hidePageLoader);
+  window.setTimeout(hidePageLoader, 2500);
+}
