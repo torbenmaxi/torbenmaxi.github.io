@@ -527,9 +527,15 @@ h2 {
 }
 
 .turnstile-box {
+  display: none;
   min-height: 70px;
-  display: flex;
   align-items: center;
+  justify-content: flex-start;
+  padding: 10px 0;
+}
+
+.turnstile-box.is-visible {
+  display: flex;
 }
 
 /* Footer */
