@@ -8,417 +8,78 @@
 
   <meta
     name="description"
-    content="Kleine Webprojekte, Spiele und Experimente von Torben."
+    content="Wähle dein Betriebssystem: MaxiOS oder miniOS."
   />
 
-  <script>
-    if (localStorage.getItem("theme") === "dark") {
-      document.documentElement.classList.add("dark");
-    }
-  </script>
-
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Maxi by Torben",
-      "alternateName": "T-Maxi",
-      "url": "https://t-maxi.de/"
-    }
-  </script>
-
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/style.css?v=13" />
-
-  <script
-    src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js"
-    type="module"
-  ></script>
+  <link rel="stylesheet" href="/boot/boot.css?v=1" />
 </head>
 
 <body>
-  <div class="page-loader" id="pageLoader" aria-label="Website lädt">
-    <div class="loader-inner">
-      <span class="loader-logo">Maxi by Torben</span>
-      <span class="loader-line"></span>
-    </div>
-  </div>
+  <main class="boot-manager" aria-labelledby="bootTitle">
+    <header class="boot-header">
+      <span class="boot-dot boot-dot-red"></span>
+      <span class="boot-dot boot-dot-yellow"></span>
+      <span class="boot-dot boot-dot-green"></span>
+      <span class="boot-title">boot-manager.terminal</span>
+    </header>
 
-  <header class="site-header">
-    <nav class="container site-nav" aria-label="Hauptnavigation">
-      <a href="/" class="logo" aria-label="Maxi by Torben Startseite">
-        Maxi by Torben
-      </a>
+    <section class="boot-content">
+      <div class="boot-line" id="bootText" aria-live="polite"></div>
 
-      <div class="nav-links">
-        <a href="#projects">Projekte</a>
-        <a href="#music">Musik</a>
-        <a href="#contact">Kontakt</a>
+      <div class="recommended-system">
+        <p class="recommended-label">Empfohlenes Betriebssystem</p>
 
-        <button class="account-open" id="accountOpen" type="button">
-          Account
-        </button>
+        <a class="recommended-card" id="recommendedSystemLink" href="/maxios/">
+          <span class="recommended-icon" id="recommendedSystemIcon">🖥️</span>
 
-        <button
-          class="theme-toggle"
-          id="themeToggle"
-          type="button"
-          aria-label="Darkmode aktivieren"
-        >
-          <span class="theme-toggle-icon theme-toggle-sun" aria-hidden="true"></span>
-          <span class="theme-toggle-icon theme-toggle-moon" aria-hidden="true"></span>
-          <span class="theme-toggle-thumb" aria-hidden="true"></span>
-        </button>
-      </div>
-    </nav>
-  </header>
+          <span>
+            <strong id="recommendedSystemName">MaxiOS</strong>
+            <span id="recommendedSystemDescription">
+              Desktop-Erlebnis mit Fenstern, Dock und Apps.
+            </span>
+          </span>
 
-  <main>
-    <section class="hero container" aria-labelledby="heroTitle">
-      <div class="hero-content">
-        <p class="eyebrow">
-          Hello, world.
-        </p>
-
-        <h1 id="heroTitle">Ein kleiner Ort im Internet.</h1>
+          <span class="recommended-arrow">Starten ↵</span>
+        </a>
       </div>
 
-      <div class="hero-side">
-        <div class="hero-animation" aria-hidden="true">
-          <dotlottie-wc
-            src="/assets/animations/avocado.json"
-            speed="1"
-            autoplay
-            loop
-          ></dotlottie-wc>
-        </div>
+      <nav class="boot-options" aria-label="Betriebssystem auswählen">
+        <a class="boot-option" href="/maxios/" data-option="1">
+          <span class="boot-option-number">[1]</span>
 
-        <div class="hero-actions" aria-label="Schnellzugriff">
-          <a class="button button-primary" href="#projects">
-            Projekte ansehen
-          </a>
+          <span>
+            <strong>MaxiOS</strong>
+            <span>Desktop-Erlebnis mit Fenstern, Dock und Apps.</span>
+          </span>
 
-          <a class="button button-secondary" href="#contact">
-            Kontakt
-          </a>
-        </div>
-      </div>
-    </section>
+          <span class="boot-option-arrow">↵</span>
+        </a>
 
-    <section id="projects" class="section" aria-labelledby="projects-title">
-      <div class="container">
-        <div class="section-head">
-          <h2 id="projects-title">Projekte</h2>
-        </div>
+        <a class="boot-option" href="/minios/" data-option="2">
+          <span class="boot-option-number">[2]</span>
 
-        <div class="grid">
-          <a class="card" href="/tic-tac-toe/">
-            <span class="card-number">01</span>
+          <span>
+            <strong>miniOS</strong>
+            <span>Mobile Oberfläche im Homescreen-Stil.</span>
+          </span>
 
-            <div>
-              <h3>Tic Tac Toe</h3>
-              <p>Zwei Spieler, neun Felder, ein Gewinner.</p>
-            </div>
-          </a>
+          <span class="boot-option-arrow">↵</span>
+        </a>
+      </nav>
 
-          <a class="card" href="/memory/">
-            <span class="card-number">02</span>
+      <p class="boot-footer">
+        <span class="desktop-hint">
+          Tipp: Drücke 1 oder 2 auf deiner Tastatur. Enter startet die Empfehlung.
+        </span>
 
-            <div>
-              <h3>Memory</h3>
-              <p>Finde alle Paare.</p>
-            </div>
-          </a>
-
-          <article class="card">
-            <span class="card-number">03</span>
-
-            <div>
-              <h3>Demnächst</h3>
-              <p>Weitere Projekte folgen.</p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="music" class="section" aria-labelledby="music-title">
-      <div class="container music-layout">
-        <div>
-          <p class="eyebrow">Musik</p>
-    
-          <h2 id="music-title">Apple Music</h2>
-    
-          <p class="music-intro">
-            Eine Playlist für nebenbei.
-          </p>
-        </div>
-    
-        <div class="music-embed">
-          <iframe
-            id="appleMusicEmbed"
-            allow="autoplay *; encrypted-media *;"
-            height="450"
-            title="Apple Music Playlist Seventeen"
-            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-            src="https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x"
-          ></iframe>
-        </div>
-      </div>
-    </section>
-    
-    <section id="contact" class="section" aria-labelledby="contact-title">
-      <div class="container contact-layout">
-        <div>
-          <p class="eyebrow">Kontakt</p>
-
-          <h2 id="contact-title">Schreib mir.</h2>
-
-          <p class="contact-intro">
-            Für Ideen, Fragen oder ein kurzes Hey.
-          </p>
-        </div>
-
-        <form
-          class="contact-form"
-          id="contactForm"
-          action="https://formspree.io/f/xvzdlego"
-          method="POST"
-        >
-          <label for="contactName">
-            Name
-          </label>
-          <input
-            id="contactName"
-            type="text"
-            name="name"
-            placeholder="Dein Name"
-            autocomplete="name"
-            required
-          />
-
-          <label for="contactEmail">
-            E-Mail
-          </label>
-          <input
-            id="contactEmail"
-            type="email"
-            name="email"
-            placeholder="deine@email.de"
-            autocomplete="email"
-            required
-          />
-
-          <label for="contactMessage">
-            Nachricht
-          </label>
-          <textarea
-            id="contactMessage"
-            name="message"
-            rows="6"
-            placeholder="Worum geht’s?"
-            required
-          ></textarea>
-
-          <input
-            type="text"
-            name="_gotcha"
-            class="honeypot"
-            tabindex="-1"
-            autocomplete="off"
-            aria-hidden="true"
-          />
-
-          <div class="turnstile-box" id="turnstileBox"></div>
-
-          <p class="form-status" id="formStatus" aria-live="polite"></p>
-
-          <button class="button button-primary" type="submit">
-            Nachricht senden
-          </button>
-        </form>
-      </div>
+        <span class="mobile-hint">
+          Tippe auf dein System.
+        </span>
+      </p>
     </section>
   </main>
 
-  <footer>
-    <div class="container footer-inner">
-      <span>© 2026 Torben Maximilian</span>
-
-      <button
-        class="stats-open"
-        id="statsOpen"
-        type="button"
-        aria-label="Website-Statistiken öffnen"
-      >
-        Stats
-      </button>
-
-      <span class="footer-links">
-        <a href="/impressum/">Impressum</a>
-        <span aria-hidden="true">·</span>
-        <a href="/datenschutz/">Datenschutz</a>
-      </span>
-    </div>
-  </footer>
-
-  <div class="stats-modal" id="statsModal" aria-hidden="true">
-    <div class="stats-modal-backdrop" id="statsClose"></div>
-
-    <div
-      class="stats-dialog"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="statsTitle"
-    >
-      <button
-        class="stats-dialog-close"
-        id="statsCloseButton"
-        type="button"
-        aria-label="Statistiken schließen"
-      >
-        ×
-      </button>
-
-      <p class="eyebrow">Website Stats</p>
-
-      <h2 id="statsTitle">Kleine Zahlen.</h2>
-
-      <div class="stats-grid">
-        <article class="stats-card stats-card-wide">
-          <span class="stats-label">Website</span>
-          <strong class="stats-value">Maxi by Torben</strong>
-          <span class="stats-subline">Ein kleiner Ort im Internet.</span>
-        </article>
-
-        <article class="stats-card">
-          <span class="stats-label">Likes</span>
-          <strong class="stats-value" id="statsLikeCount">–</strong>
-        </article>
-
-        <article class="stats-card">
-          <span class="stats-label">Gerade aktiv</span>
-          <strong class="stats-value" id="activeVisitors">–</strong>
-        </article>
-
-        <article class="stats-card">
-          <span class="stats-label">Aufrufe</span>
-          <strong class="stats-value" id="statsPageViews">–</strong>
-        </article>
-
-        <article class="stats-card">
-          <span class="stats-label">Online seit</span>
-          <strong class="stats-value" id="statsDaysOnline">–</strong>
-        </article>
-      </div>
-
-      <p class="stats-note" id="statsUpdated">
-        Wird geladen...
-      </p>
-    </div>
-  </div>
-
-  <div class="like-popup" id="likePopup" aria-hidden="true">
-    <p>Gefällt dir die Website?</p>
-
-    <div class="like-popup-actions">
-      <button
-        class="like-widget"
-        id="likeButton"
-        type="button"
-        aria-label="Website liken"
-      >
-        <span class="like-heart-icon" aria-hidden="true">♥</span>
-        <span id="likeText">Gefällt mir</span>
-        <strong id="likeCount">0</strong>
-      </button>
-
-      <div class="like-popup-secondary">
-        <button class="like-popup-later" id="likePopupLater" type="button">
-          Vielleicht später
-        </button>
-
-        <button class="like-popup-no" id="likePopupNo" type="button">
-          Nein danke
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="account-modal" id="accountModal" aria-hidden="true">
-    <div class="account-modal-backdrop" id="accountClose"></div>
-
-    <div
-      class="account-dialog"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="accountTitle"
-    >
-      <button
-        class="account-dialog-close"
-        id="accountCloseButton"
-        type="button"
-        aria-label="Fenster schließen"
-      >
-        ×
-      </button>
-
-      <p class="eyebrow">Account</p>
-
-      <h2 id="accountTitle">Account erstellen</h2>
-
-      <p class="account-intro">
-        Wähle einen Benutzernamen und ein sicheres Passwort.
-      </p>
-
-      <form class="account-form" id="accountForm">
-        <label for="accountUsername">
-          Benutzername
-        </label>
-
-        <input
-          id="accountUsername"
-          type="text"
-          placeholder="Benutzername"
-          autocomplete="username"
-          required
-        />
-
-        <label for="accountPassword">
-          Passwort
-        </label>
-
-        <div class="password-field">
-          <input
-            id="accountPassword"
-            type="password"
-            placeholder="Passwort"
-            autocomplete="new-password"
-            required
-          />
-
-          <button
-            class="password-toggle"
-            id="passwordToggle"
-            type="button"
-            aria-label="Passwort anzeigen"
-          >
-            Anzeigen
-          </button>
-        </div>
-
-        <div class="password-rules" id="passwordRules"></div>
-
-        <p class="form-status" id="accountStatus" aria-live="polite"></p>
-
-        <button class="button button-primary" type="submit">
-          Account erstellen
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script src="/script.js?v=13" defer></script>
+  <script src="/boot/boot.js?v=1" defer></script>
 </body>
 </html>
