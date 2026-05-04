@@ -143,11 +143,18 @@ function createWindow(appKey) {
     <div class="maxios-window-content">
       ${typeof app.content === "function" ? app.content() : app.content}
     </div>
+    
+    <button
+      class="maxios-window-resize"
+      type="button"
+      aria-label="Fenstergröße ändern"
+    ></button>
   `;
 
   windowLayer.appendChild(windowElement);
   bringToFront(windowElement);
   makeWindowDraggable(windowElement);
+  makeWindowResizable(windowElement);
 
   windowElement.querySelector(".maxios-window-close")?.addEventListener("click", () => {
     windowElement.remove();
@@ -197,6 +204,52 @@ function makeWindowDraggable(windowElement) {
   dragHandle.addEventListener("pointerup", (event) => {
     isDragging = false;
     dragHandle.releasePointerCapture(event.pointerId);
+  });
+}
+
+function makeWindowResizable(windowElement) {
+  const resizeHandle = windowElement.querySelector(".maxios-window-resize");
+
+  if (!resizeHandle) return;
+
+  let isResizing = false;
+  let startX = 0;
+  let startY = 0;
+  let initialWidth = 0;
+  let initialHeight = 0;
+
+  resizeHandle.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    isResizing = true;
+    startX = event.clientX;
+    startY = event.clientY;
+    initialWidth = windowElement.offsetWidth;
+    initialHeight = windowElement.offsetHeight;
+
+    bringToFront(windowElement);
+    resizeHandle.setPointerCapture(event.pointerId);
+  });
+
+  resizeHandle.addEventListener("pointermove", (event) => {
+    if (!isResizing) return;
+
+    const minWidth = 320;
+    const minHeight = 240;
+    const maxWidth = window.innerWidth - windowElement.offsetLeft - 12;
+    const maxHeight = window.innerHeight - windowElement.offsetTop - 12;
+
+    const nextWidth = initialWidth + event.clientX - startX;
+    const nextHeight = initialHeight + event.clientY - startY;
+
+    windowElement.style.width = `${Math.max(minWidth, Math.min(nextWidth, maxWidth))}px`;
+    windowElement.style.height = `${Math.max(minHeight, Math.min(nextHeight, maxHeight))}px`;
+  });
+
+  resizeHandle.addEventListener("pointerup", (event) => {
+    isResizing = false;
+    resizeHandle.releasePointerCapture(event.pointerId);
   });
 }
 
