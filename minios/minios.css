@@ -210,12 +210,16 @@ html.minios-light .minios::before,
 }
 
 .minios-app-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px 14px;
+  position: relative;
+  min-height: 520px;
 }
 
 .minios-app-icon {
+  position: absolute;
+  left: var(--icon-x, 22px);
+  top: var(--icon-y, 42px);
+  width: 76px;
+  min-height: 92px;
   display: grid;
   justify-items: center;
   gap: 8px;
@@ -223,6 +227,14 @@ html.minios-light .minios::before,
   cursor: pointer;
   color: var(--minios-text);
   text-align: center;
+  user-select: none;
+  touch-action: none;
+}
+
+.minios-app-icon.is-dragging {
+  z-index: 30;
+  cursor: grabbing;
+  transform: scale(1.05);
 }
 
 .minios-icon-symbol {
