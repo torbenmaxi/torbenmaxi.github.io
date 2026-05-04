@@ -85,6 +85,7 @@ const apps = {
     y: 82,
     width: 620,
     height: 520,
+    maxWidth: 980,
     maxHeight: 620,
     content: () => {
       const theme = getSavedMaxiosTheme() === "light" ? "light" : "dark";
@@ -140,6 +141,10 @@ function createWindow(appKey) {
 
   if (app.maxHeight) {
     windowElement.dataset.maxHeight = String(app.maxHeight);
+  }
+
+  if (app.maxWidth) {
+    windowElement.dataset.maxWidth = String(app.maxWidth);
   }
 
   windowElement.innerHTML = `
@@ -251,7 +256,10 @@ function makeWindowResizable(windowElement) {
 
     const minWidth = 320;
     const minHeight = 240;
-    const maxWidth = window.innerWidth - windowElement.offsetLeft - 12;
+    const windowMaxWidth = window.innerWidth - windowElement.offsetLeft - 12;
+    const appMaxWidth = Number(windowElement.dataset.maxWidth || windowMaxWidth);
+    const maxWidth = Math.min(windowMaxWidth, appMaxWidth);
+    
     const windowMaxHeight = window.innerHeight - windowElement.offsetTop - 12;
     const appMaxHeight = Number(windowElement.dataset.maxHeight || windowMaxHeight);
     const maxHeight = Math.min(windowMaxHeight, appMaxHeight);
