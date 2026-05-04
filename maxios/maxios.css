@@ -650,6 +650,99 @@ html.maxios-light .maxios-window-resize::before,
   border-color: rgba(21, 21, 21, 0.34);
 }
 
+/* Minimized windows */
+
+.maxios-minimized-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  z-index: 22;
+  min-height: 62px;
+  max-width: calc(100% - 48px);
+  padding: 8px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--maxios-line);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.11);
+  box-shadow:
+    0 20px 70px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(22px);
+  transform: translateX(-50%);
+}
+
+.maxios-minimized-bar:not(:empty) {
+  display: flex;
+}
+
+.maxios-minimized-item {
+  min-width: 142px;
+  height: 46px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--maxios-text);
+  cursor: pointer;
+  font-weight: 750;
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease;
+}
+
+.maxios-minimized-item:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.maxios-minimized-icon {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background:
+    radial-gradient(circle at 26% 22%, rgba(255, 255, 255, 0.56), transparent 17%),
+    linear-gradient(135deg, #ff6f9f 0%, #ff2d55 45%, #8b5cf6 100%);
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.maxios-window.is-minimized {
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
+  pointer-events: none;
+}
+
+html.maxios-light .maxios-minimized-bar,
+.maxios.theme-light .maxios-minimized-bar {
+  background: rgba(255, 255, 255, 0.42);
+  border-color: rgba(21, 21, 21, 0.1);
+  box-shadow:
+    0 20px 70px rgba(21, 21, 21, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+html.maxios-light .maxios-minimized-item,
+.maxios.theme-light .maxios-minimized-item {
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--maxios-text);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 14px 32px rgba(21, 21, 21, 0.12);
+}
+
+html.maxios-light .maxios-minimized-item:hover,
+.maxios.theme-light .maxios-minimized-item:hover {
+  background: rgba(255, 255, 255, 0.76);
+}
+
 /* Reserved app/window content */
 
 .maxios-app-grid {
