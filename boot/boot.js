@@ -12,7 +12,7 @@ if (prefersMiniOS) {
   recommendedSystemLink.href = "/minios/";
   recommendedSystemIcon.textContent = "📱";
   recommendedSystemName.textContent = "miniOS";
-  recommendedSystemDescription.textContent = "Mobile Oberfläche im Homescreen-Stil.";
+  recommendedSystemDescription.textContent = "Touchbasierte Oberfläche für kleine Bildschirme.";
 }
 
 const lines = [
