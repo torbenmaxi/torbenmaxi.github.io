@@ -4,7 +4,6 @@
   --minios-muted: rgba(244, 241, 234, 0.66);
   --minios-line: rgba(255, 255, 255, 0.14);
   --minios-glass: rgba(255, 255, 255, 0.1);
-  --minios-green: #a7f59d;
   --minios-radius: 36px;
   --minios-transition: 0.22s ease;
 }
@@ -83,7 +82,6 @@ html.minios-light .minios,
   --minios-muted: rgba(21, 21, 21, 0.62);
   --minios-line: rgba(21, 21, 21, 0.13);
   --minios-glass: rgba(255, 255, 255, 0.48);
-  --minios-green: #2f7d52;
 
   color: var(--minios-text);
   background:
@@ -112,6 +110,7 @@ html.minios-light .minios::before,
   display: flex;
   align-items: center;
   justify-content: space-between;
+  color: var(--minios-text);
   font-size: 14px;
   font-weight: 800;
 }
@@ -122,6 +121,15 @@ html.minios-light .minios::before,
   gap: 8px;
   color: var(--minios-text);
   font-size: 12px;
+}
+
+.minios-signal {
+  letter-spacing: 1px;
+}
+
+.minios-wifi {
+  font-size: 13px;
+  transform: translateY(-1px);
 }
 
 .minios-battery {
@@ -136,23 +144,25 @@ html.minios-light .minios::before,
 .minios-battery::before {
   content: "";
   position: absolute;
-  top: 2px;
+  top: 50%;
   left: 2px;
   width: 15px;
   height: 6px;
   border-radius: 2px;
   background: currentColor;
+  transform: translateY(-50%);
 }
 
 .minios-battery::after {
   content: "";
   position: absolute;
-  top: 3px;
+  top: 50%;
   right: -4px;
   width: 2px;
   height: 6px;
   border-radius: 0 2px 2px 0;
   background: currentColor;
+  transform: translateY(-50%);
 }
 
 /* Home */
@@ -160,27 +170,7 @@ html.minios-light .minios::before,
 .minios-home {
   position: absolute;
   inset: 44px 0 0;
-  padding: 28px 22px 108px;
-}
-
-.minios-home-head {
-  margin-bottom: 28px;
-}
-
-.minios-eyebrow {
-  margin-bottom: 6px;
-  color: var(--minios-muted);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.minios-home h1 {
-  color: var(--minios-text);
-  font-size: clamp(38px, 10vw, 52px);
-  line-height: 0.96;
-  letter-spacing: -0.07em;
+  padding: 42px 22px 108px;
 }
 
 .minios-app-grid {
@@ -195,9 +185,8 @@ html.minios-light .minios::before,
   gap: 8px;
   background: transparent;
   cursor: pointer;
-  color: #fff;
+  color: var(--minios-text);
   text-align: center;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
 }
 
 .minios-icon-symbol {
@@ -219,13 +208,11 @@ html.minios-light .minios::before,
   color: var(--minios-text);
   font-size: 12px;
   font-weight: 700;
-  text-shadow: none;
 }
 
-/* Music icon */
+/* App icons */
 
-.minios-icon-music,
-.minios-dock-music {
+.minios-icon-music {
   background:
     radial-gradient(circle at 26% 22%, rgba(255, 255, 255, 0.56), transparent 17%),
     linear-gradient(135deg, #ff6f9f 0%, #ff2d55 45%, #8b5cf6 100%);
@@ -243,48 +230,26 @@ html.minios-light .minios::before,
   text-shadow: 0 2px 10px rgba(120, 0, 40, 0.28);
 }
 
-/* Dock */
-
-.minios-dock {
-  position: absolute;
-  left: 50%;
-  right: auto;
-  bottom: 18px;
-  z-index: 12;
-  min-height: 82px;
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid var(--minios-line);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.13);
+.minios-icon-settings {
+  background:
+    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.5), transparent 18%),
+    linear-gradient(135deg, #d7dce2 0%, #8d99a8 48%, #4b5563 100%);
   box-shadow:
-    0 20px 70px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(22px);
-  transform: translateX(-50%);
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    0 16px 36px rgba(0, 0, 0, 0.22);
+  color: #fff;
+  font-size: 34px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.26);
 }
 
-.minios-dock-item {
-  width: 60px;
-  height: 60px;
-  display: grid;
-  place-items: center;
-  border-radius: 19px;
-  background: transparent;
-  cursor: pointer;
+html.minios-light .minios-icon-settings,
+.minios.theme-light .minios-icon-settings {
+  background:
+    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.72), transparent 18%),
+    linear-gradient(135deg, #f0f2f4 0%, #b7bec8 48%, #6b7280 100%);
 }
 
-.minios-dock-music {
-  width: 58px;
-  height: 58px;
-  display: grid;
-  place-items: center;
-  border-radius: 18px;
-}
-
-/* App screen */
+/* App screens */
 
 .minios-app-screen {
   position: absolute;
@@ -321,40 +286,15 @@ html.minios-light .minios-app-screen,
 
 .minios-app-header {
   min-height: 86px;
-  padding: 46px 18px 12px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  padding: 48px 18px 12px;
+  display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
 }
 
 .minios-app-header h2 {
-  justify-self: center;
   font-size: 17px;
   font-weight: 850;
-}
-
-.minios-back-button,
-.minios-theme-button {
-  min-height: 34px;
-  padding: 0 11px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.11);
-  color: var(--minios-text);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.minios-theme-button {
-  justify-self: end;
-}
-
-html.minios-light .minios-back-button,
-html.minios-light .minios-theme-button,
-.minios.theme-light .minios-back-button,
-.minios.theme-light .minios-theme-button {
-  background: rgba(21, 21, 21, 0.08);
 }
 
 .minios-app-content {
@@ -381,6 +321,73 @@ html.minios-light .minios-theme-button,
   background: transparent;
 }
 
+/* Settings */
+
+.minios-settings-card {
+  padding: 18px;
+  display: grid;
+  gap: 18px;
+  border: 1px solid var(--minios-line);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 18px 60px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(18px);
+}
+
+.minios-settings-card h3 {
+  margin-bottom: 4px;
+  font-size: 22px;
+  letter-spacing: -0.04em;
+}
+
+.minios-settings-card p {
+  color: var(--minios-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.minios-theme-options {
+  padding: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  border: 1px solid var(--minios-line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.minios-theme-options button {
+  min-height: 40px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--minios-muted);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.minios-theme-options button[aria-pressed="true"] {
+  background: var(--minios-text);
+  color: var(--minios-bg);
+}
+
+html.minios-light .minios-settings-card,
+.minios.theme-light .minios-settings-card {
+  background: rgba(255, 255, 255, 0.52);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    0 18px 60px rgba(21, 21, 21, 0.1);
+}
+
+html.minios-light .minios-theme-options,
+.minios.theme-light .minios-theme-options {
+  background: rgba(21, 21, 21, 0.06);
+}
+
+/* Home indicator */
+
 .minios-home-indicator {
   position: absolute;
   left: 50%;
@@ -394,7 +401,7 @@ html.minios-light .minios-theme-button,
   transform: translateX(-50%);
 }
 
-/* Responsive */
+/* Framed preview on larger screens */
 
 @media (min-width: 520px) {
   .minios-phone {
