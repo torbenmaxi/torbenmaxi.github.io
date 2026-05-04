@@ -31,18 +31,13 @@
         <span id="miniosClock">--:--</span>
 
         <div class="minios-status-icons" aria-hidden="true">
-          <span>●●●</span>
-          <span>⌁</span>
+          <span class="minios-signal">●●●</span>
+          <span class="minios-wifi">⌁</span>
           <span class="minios-battery"></span>
         </div>
       </header>
 
-      <section class="minios-home" aria-labelledby="miniosTitle">
-        <div class="minios-home-head">
-          <p class="minios-eyebrow">miniOS</p>
-          <h1 id="miniosTitle">Maxi by Torben</h1>
-        </div>
-
+      <section class="minios-home" aria-label="Homescreen">
         <div class="minios-app-grid" aria-label="Apps">
           <button
             class="minios-app-icon"
@@ -55,18 +50,17 @@
             </span>
             <span>Musik</span>
           </button>
-        </div>
 
-        <div class="minios-dock" aria-label="Dock">
           <button
-            class="minios-dock-item"
+            class="minios-app-icon"
             type="button"
-            data-app="music"
-            aria-label="Musik öffnen"
+            data-app="settings"
+            aria-label="Einstellungen öffnen"
           >
-            <span class="minios-dock-music" aria-hidden="true">
-              <span class="minios-music-note">♪</span>
+            <span class="minios-icon-symbol minios-icon-settings" aria-hidden="true">
+              ⚙
             </span>
+            <span>Einstellungen</span>
           </button>
         </div>
       </section>
@@ -78,20 +72,7 @@
         aria-labelledby="musicAppTitle"
       >
         <header class="minios-app-header">
-          <button class="minios-back-button" id="musicAppClose" type="button">
-            Zurück
-          </button>
-
           <h2 id="musicAppTitle">Musik</h2>
-
-          <button
-            class="minios-theme-button"
-            id="themeToggle"
-            type="button"
-            aria-label="Darstellung wechseln"
-          >
-            Darstellung
-          </button>
         </header>
 
         <div class="minios-app-content">
@@ -111,7 +92,44 @@
 
         <button
           class="minios-home-indicator"
-          id="musicHomeIndicator"
+          data-close-app
+          type="button"
+          aria-label="Zurück zum Homescreen"
+        ></button>
+      </section>
+
+      <section
+        class="minios-app-screen"
+        id="settingsApp"
+        aria-hidden="true"
+        aria-labelledby="settingsAppTitle"
+      >
+        <header class="minios-app-header">
+          <h2 id="settingsAppTitle">Einstellungen</h2>
+        </header>
+
+        <div class="minios-app-content">
+          <div class="minios-settings-card">
+            <div>
+              <h3>Darstellung</h3>
+              <p>Wähle, wie miniOS aussehen soll.</p>
+            </div>
+
+            <div class="minios-theme-options" aria-label="Darstellung auswählen">
+              <button type="button" data-theme-option="light">
+                Hell
+              </button>
+
+              <button type="button" data-theme-option="dark">
+                Dunkel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button
+          class="minios-home-indicator"
+          data-close-app
           type="button"
           aria-label="Zurück zum Homescreen"
         ></button>
