@@ -34,7 +34,45 @@
         </a>
 
         <span>Datei</span>
-        <span>Bearbeiten</span>
+
+        <div class="maxios-menu">
+          <button
+            class="maxios-menu-button"
+            id="statsMenuButton"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="statsMenu"
+          >
+            Statistiken
+          </button>
+        
+          <div
+            class="maxios-menu-panel maxios-stats-menu"
+            id="statsMenu"
+            role="menu"
+            aria-hidden="true"
+          >
+            <div class="maxios-stats-menu-row">
+              <span>Likes</span>
+              <strong id="maxiosStatsLikes">–</strong>
+            </div>
+        
+            <div class="maxios-stats-menu-row">
+              <span>Aufrufe</span>
+              <strong id="maxiosStatsPageViews">–</strong>
+            </div>
+        
+            <div class="maxios-stats-menu-row">
+              <span>Gerade aktiv</span>
+              <strong id="maxiosStatsActiveVisitors">–</strong>
+            </div>
+        
+            <p class="maxios-stats-menu-note" id="maxiosStatsUpdated">
+              Wird geladen...
+            </p>
+          </div>
+        </div>
 
         <div class="maxios-menu">
           <button
@@ -88,6 +126,7 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="/maxios/maxios.js?v=1" defer></script>
 </body>
 </html>
