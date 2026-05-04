@@ -102,9 +102,9 @@ const topbarParts = [
   `<span>Hilfe</span>`,
   `</div>`,
   `<div class="maxios-topbar-right">`,
-  `<span aria-hidden="true">⌁</span>`,
-  `<span aria-hidden="true">◐</span>`,
-  `<span id="maxiosClock">--:--</span>`,
+  `<span aria-hidden="true">‹</span>`,
+  `<span aria-hidden="true">⌘</span>`,
+  `<span id="maxiosClock">--:--:--</span>`,
   `</div>`
 ];
 
@@ -170,13 +170,21 @@ function updateClock() {
 
   if (!clock) return;
 
-  clock.textContent = new Date().toLocaleString("de-DE", {
+  const now = new Date();
+
+  const date = now.toLocaleDateString("de-DE", {
     weekday: "short",
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit"
+    day: "numeric",
+    month: "short"
   });
+
+  const time = now.toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+
+  clock.textContent = `${date} ${time}`;
 }
 
 function createWindow(appKey) {
@@ -361,7 +369,7 @@ async function buildTopbar() {
   }
 
   updateClock();
-  window.setInterval(updateClock, 30000);
+  window.setInterval(updateClock, 1000);
 }
 
 async function buildIcons() {
