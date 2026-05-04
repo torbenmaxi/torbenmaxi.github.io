@@ -8,8 +8,18 @@
 
   <meta
     name="description"
-    content="Wähle dein Betriebssystem: MaxiOS oder miniOS."
+    content="Ein kleiner Ort im Internet von Torben Maximilian."
   />
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Maxi by Torben",
+      "alternateName": "T-Maxi",
+      "url": "https://t-maxi.de/"
+    }
+  </script>
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="stylesheet" href="/boot/boot.css?v=1" />
@@ -18,20 +28,26 @@
 <body>
   <main class="boot-manager" aria-labelledby="bootTitle">
     <header class="boot-header">
-      <span class="boot-dot boot-dot-red"></span>
-      <span class="boot-dot boot-dot-yellow"></span>
-      <span class="boot-dot boot-dot-green"></span>
+      <span class="boot-dot boot-dot-red" aria-hidden="true"></span>
+      <span class="boot-dot boot-dot-yellow" aria-hidden="true"></span>
+      <span class="boot-dot boot-dot-green" aria-hidden="true"></span>
       <span class="boot-title">Terminal</span>
     </header>
 
     <section class="boot-content">
+      <h1 class="sr-only" id="bootTitle">
+        Maxi by Torben Systemauswahl
+      </h1>
+
       <div class="boot-line" id="bootText" aria-live="polite"></div>
 
       <div class="recommended-system">
         <p class="recommended-label">Empfohlenes Betriebssystem</p>
 
         <a class="recommended-card" id="recommendedSystemLink" href="/maxios/">
-          <span class="recommended-icon" id="recommendedSystemIcon">🖥️</span>
+          <span class="recommended-icon" id="recommendedSystemIcon" aria-hidden="true">
+            🖥️
+          </span>
 
           <span>
             <strong id="recommendedSystemName">MaxiOS</strong>
@@ -43,25 +59,25 @@
 
       <nav class="boot-options" aria-label="Betriebssystem auswählen">
         <a class="boot-option" href="/maxios/" data-option="1">
-          <span class="boot-option-number">[1]</span>
+          <span class="boot-option-number" aria-hidden="true">[1]</span>
 
           <span>
             <strong>MaxiOS</strong>
             <span>Fensterbasierte Oberfläche für große Bildschirme.</span>
           </span>
 
-          <span class="boot-option-arrow">↵</span>
+          <span class="boot-option-arrow" aria-hidden="true">↵</span>
         </a>
 
         <a class="boot-option" href="/minios/" data-option="2">
-          <span class="boot-option-number">[2]</span>
+          <span class="boot-option-number" aria-hidden="true">[2]</span>
 
           <span>
             <strong>miniOS</strong>
             <span>Touchbasierte Oberfläche für kleine Bildschirme.</span>
           </span>
 
-          <span class="boot-option-arrow">↵</span>
+          <span class="boot-option-arrow" aria-hidden="true">↵</span>
         </a>
       </nav>
 
