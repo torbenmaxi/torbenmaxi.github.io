@@ -6,12 +6,7 @@ const recommendedSystemIcon = document.getElementById("recommendedSystemIcon");
 const recommendedSystemName = document.getElementById("recommendedSystemName");
 
 const prefersMiniOS = window.matchMedia("(max-width: 820px)").matches;
-
-if (prefersMiniOS) {
-  recommendedSystemLink.href = "/minios/";
-  recommendedSystemIcon.textContent = "📱";
-  recommendedSystemName.textContent = "miniOS";
-}
+const recommendedSystemUrl = prefersMiniOS ? "/minios/" : "/maxios/";
 
 const lines = [
   "Maxi by Torben",
@@ -24,6 +19,25 @@ const lines = [
   "System auswählen:"
 ];
 
+/* Recommended system */
+
+function updateRecommendedSystem() {
+  if (!recommendedSystemLink || !recommendedSystemIcon || !recommendedSystemName) return;
+
+  recommendedSystemLink.href = recommendedSystemUrl;
+
+  if (prefersMiniOS) {
+    recommendedSystemIcon.textContent = "📱";
+    recommendedSystemName.textContent = "miniOS";
+    return;
+  }
+
+  recommendedSystemIcon.textContent = "🖥️";
+  recommendedSystemName.textContent = "MaxiOS";
+}
+
+/* Terminal typing */
+
 function wait(milliseconds) {
   return new Promise((resolve) => {
     window.setTimeout(resolve, milliseconds);
@@ -31,6 +45,8 @@ function wait(milliseconds) {
 }
 
 async function typeBootText() {
+  if (!bootText) return;
+
   let output = "";
 
   for (const line of lines) {
@@ -48,18 +64,25 @@ async function typeBootText() {
   }
 }
 
+/* Keyboard shortcuts */
+
 document.addEventListener("keydown", (event) => {
   if (event.key === "1") {
     window.location.href = "/maxios/";
+    return;
   }
 
   if (event.key === "2") {
     window.location.href = "/minios/";
+    return;
   }
 
   if (event.key === "Enter") {
-    window.location.href = recommendedSystemLink.href;
+    window.location.href = recommendedSystemUrl;
   }
 });
 
+/* Init */
+
+updateRecommendedSystem();
 typeBootText();
