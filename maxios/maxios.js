@@ -67,6 +67,13 @@ function applyMaxiosTheme(theme) {
 
     button.setAttribute("aria-pressed", String(isActive));
   });
+  
+  const musicFrame = document.querySelector(".maxios-music-frame");
+  
+  if (musicFrame) {
+    musicFrame.src =
+      `https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x?theme=${normalizedTheme}`;
+  }
 }
 
 /* Windows */
@@ -77,18 +84,22 @@ const apps = {
     x: 220,
     y: 82,
     width: 620,
-    content: `
-      <h2>Musik</h2>
-      <p>Eine Playlist für nebenbei.</p>
-
-      <iframe
-        class="maxios-music-frame"
-        allow="autoplay *; encrypted-media *;"
-        title="Apple Music Playlist Seventeen"
-        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-        src="https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x?theme=dark"
-      ></iframe>
-    `
+    content: () => {
+      const theme = getSavedMaxiosTheme() === "light" ? "light" : "dark";
+  
+      return `
+        <h2>Musik</h2>
+        <p>Eine Playlist für nebenbei.</p>
+  
+        <iframe
+          class="maxios-music-frame"
+          allow="autoplay *; encrypted-media *;"
+          title="Apple Music Playlist Seventeen"
+          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+          src="https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x?theme=${theme}"
+        ></iframe>
+      `;
+    }
   }
 };
 
@@ -130,7 +141,7 @@ function createWindow(appKey) {
     </div>
 
     <div class="maxios-window-content">
-      ${app.content}
+      ${typeof app.content === "function" ? app.content() : app.content}
     </div>
   `;
 
