@@ -13,9 +13,11 @@ function updateClock() {
 
   const now = new Date();
 
-  const weekday = now.toLocaleDateString("de-DE", {
-    weekday: "short"
-  });
+  const weekday = now
+    .toLocaleDateString("de-DE", {
+      weekday: "short"
+    })
+    .replace(".", "");
 
   const date = now.toLocaleDateString("de-DE", {
     day: "numeric",
@@ -28,7 +30,7 @@ function updateClock() {
     second: "2-digit"
   });
 
-  clockElement.textContent = `${weekday} ${date} ${time}`;
+  clockElement.textContent = `${weekday}. ${date} | ${time}`;
 }
 
 /* Theme */
