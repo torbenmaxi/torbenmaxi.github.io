@@ -66,10 +66,10 @@ a {
   inset: 0 0 auto;
   z-index: 30;
   height: 38px;
-  padding: 0 18px;
-  display: flex;
+  padding: 0 14px;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
   background: rgba(3, 8, 12, 0.72);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(18px);
@@ -91,7 +91,17 @@ a {
 .maxios-topbar-right {
   display: flex;
   align-items: center;
-  gap: 18px;
+}
+
+.maxios-topbar-left {
+  gap: 22px;
+  min-width: 0;
+}
+
+.maxios-topbar-right {
+  gap: 14px;
+  justify-self: end;
+  white-space: nowrap;
 }
 
 .maxios-brand {
@@ -99,6 +109,12 @@ a {
   align-items: center;
   gap: 9px;
   font-weight: 800;
+  white-space: nowrap;
+}
+
+.maxios-topbar-left span,
+.maxios-topbar-right span {
+  white-space: nowrap;
 }
 
 .maxios-brand-dot {
