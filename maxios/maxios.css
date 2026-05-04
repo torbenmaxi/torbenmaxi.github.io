@@ -415,7 +415,10 @@ html.maxios-light .maxios-stats-menu-row:hover,
 .maxios-window {
   position: absolute;
   width: min(560px, calc(100vw - 32px));
+  min-width: 320px;
   min-height: 240px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 62px);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 18px;
@@ -543,6 +546,8 @@ html.maxios-light .maxios-stats-menu-row:hover,
 }
 
 .maxios-window-content {
+  height: calc(100% - 42px);
+  overflow: auto;
   padding: 26px;
 }
 
@@ -563,6 +568,34 @@ html.maxios-light .maxios-stats-menu-row:hover,
 
 .maxios-window-content p {
   color: rgba(244, 241, 234, 0.72);
+}
+
+.maxios-window-resize {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 18px;
+  height: 18px;
+  border: 0;
+  background: transparent;
+  cursor: nwse-resize;
+}
+
+.maxios-window-resize::before {
+  content: "";
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid rgba(244, 241, 234, 0.42);
+  border-bottom: 2px solid rgba(244, 241, 234, 0.42);
+  border-radius: 1px;
+}
+
+html.maxios-light .maxios-window-resize::before,
+.maxios.theme-light .maxios-window-resize::before {
+  border-color: rgba(21, 21, 21, 0.34);
 }
 
 /* Reserved app/window content */
