@@ -154,6 +154,30 @@ function updateClock() {
   clockElement.textContent = `${date} ${time}`;
 }
 
+function getSavedMaxiosTheme() {
+  return localStorage.getItem("maxiosTheme") || localStorage.getItem("theme") || "dark";
+}
+
+function applyMaxiosTheme(theme) {
+  if (!maxiosElement) return;
+
+  const isLight = theme === "light";
+
+  maxiosElement.classList.toggle("theme-light", isLight);
+  localStorage.setItem("maxiosTheme", isLight ? "light" : "dark");
+
+  themeOptionButtons.forEach((button) => {
+    const isActive = button.dataset.themeOption === (isLight ? "light" : "dark");
+
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
+function closeAppearanceMenu() {
+  appearanceMenuButton?.parentElement?.classList.remove("is-open");
+  appearanceMenu?.setAttribute("aria-hidden", "true");
+}
+
 function bringToFront(windowElement) {
   topZIndex += 1;
   windowElement.style.zIndex = String(topZIndex);
@@ -264,6 +288,30 @@ document.addEventListener("keydown", (event) => {
     .sort((a, b) => Number(b.style.zIndex || 0) - Number(a.style.zIndex || 0))[0];
 
   topWindow?.remove();
+});
+
+applyMaxiosTheme(getSavedMaxiosTheme());
+
+appearanceMenuButton?.addEventListener("click", (event) => {
+  event.stopPropagation();
+
+  const menu = appearanceMenuButton.parentElement;
+  const isOpen = menu?.classList.toggle("is-open");
+
+  appearanceMenu?.setAttribute("aria-hidden", String(!isOpen));
+});
+
+themeOptionButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    applyMaxiosTheme(button.dataset.themeOption);
+    closeAppearanceMenu();
+  });
+});
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".maxios-menu")) {
+    closeAppearanceMenu();
+  }
 });
 
 updateClock();
