@@ -3,6 +3,10 @@
 const clockElement = document.getElementById("maxiosClock");
 const windowLayer = document.getElementById("maxiosWindowLayer");
 const appTriggers = document.querySelectorAll("[data-app]");
+const maxiosElement = document.getElementById("maxios");
+const appearanceMenuButton = document.getElementById("appearanceMenuButton");
+const appearanceMenu = document.getElementById("appearanceMenu");
+const themeOptionButtons = document.querySelectorAll("[data-theme-option]");
 
 let topZIndex = 10;
 
