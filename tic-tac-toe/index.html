@@ -11,8 +11,14 @@
     content="Spiele Tic Tac Toe auf Maxi by Torben."
   />
 
+  <script>
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.classList.add("dark");
+    }
+  </script>
+
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/style.css?v=12" />
+  <link rel="stylesheet" href="/style.css?v=13" />
 </head>
 
 <body>
@@ -61,11 +67,12 @@
           </div>
 
           <div class="ttt-controls">
-            <div class="ttt-mode" aria-label="Spielmodus">
+            <div class="ttt-mode" role="group" aria-label="Spielmodus">
               <button
                 class="ttt-mode-option active"
                 type="button"
                 data-mode="human"
+                aria-pressed="true"
               >
                 2 Spieler
               </button>
@@ -74,6 +81,7 @@
                 class="ttt-mode-option"
                 type="button"
                 data-mode="computer"
+                aria-pressed="false"
               >
                 Computer
               </button>
@@ -127,7 +135,6 @@
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script src="/script.js?v=11" defer></script>
+  <script src="/script.js?v=13" defer></script>
 </body>
 </html>
