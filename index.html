@@ -8,7 +8,7 @@
 
   <meta
     name="description"
-    content="Ein kleiner Ort im Internet von Torben Maximilian."
+    content="Maxi by Torben – ein kleines System im Internet."
   />
 
   <script type="application/ld+json">
@@ -36,28 +36,30 @@
 
     <section class="boot-content">
       <h1 class="sr-only" id="bootTitle">
-        Maxi by Torben Systemauswahl
+        Maxi by Torben Systemstart
       </h1>
 
-      <div class="boot-line" id="bootText" aria-live="polite"></div>
+      <div class="boot-line boot-line-compact" id="bootText" aria-live="polite"></div>
 
-      <div class="recommended-system">
-        <p class="recommended-label">Empfohlenes Betriebssystem</p>
+      <div class="boot-autostart" id="bootAutostart">
+        <p>
+          Startet automatisch...
+        </p>
 
-        <a class="recommended-card" id="recommendedSystemLink" href="/maxios/">
-          <span class="recommended-icon" id="recommendedSystemIcon" aria-hidden="true">
-            🖥️
-          </span>
-
-          <span>
-            <strong id="recommendedSystemName">MaxiOS</strong>
-          </span>
-
-          <span class="recommended-arrow">Starten ↵</span>
-        </a>
+        <button
+          class="boot-switch-button"
+          id="bootSwitchButton"
+          type="button"
+        >
+          Anderes System wählen
+        </button>
       </div>
 
-      <nav class="boot-options" aria-label="Betriebssystem auswählen">
+      <nav
+        class="boot-options is-hidden"
+        id="bootOptions"
+        aria-label="Betriebssystem auswählen"
+      >
         <a class="boot-option" href="/maxios/" data-option="1">
           <span class="boot-option-number" aria-hidden="true">[1]</span>
 
@@ -81,9 +83,9 @@
         </a>
       </nav>
 
-      <p class="boot-footer">
+      <p class="boot-footer is-hidden" id="bootFooter">
         <span class="desktop-hint">
-          Tipp: Drücke 1 oder 2 auf deiner Tastatur. Enter startet die Empfehlung.
+          Tipp: Drücke 1 oder 2 auf deiner Tastatur.
         </span>
 
         <span class="mobile-hint">
