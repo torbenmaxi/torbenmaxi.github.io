@@ -84,7 +84,7 @@ const apps = {
     x: 220,
     y: 82,
     width: 620,
-    height: 820,
+    height: 520,
     content: () => {
       const theme = getSavedMaxiosTheme() === "light" ? "light" : "dark";
   
@@ -132,6 +132,10 @@ function createWindow(appKey) {
   windowElement.style.left = `${app.x}px`;
   windowElement.style.top = `${app.y}px`;
   windowElement.style.width = `${app.width}px`;
+
+  if (app.height) {
+    windowElement.style.height = `${app.height}px`;
+  }
 
   windowElement.innerHTML = `
     <div class="maxios-window-bar">
