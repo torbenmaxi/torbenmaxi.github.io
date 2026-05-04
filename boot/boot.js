@@ -4,7 +4,6 @@ const bootText = document.getElementById("bootText");
 const recommendedSystemLink = document.getElementById("recommendedSystemLink");
 const recommendedSystemIcon = document.getElementById("recommendedSystemIcon");
 const recommendedSystemName = document.getElementById("recommendedSystemName");
-const recommendedSystemDescription = document.getElementById("recommendedSystemDescription");
 
 const prefersMiniOS = window.matchMedia("(max-width: 820px)").matches;
 
@@ -12,7 +11,6 @@ if (prefersMiniOS) {
   recommendedSystemLink.href = "/minios/";
   recommendedSystemIcon.textContent = "📱";
   recommendedSystemName.textContent = "miniOS";
-  recommendedSystemDescription.textContent = "Touchbasierte Oberfläche für kleine Bildschirme.";
 }
 
 const lines = [
