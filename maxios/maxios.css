@@ -298,6 +298,46 @@ html.maxios-light .maxios-menu-panel button[aria-pressed="true"],
   background: rgba(255, 255, 255, 0.12);
 }
 
+.maxios-stats-menu {
+  width: 240px;
+  padding: 10px;
+}
+
+.maxios-stats-menu-row {
+  min-height: 34px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 10px;
+  color: var(--maxios-muted);
+  font-size: 14px;
+}
+
+.maxios-stats-menu-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.maxios-stats-menu-row strong {
+  color: var(--maxios-text);
+  font-weight: 800;
+}
+
+.maxios-stats-menu-note {
+  margin-top: 8px;
+  padding: 8px 10px 0;
+  border-top: 1px solid var(--maxios-line);
+  color: var(--maxios-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+html.maxios-light .maxios-stats-menu-row:hover,
+.maxios.theme-light .maxios-stats-menu-row:hover {
+  background: rgba(21, 21, 21, 0.06);
+}
+
 /* Windows */
 
 .maxios-window-layer {
