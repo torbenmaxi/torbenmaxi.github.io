@@ -138,8 +138,11 @@ function updateClock() {
 
   const now = new Date();
 
+  const weekday = now.toLocaleDateString("de-DE", {
+    weekday: "short"
+  });
+
   const date = now.toLocaleDateString("de-DE", {
-    weekday: "short",
     day: "numeric",
     month: "short"
   });
@@ -150,7 +153,7 @@ function updateClock() {
     second: "2-digit"
   });
 
-  clockElement.textContent = `${date} ${time}`;
+  clockElement.textContent = `${weekday} ${date} ${time}`;
 }
 
 function getSavedMaxiosTheme() {
