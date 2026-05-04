@@ -154,36 +154,52 @@ html.minios-light .minios::before,
 
 .minios-wifi {
   position: relative;
-  width: 18px;
+  width: 19px;
   height: 14px;
   display: inline-block;
-  overflow: hidden;
+  color: currentColor;
 }
 
 .minios-wifi span {
   position: absolute;
   left: 50%;
-  bottom: -2px;
+  display: block;
   border: 2px solid currentColor;
-  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
   border-left-color: transparent;
-  border-radius: 50%;
-  transform: translateX(-50%) rotate(45deg);
+  border-radius: 999px 999px 0 0;
+  transform: translateX(-50%);
 }
 
 .minios-wifi span:nth-child(1) {
+  top: 1px;
   width: 18px;
   height: 18px;
 }
 
 .minios-wifi span:nth-child(2) {
+  top: 5px;
   width: 12px;
   height: 12px;
 }
 
 .minios-wifi span:nth-child(3) {
+  top: 9px;
   width: 6px;
   height: 6px;
+}
+
+.minios-wifi::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translateX(-50%);
 }
 
 .minios-battery {
