@@ -1,7 +1,7 @@
 :root {
   --maxios-bg: #071018;
   --maxios-text: #f4f1ea;
-  --maxios-muted: rgba(244, 241, 234, 0.64);
+  --maxios-muted: rgba(244, 241, 234, 0.66);
   --maxios-line: rgba(255, 255, 255, 0.14);
   --maxios-glass: rgba(255, 255, 255, 0.1);
   --maxios-green: #a7f59d;
@@ -41,6 +41,12 @@ a {
   text-decoration: none;
 }
 
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(244, 241, 234, 0.9);
+  outline-offset: 3px;
+}
+
 .maxios {
   position: fixed;
   inset: 0;
@@ -68,23 +74,13 @@ a {
   height: 38px;
   padding: 0 14px;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   background: rgba(3, 8, 12, 0.72);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(18px);
   font-size: 14px;
   font-weight: 650;
-  opacity: 0;
-  transform: translateY(-8px);
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s ease;
-}
-
-.maxios-topbar.is-visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .maxios-topbar-left,
@@ -94,13 +90,18 @@ a {
 }
 
 .maxios-topbar-left {
-  gap: 22px;
   min-width: 0;
+  gap: 22px;
 }
 
 .maxios-topbar-right {
-  gap: 14px;
   justify-self: end;
+  gap: 14px;
+  white-space: nowrap;
+}
+
+.maxios-topbar-left span,
+.maxios-topbar-right span {
   white-space: nowrap;
 }
 
@@ -109,11 +110,6 @@ a {
   align-items: center;
   gap: 9px;
   font-weight: 800;
-  white-space: nowrap;
-}
-
-.maxios-topbar-left span,
-.maxios-topbar-right span {
   white-space: nowrap;
 }
 
@@ -155,16 +151,6 @@ a {
   cursor: pointer;
   text-align: center;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
-  opacity: 0;
-  transform: translateY(10px) scale(0.96);
-  transition:
-    opacity 0.28s ease,
-    transform 0.28s ease;
-}
-
-.maxios-icon.is-visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
 }
 
 .maxios-icon:hover .maxios-icon-symbol,
@@ -317,6 +303,7 @@ a {
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.075);
   color: #fff;
+  transition: background 0.18s ease;
 }
 
 .maxios-app-card:hover {
@@ -326,6 +313,25 @@ a {
 .maxios-app-card span {
   color: rgba(244, 241, 234, 0.58);
   font-size: 13px;
+}
+
+.maxios-stats-list {
+  margin-top: 20px;
+  display: grid;
+  gap: 10px;
+}
+
+.maxios-stats-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(244, 241, 234, 0.72);
+}
+
+.maxios-stats-row strong {
+  color: #fff;
 }
 
 .maxios-music-frame {
@@ -345,25 +351,8 @@ a {
   line-height: 1.6;
 }
 
-.maxios-terminal-output {
-  min-height: 320px;
-  white-space: pre-wrap;
-}
-
-.maxios-terminal-cursor {
-  display: inline-block;
-  width: 8px;
-  height: 1.2em;
-  margin-left: 3px;
-  background: var(--maxios-green);
-  vertical-align: -0.2em;
-  animation: maxios-cursor-blink 0.8s steps(2, start) infinite;
-}
-
-@keyframes maxios-cursor-blink {
-  50% {
-    opacity: 0;
-  }
+.maxios-terminal p {
+  color: var(--maxios-green);
 }
 
 .maxios-dock {
@@ -383,16 +372,7 @@ a {
     0 20px 70px rgba(0, 0, 0, 0.42),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(22px);
-  opacity: 0;
-  transform: translateX(-50%) translateY(14px);
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s ease;
-}
-
-.maxios-dock.is-visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%);
 }
 
 .maxios-dock-item {
