@@ -124,12 +124,66 @@ html.minios-light .minios::before,
 }
 
 .minios-signal {
-  letter-spacing: 1px;
+  height: 14px;
+  display: inline-flex;
+  align-items: end;
+  gap: 2px;
+}
+
+.minios-signal span {
+  width: 3px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.minios-signal span:nth-child(1) {
+  height: 5px;
+}
+
+.minios-signal span:nth-child(2) {
+  height: 8px;
+}
+
+.minios-signal span:nth-child(3) {
+  height: 11px;
+}
+
+.minios-signal span:nth-child(4) {
+  height: 14px;
 }
 
 .minios-wifi {
-  font-size: 13px;
-  transform: translateY(-1px);
+  position: relative;
+  width: 18px;
+  height: 14px;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.minios-wifi span {
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-radius: 50%;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.minios-wifi span:nth-child(1) {
+  width: 18px;
+  height: 18px;
+}
+
+.minios-wifi span:nth-child(2) {
+  width: 12px;
+  height: 12px;
+}
+
+.minios-wifi span:nth-child(3) {
+  width: 6px;
+  height: 6px;
 }
 
 .minios-battery {
