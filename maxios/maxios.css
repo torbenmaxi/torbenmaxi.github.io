@@ -67,6 +67,79 @@ a:focus-visible {
     radial-gradient(circle at 50% 115%, rgba(255, 255, 255, 0.1), transparent 44%);
 }
 
+.maxios.theme-light {
+  --maxios-bg: #f7f7f4;
+  --maxios-text: #151515;
+  --maxios-muted: rgba(21, 21, 21, 0.62);
+  --maxios-line: rgba(21, 21, 21, 0.14);
+  --maxios-glass: rgba(255, 255, 255, 0.62);
+  --maxios-green: #2f7d52;
+
+  color: var(--maxios-text);
+  background:
+    radial-gradient(circle at 18% 10%, rgba(145, 189, 198, 0.52), transparent 28%),
+    radial-gradient(circle at 78% 20%, rgba(197, 178, 210, 0.5), transparent 32%),
+    linear-gradient(180deg, #f7f7f4 0%, #ecece6 100%);
+}
+
+.maxios.theme-light::before {
+  background:
+    linear-gradient(to top, rgba(255, 255, 255, 0.32), transparent 56%),
+    radial-gradient(circle at 50% 115%, rgba(21, 21, 21, 0.08), transparent 44%);
+}
+
+.maxios.theme-light .maxios-topbar {
+  background: rgba(247, 247, 244, 0.74);
+  border-bottom-color: rgba(21, 21, 21, 0.1);
+}
+
+.maxios.theme-light .maxios-menu-panel,
+.maxios.theme-light .maxios-window {
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--maxios-text);
+  box-shadow:
+    0 30px 90px rgba(21, 21, 21, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.maxios.theme-light .maxios-window-bar {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.24));
+  border-bottom-color: rgba(21, 21, 21, 0.08);
+}
+
+.maxios.theme-light .maxios-window-title,
+.maxios.theme-light .maxios-window-content h2,
+.maxios.theme-light .maxios-window-content h3,
+.maxios.theme-light .maxios-stats-row strong {
+  color: var(--maxios-text);
+}
+
+.maxios.theme-light .maxios-window-content p,
+.maxios.theme-light .maxios-stats-row,
+.maxios.theme-light .maxios-app-card span {
+  color: var(--maxios-muted);
+}
+
+.maxios.theme-light .maxios-icon,
+.maxios.theme-light .maxios-dock-item,
+.maxios.theme-light .maxios-app-card {
+  color: var(--maxios-text);
+  text-shadow: none;
+}
+
+.maxios.theme-light .maxios-icon-symbol,
+.maxios.theme-light .maxios-dock,
+.maxios.theme-light .maxios-dock-item,
+.maxios.theme-light .maxios-app-card {
+  background: rgba(255, 255, 255, 0.54);
+  border-color: rgba(21, 21, 21, 0.12);
+}
+
+.maxios.theme-light .maxios-terminal,
+.maxios.theme-light .maxios-terminal p {
+  color: var(--maxios-green);
+}
+
 .maxios-topbar {
   position: absolute;
   inset: 0 0 auto;
@@ -103,6 +176,68 @@ a:focus-visible {
 .maxios-topbar-left span,
 .maxios-topbar-right span {
   white-space: nowrap;
+}
+
+.maxios-menu {
+  position: relative;
+}
+
+.maxios-menu-button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-weight: inherit;
+}
+
+.maxios-menu-panel {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: -10px;
+  width: 180px;
+  padding: 7px;
+  display: grid;
+  gap: 3px;
+  border: 1px solid var(--maxios-line);
+  border-radius: 14px;
+  background: rgba(10, 15, 19, 0.86);
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(22px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px) scale(0.98);
+  pointer-events: none;
+  transition:
+    opacity 0.16s ease,
+    visibility 0.16s ease,
+    transform 0.16s ease;
+}
+
+.maxios-menu.is-open .maxios-menu-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.maxios-menu-panel button {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--maxios-text);
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+}
+
+.maxios-menu-panel button:hover,
+.maxios-menu-panel button[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .maxios-brand {
