@@ -11,14 +11,20 @@
     content="Kleine Webprojekte, Spiele und Experimente von Torben."
   />
 
+  <script>
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.classList.add("dark");
+    }
+  </script>
+
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Maxi by Torben",
-    "alternateName": "T-Maxi",
-    "url": "https://t-maxi.de/"
-  }
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Maxi by Torben",
+      "alternateName": "T-Maxi",
+      "url": "https://t-maxi.de/"
+    }
   </script>
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -48,11 +54,7 @@
         <a href="#projects">Projekte</a>
         <a href="#contact">Kontakt</a>
 
-        <button
-          class="account-open"
-          id="accountOpen"
-          type="button"
-        >
+        <button class="account-open" id="accountOpen" type="button">
           Account
         </button>
 
@@ -71,13 +73,13 @@
   </header>
 
   <main>
-    <section class="hero container">
+    <section class="hero container" aria-labelledby="heroTitle">
       <div class="hero-content">
         <p class="eyebrow">
           Hello, world.
         </p>
 
-        <h1>Ein kleiner Ort im Internet.</h1>
+        <h1 id="heroTitle">Ein kleiner Ort im Internet.</h1>
       </div>
 
       <div class="hero-side">
@@ -201,10 +203,7 @@
             aria-hidden="true"
           />
 
-          <div
-            class="turnstile-box"
-            id="turnstileBox"
-          ></div>
+          <div class="turnstile-box" id="turnstileBox"></div>
 
           <p class="form-status" id="formStatus" aria-live="polite"></p>
 
@@ -219,7 +218,7 @@
   <footer>
     <div class="container footer-inner">
       <span>© 2026 Torben Maximilian</span>
-  
+
       <button
         class="stats-open"
         id="statsOpen"
@@ -228,7 +227,7 @@
       >
         Stats
       </button>
-  
+
       <span class="footer-links">
         <a href="/impressum/">Impressum</a>
         <span aria-hidden="true">·</span>
@@ -239,7 +238,7 @@
 
   <div class="stats-modal" id="statsModal" aria-hidden="true">
     <div class="stats-modal-backdrop" id="statsClose"></div>
-  
+
     <div
       class="stats-dialog"
       role="dialog"
@@ -254,39 +253,39 @@
       >
         ×
       </button>
-  
+
       <p class="eyebrow">Website Stats</p>
-  
+
       <h2 id="statsTitle">Kleine Zahlen.</h2>
-  
+
       <div class="stats-grid">
         <article class="stats-card stats-card-wide">
           <span class="stats-label">Website</span>
           <strong class="stats-value">Maxi by Torben</strong>
           <span class="stats-subline">Ein kleiner Ort im Internet.</span>
         </article>
-  
+
         <article class="stats-card">
           <span class="stats-label">Likes</span>
           <strong class="stats-value" id="statsLikeCount">–</strong>
         </article>
-  
+
         <article class="stats-card">
           <span class="stats-label">Gerade aktiv</span>
           <strong class="stats-value" id="activeVisitors">–</strong>
         </article>
-  
+
         <article class="stats-card">
           <span class="stats-label">Aufrufe</span>
           <strong class="stats-value" id="statsPageViews">–</strong>
         </article>
-  
+
         <article class="stats-card">
           <span class="stats-label">Online seit</span>
           <strong class="stats-value" id="statsDaysOnline">–</strong>
         </article>
       </div>
-  
+
       <p class="stats-note" id="statsUpdated">
         Wird geladen...
       </p>
@@ -295,7 +294,7 @@
 
   <div class="like-popup" id="likePopup" aria-hidden="true">
     <p>Gefällt dir die Website?</p>
-  
+
     <div class="like-popup-actions">
       <button
         class="like-widget"
@@ -307,27 +306,19 @@
         <span id="likeText">Gefällt mir</span>
         <strong id="likeCount">0</strong>
       </button>
-  
+
       <div class="like-popup-secondary">
-        <button
-          class="like-popup-later"
-          id="likePopupLater"
-          type="button"
-        >
+        <button class="like-popup-later" id="likePopupLater" type="button">
           Vielleicht später
         </button>
-  
-        <button
-          class="like-popup-no"
-          id="likePopupNo"
-          type="button"
-        >
+
+        <button class="like-popup-no" id="likePopupNo" type="button">
           Nein danke
         </button>
       </div>
     </div>
   </div>
-  
+
   <div class="account-modal" id="accountModal" aria-hidden="true">
     <div class="account-modal-backdrop" id="accountClose"></div>
 
