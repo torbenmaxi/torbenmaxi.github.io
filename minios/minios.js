@@ -3,10 +3,11 @@
 const miniosElement = document.getElementById("minios");
 const clockElement = document.getElementById("miniosClock");
 const appTriggers = document.querySelectorAll("[data-app]");
+const closeAppButtons = document.querySelectorAll("[data-close-app]");
+const themeOptionButtons = document.querySelectorAll("[data-theme-option]");
+
 const musicApp = document.getElementById("musicApp");
-const musicAppClose = document.getElementById("musicAppClose");
-const musicHomeIndicator = document.getElementById("musicHomeIndicator");
-const themeToggle = document.getElementById("themeToggle");
+const settingsApp = document.getElementById("settingsApp");
 const musicFrame = document.getElementById("musicFrame");
 
 const musicPlaylistUrl =
@@ -17,9 +18,7 @@ const musicPlaylistUrl =
 function updateClock() {
   if (!clockElement) return;
 
-  const now = new Date();
-
-  clockElement.textContent = now.toLocaleTimeString("de-DE", {
+  clockElement.textContent = new Date().toLocaleTimeString("de-DE", {
     hour: "2-digit",
     minute: "2-digit"
   });
@@ -42,49 +41,63 @@ function applyMiniOSTheme(theme) {
 
   localStorage.setItem("miniosTheme", normalizedTheme);
 
+  themeOptionButtons.forEach((button) => {
+    const isActive = button.dataset.themeOption === normalizedTheme;
+
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+
   if (musicFrame) {
     musicFrame.src = `${musicPlaylistUrl}?theme=${normalizedTheme}`;
   }
 }
 
-function toggleMiniOSTheme() {
-  const currentTheme = getSavedMiniOSTheme();
-  const nextTheme = currentTheme === "light" ? "dark" : "light";
-
-  applyMiniOSTheme(nextTheme);
-}
-
 /* Apps */
 
-function openMusicApp() {
-  if (!musicApp) return;
+function getAppElement(appName) {
+  if (appName === "music") return musicApp;
+  if (appName === "settings") return settingsApp;
 
-  musicApp.classList.add("is-open");
-  musicApp.setAttribute("aria-hidden", "false");
+  return null;
 }
 
-function closeMusicApp() {
-  if (!musicApp) return;
+function openApp(appName) {
+  const appElement = getAppElement(appName);
 
-  musicApp.classList.remove("is-open");
-  musicApp.setAttribute("aria-hidden", "true");
+  if (!appElement) return;
+
+  appElement.classList.add("is-open");
+  appElement.setAttribute("aria-hidden", "false");
+}
+
+function closeApps() {
+  [musicApp, settingsApp].forEach((appElement) => {
+    if (!appElement) return;
+
+    appElement.classList.remove("is-open");
+    appElement.setAttribute("aria-hidden", "true");
+  });
 }
 
 appTriggers.forEach((trigger) => {
   trigger.addEventListener("click", () => {
-    if (trigger.dataset.app === "music") {
-      openMusicApp();
-    }
+    openApp(trigger.dataset.app);
   });
 });
 
-musicAppClose?.addEventListener("click", closeMusicApp);
-musicHomeIndicator?.addEventListener("click", closeMusicApp);
-themeToggle?.addEventListener("click", toggleMiniOSTheme);
+closeAppButtons.forEach((button) => {
+  button.addEventListener("click", closeApps);
+});
+
+themeOptionButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    applyMiniOSTheme(button.dataset.themeOption);
+  });
+});
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    closeMusicApp();
+    closeApps();
   }
 });
 
