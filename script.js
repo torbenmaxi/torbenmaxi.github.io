@@ -24,14 +24,27 @@ function updateThemeToggle() {
   );
 }
 
+function updateAppleMusicTheme() {
+  const appleMusicEmbed = document.getElementById("appleMusicEmbed");
+
+  if (!appleMusicEmbed) return;
+
+  const baseUrl =
+    "https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x";
+
+  appleMusicEmbed.src = isDarkTheme() ? `${baseUrl}?theme=dark` : baseUrl;
+}
+
 applySavedTheme();
 updateThemeToggle();
+updateAppleMusicTheme();
 
 themeToggle?.addEventListener("click", () => {
   rootElement.classList.toggle("dark");
 
   localStorage.setItem("theme", isDarkTheme() ? "dark" : "light");
   updateThemeToggle();
+  updateAppleMusicTheme();
 });
 
 /* Leave warning */
