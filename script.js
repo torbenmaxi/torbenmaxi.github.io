@@ -2,36 +2,37 @@
 
 /* Theme */
 
+const rootElement = document.documentElement;
 const themeToggle = document.getElementById("themeToggle");
-const savedTheme = localStorage.getItem("theme");
 
-if (savedTheme === "dark") {
-  document.body.classList.add("dark");
+function isDarkTheme() {
+  return rootElement.classList.contains("dark");
+}
+
+function applySavedTheme() {
+  const savedTheme = localStorage.getItem("theme");
+
+  rootElement.classList.toggle("dark", savedTheme === "dark");
 }
 
 function updateThemeToggle() {
   if (!themeToggle) return;
 
-  const isDark = document.body.classList.contains("dark");
-
   themeToggle.setAttribute(
     "aria-label",
-    isDark ? "Lightmode aktivieren" : "Darkmode aktivieren"
+    isDarkTheme() ? "Lightmode aktivieren" : "Darkmode aktivieren"
   );
 }
 
-if (themeToggle) {
+applySavedTheme();
+updateThemeToggle();
+
+themeToggle?.addEventListener("click", () => {
+  rootElement.classList.toggle("dark");
+
+  localStorage.setItem("theme", isDarkTheme() ? "dark" : "light");
   updateThemeToggle();
-
-  themeToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-
-    const isDark = document.body.classList.contains("dark");
-
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-    updateThemeToggle();
-  });
-}
+});
 
 /* Leave warning */
 
@@ -61,7 +62,6 @@ const turnstileBox = document.getElementById("turnstileBox");
 const turnstileSiteKey = "0x4AAAAAADDEUylFGy2boS8x";
 
 let turnstileLoading = false;
-let turnstileLoaded = false;
 let turnstileWidgetId = null;
 let contactSubmitPending = false;
 
@@ -75,22 +75,20 @@ function setFormStatus(message, type = "") {
 function loadTurnstileScript() {
   return new Promise((resolve, reject) => {
     if (window.turnstile) {
-      turnstileLoaded = true;
       resolve();
       return;
     }
 
     if (turnstileLoading) {
-      const checkTurnstile = window.setInterval(() => {
-        if (window.turnstile) {
-          window.clearInterval(checkTurnstile);
-          turnstileLoaded = true;
-          resolve();
-        }
+      const checkInterval = window.setInterval(() => {
+        if (!window.turnstile) return;
+
+        window.clearInterval(checkInterval);
+        resolve();
       }, 100);
 
       window.setTimeout(() => {
-        window.clearInterval(checkTurnstile);
+        window.clearInterval(checkInterval);
         reject(new Error("Turnstile loading timeout"));
       }, 8000);
 
@@ -105,14 +103,8 @@ function loadTurnstileScript() {
     script.async = true;
     script.defer = true;
 
-    script.onload = () => {
-      turnstileLoaded = true;
-      resolve();
-    };
-
-    script.onerror = () => {
-      reject(new Error("Turnstile failed to load"));
-    };
+    script.addEventListener("load", () => resolve());
+    script.addEventListener("error", () => reject(new Error("Turnstile failed to load")));
 
     document.head.appendChild(script);
   });
@@ -120,6 +112,7 @@ function loadTurnstileScript() {
 
 function getTurnstileToken() {
   const tokenField = contactForm?.querySelector('[name="cf-turnstile-response"]');
+
   return tokenField?.value || "";
 }
 
@@ -176,7 +169,7 @@ async function prepareTurnstileAndSubmit() {
     return;
   }
 
-  turnstileBox?.classList.add("is-visible");
+  turnstileBox.classList.add("is-visible");
   setFormStatus("Sicherheitsprüfung wird geladen...");
 
   try {
@@ -201,9 +194,7 @@ async function prepareTurnstileAndSubmit() {
       });
     }
 
-    const existingToken = getTurnstileToken();
-
-    if (existingToken) {
+    if (getTurnstileToken()) {
       await sendContactForm();
       return;
     }
@@ -216,17 +207,13 @@ async function prepareTurnstileAndSubmit() {
   }
 }
 
-if (contactForm && formStatus) {
-  contactForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+contactForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
 
-    await prepareTurnstileAndSubmit();
-  });
-}
-
-contactForm?.addEventListener("input", () => {
-  enableLeaveWarning();
+  await prepareTurnstileAndSubmit();
 });
+
+contactForm?.addEventListener("input", enableLeaveWarning);
 
 /* Tic Tac Toe */
 
@@ -273,16 +260,13 @@ const ticTacToe = {
     this.resetScoreButton?.addEventListener("click", () => this.resetScore());
 
     const savedMode = localStorage.getItem("tttMode");
+    const initialMode = savedMode === "computer" ? "computer" : "human";
 
-    if (savedMode === "human" || savedMode === "computer") {
-      this.setMode(savedMode);
-    } else {
-      this.setMode("human");
-    }
+    this.setMode(initialMode);
 
     this.modeButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        const mode = button.dataset.mode;
+        const { mode } = button.dataset;
 
         if (mode !== "human" && mode !== "computer") return;
 
@@ -320,9 +304,7 @@ const ticTacToe = {
 
     const savedScore = localStorage.getItem("tttScore");
 
-    if (!savedScore) {
-      return fallbackScore;
-    }
+    if (!savedScore) return fallbackScore;
 
     try {
       return {
@@ -347,11 +329,11 @@ const ticTacToe = {
   },
 
   updateDisplay() {
-    this.cells.forEach((cell, index) => {
-      const isComputerTurn =
-        this.getMode() === "computer" &&
-        this.currentPlayer === this.computerPlayer;
+    const isComputerTurn =
+      this.getMode() === "computer" &&
+      this.currentPlayer === this.computerPlayer;
 
+    this.cells.forEach((cell, index) => {
       cell.textContent = this.board[index];
       cell.disabled =
         this.gameOver ||
@@ -367,6 +349,7 @@ const ticTacToe = {
 
   setStatus(message) {
     if (!this.statusElement) return;
+
     this.statusElement.textContent = message;
   },
 
@@ -393,6 +376,7 @@ const ticTacToe = {
     const score = this.getScore();
 
     score[winner] += 1;
+
     this.saveScore(score);
     this.updateScoreDisplay();
 
@@ -421,6 +405,7 @@ const ticTacToe = {
     this.gameOver = true;
 
     const score = this.getScore();
+
     score.draw += 1;
 
     this.saveScore(score);
@@ -459,19 +444,21 @@ const ticTacToe = {
     this.updateDisplay();
 
     if (
-      this.getMode() === "computer" &&
-      this.currentPlayer === this.computerPlayer &&
-      !this.gameOver
+      this.getMode() !== "computer" ||
+      this.currentPlayer !== this.computerPlayer ||
+      this.gameOver
     ) {
-      this.computerThinking = true;
-      this.updateDisplay();
-
-      window.setTimeout(() => {
-        this.makeComputerMove();
-        this.computerThinking = false;
-        this.updateDisplay();
-      }, 450);
+      return;
     }
+
+    this.computerThinking = true;
+    this.updateDisplay();
+
+    window.setTimeout(() => {
+      this.makeComputerMove();
+      this.computerThinking = false;
+      this.updateDisplay();
+    }, 450);
   },
 
   handleCellClick(event) {
@@ -508,9 +495,7 @@ const ticTacToe = {
 
       this.board[move] = "";
 
-      if (winner) {
-        return move;
-      }
+      if (winner) return move;
     }
 
     return null;
@@ -541,10 +526,10 @@ const ticTacToe = {
       move = availableMoves[Math.floor(Math.random() * availableMoves.length)];
     }
 
-    if (move !== null) {
-      this.board[move] = this.computerPlayer;
-      this.endTurn();
-    }
+    if (move === null) return;
+
+    this.board[move] = this.computerPlayer;
+    this.endTurn();
   },
 
   resetGame() {
@@ -647,16 +632,20 @@ const memory = {
   },
 
   shuffleCards() {
-    const cardValues = [...this.symbols, ...this.symbols];
+    const cards = [...this.symbols, ...this.symbols].map((symbol, index) => ({
+      id: index,
+      symbol,
+      isOpen: false,
+      isMatched: false
+    }));
 
-    return cardValues
-      .map((symbol, index) => ({
-        id: index,
-        symbol,
-        isOpen: false,
-        isMatched: false
-      }))
-      .sort(() => Math.random() - 0.5);
+    for (let i = cards.length - 1; i > 0; i -= 1) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+
+      [cards[i], cards[randomIndex]] = [cards[randomIndex], cards[i]];
+    }
+
+    return cards;
   },
 
   renderBoard() {
@@ -703,11 +692,11 @@ const memory = {
 
     this.updateCards();
 
-    if (this.openCards.length === 2) {
-      this.moves += 1;
-      this.checkPair();
-      this.updateDisplay();
-    }
+    if (this.openCards.length !== 2) return;
+
+    this.moves += 1;
+    this.checkPair();
+    this.updateDisplay();
   },
 
   checkPair() {
@@ -761,11 +750,13 @@ const memory = {
 
   getPlayerName() {
     const playerName = this.playerNameElement?.value.trim() || "";
+
     return playerName.slice(0, 18);
   },
 
   getBestScore() {
     const savedScore = localStorage.getItem("memoryBest");
+
     return savedScore ? Number(savedScore) : null;
   },
 
@@ -781,11 +772,10 @@ const memory = {
   async savePendingScore() {
     const playerName = this.getPlayerName();
 
-    if (!this.pendingScore || !playerName || this.scoreSaved) {
-      return;
-    }
+    if (!this.pendingScore || !playerName || this.scoreSaved) return;
 
     await this.saveScore(playerName, this.pendingScore);
+
     this.pendingScore = null;
     this.updateSaveButton();
   },
@@ -887,6 +877,7 @@ const memory = {
 
   setStatus(message) {
     if (!this.statusElement) return;
+
     this.statusElement.textContent = message;
   },
 
@@ -901,6 +892,14 @@ const memory = {
 };
 
 memory.init();
+
+/* Modals */
+
+function updateModalState() {
+  const hasOpenModal = document.querySelector(".account-modal.is-open, .stats-modal.is-open");
+
+  document.body.classList.toggle("modal-open", Boolean(hasOpenModal));
+}
 
 /* Fake account modal */
 
@@ -1021,7 +1020,9 @@ function openAccountModal() {
 
   accountModal.classList.add("is-open");
   accountModal.setAttribute("aria-hidden", "false");
+
   renderPasswordRules();
+  updateModalState();
 }
 
 function closeAccountModal() {
@@ -1029,6 +1030,8 @@ function closeAccountModal() {
 
   accountModal.classList.remove("is-open");
   accountModal.setAttribute("aria-hidden", "true");
+
+  updateModalState();
 }
 
 function renderPasswordRules() {
@@ -1063,20 +1066,13 @@ accountOpen?.addEventListener("click", openAccountModal);
 accountClose?.addEventListener("click", closeAccountModal);
 accountCloseButton?.addEventListener("click", closeAccountModal);
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    closeAccountModal();
-    closeStatsModal();
-  }
-});
-
 accountPassword?.addEventListener("input", () => {
   renderPasswordRules();
 
-  if (accountStatus) {
-    accountStatus.textContent = "";
-    accountStatus.className = "form-status";
-  }
+  if (!accountStatus) return;
+
+  accountStatus.textContent = "";
+  accountStatus.className = "form-status";
 });
 
 accountForm?.addEventListener("submit", (event) => {
@@ -1086,18 +1082,14 @@ accountForm?.addEventListener("submit", (event) => {
 
   const isValid = passwordRules.every((rule) => rule.test(accountPassword.value));
 
-  if (!isValid) {
-    accountStatus.className = "form-status error";
-    accountStatus.textContent = "Das Passwort erfüllt noch nicht alle Anforderungen.";
-    return;
-  }
-
   accountStatus.className = "form-status error";
-  accountStatus.textContent = "Account konnte nicht erstellt werden. Das Passwort ist zu sicher.";
+  accountStatus.textContent = isValid
+    ? "Account konnte nicht erstellt werden. Das Passwort ist zu sicher."
+    : "Das Passwort erfüllt noch nicht alle Anforderungen.";
 });
 
 passwordToggle?.addEventListener("click", () => {
-  if (!accountPassword) return;
+  if (!accountPassword || !passwordToggle) return;
 
   const isHidden = accountPassword.type === "password";
 
@@ -1141,8 +1133,18 @@ function updateLikeButton(isLiked) {
   );
 }
 
+function updateLikeCountDisplay(value) {
+  if (likeCount) {
+    likeCount.textContent = String(value);
+  }
+
+  if (statsLikeCount) {
+    statsLikeCount.textContent = String(value);
+  }
+}
+
 async function loadLikeCount() {
-  if (!supabaseClient || !likeCount) return;
+  if (!supabaseClient) return;
 
   const { data, error } = await supabaseClient
     .from("site_likes")
@@ -1155,14 +1157,11 @@ async function loadLikeCount() {
     return;
   }
 
-  likeCount.textContent = String(data.like_count);
-  if (statsLikeCount) {
-    statsLikeCount.textContent = String(data.like_count);
-  }
+  updateLikeCountDisplay(data.like_count);
 }
 
 async function changeLikeCount(delta) {
-  if (!supabaseClient || !likeCount) return;
+  if (!supabaseClient) return;
 
   const { data, error } = await supabaseClient.rpc("change_site_like", {
     target_slug: likeSlug,
@@ -1174,27 +1173,22 @@ async function changeLikeCount(delta) {
     return;
   }
 
-  likeCount.textContent = String(data);
-  if (statsLikeCount) {
-    statsLikeCount.textContent = String(data);
-  }
+  updateLikeCountDisplay(data);
 }
 
-function showLikePopupLater(delay = 8000) {
-  if (!likePopup) return;
-
+function canShowLikePopup() {
   const popupBlocked = localStorage.getItem("likePopupBlocked") === "true";
   const alreadyLiked = getLocalLikeState();
   const snoozedUntil = Number(localStorage.getItem("likePopupSnoozedUntil") || 0);
 
-  if (popupBlocked || alreadyLiked || Date.now() < snoozedUntil) return;
+  return !popupBlocked && !alreadyLiked && Date.now() >= snoozedUntil;
+}
+
+function showLikePopupLater(delay = 8000) {
+  if (!likePopup || !canShowLikePopup()) return;
 
   window.setTimeout(() => {
-    const stillBlocked = localStorage.getItem("likePopupBlocked") === "true";
-    const stillLiked = getLocalLikeState();
-    const stillSnoozedUntil = Number(localStorage.getItem("likePopupSnoozedUntil") || 0);
-
-    if (stillBlocked || stillLiked || Date.now() < stillSnoozedUntil) return;
+    if (!canShowLikePopup()) return;
 
     likePopup.classList.add("is-visible");
     likePopup.setAttribute("aria-hidden", "false");
@@ -1233,16 +1227,16 @@ if (likeButton) {
   });
 
   showLikePopupLater();
-  
+
   likePopupLater?.addEventListener("click", () => {
     const fiveMinutes = Date.now() + 5 * 60 * 1000;
-  
+
     localStorage.setItem("likePopupSnoozedUntil", String(fiveMinutes));
     hideLikePopup();
-  
+
     showLikePopupLater(5 * 60 * 1000);
   });
-  
+
   likePopupNo?.addEventListener("click", () => {
     localStorage.setItem("likePopupBlocked", "true");
     hideLikePopup();
@@ -1261,15 +1255,23 @@ function createVisitorId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function getActiveVisitorId() {
-  let visitorId = sessionStorage.getItem("activeVisitorId");
+function getStoredSessionValue(key) {
+  let value = sessionStorage.getItem(key);
 
-  if (!visitorId) {
-    visitorId = createVisitorId();
-    sessionStorage.setItem("activeVisitorId", visitorId);
+  if (!value) {
+    value = createVisitorId();
+    sessionStorage.setItem(key, value);
   }
 
-  return visitorId;
+  return value;
+}
+
+function getActiveVisitorId() {
+  return getStoredSessionValue("activeVisitorId");
+}
+
+function getSessionId() {
+  return getStoredSessionValue("siteSessionId");
 }
 
 async function updateActiveVisitors() {
@@ -1326,6 +1328,7 @@ function openStatsModal() {
   statsModal.classList.add("is-open");
   statsModal.setAttribute("aria-hidden", "false");
 
+  updateModalState();
   updateStatsPanel();
 }
 
@@ -1334,17 +1337,8 @@ function closeStatsModal() {
 
   statsModal.classList.remove("is-open");
   statsModal.setAttribute("aria-hidden", "true");
-}
 
-function getSessionId() {
-  let sessionId = sessionStorage.getItem("siteSessionId");
-
-  if (!sessionId) {
-    sessionId = createVisitorId();
-    sessionStorage.setItem("siteSessionId", sessionId);
-  }
-
-  return sessionId;
+  updateModalState();
 }
 
 async function recordPageView() {
@@ -1394,10 +1388,9 @@ async function loadStatsLikeCount() {
 function updateDaysOnline() {
   if (!statsDaysOnline) return;
 
-  const now = Date.now();
   const daysOnline = Math.max(
     1,
-    Math.floor((now - websiteLaunchDate.getTime()) / (24 * 60 * 60 * 1000))
+    Math.floor((Date.now() - websiteLaunchDate.getTime()) / (24 * 60 * 60 * 1000))
   );
 
   statsDaysOnline.textContent = `${daysOnline} Tage`;
@@ -1412,17 +1405,24 @@ async function updateStatsPanel() {
     updateActiveVisitors()
   ]);
 
-  if (statsUpdated) {
-    statsUpdated.textContent = `Zuletzt aktualisiert: ${new Date().toLocaleTimeString("de-DE", {
-      hour: "2-digit",
-      minute: "2-digit"
-    })}`;
-  }
+  if (!statsUpdated) return;
+
+  statsUpdated.textContent = `Zuletzt aktualisiert: ${new Date().toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit"
+  })}`;
 }
 
 statsOpen?.addEventListener("click", openStatsModal);
 statsClose?.addEventListener("click", closeStatsModal);
 statsCloseButton?.addEventListener("click", closeStatsModal);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+
+  closeAccountModal();
+  closeStatsModal();
+});
 
 recordPageView();
 
