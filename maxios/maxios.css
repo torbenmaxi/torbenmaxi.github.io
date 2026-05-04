@@ -517,6 +517,11 @@ html.maxios-light .maxios-stats-menu-row:hover,
   gap: 8px;
 }
 
+.maxios-window-controls {
+  display: inline-flex;
+  gap: 8px;
+}
+
 .maxios-window-control {
   position: relative;
   width: 13px;
@@ -535,19 +540,23 @@ html.maxios-light .maxios-stats-menu-row:hover,
   width: 7px;
   height: 1.4px;
   border-radius: 999px;
-  background: rgba(80, 20, 20, 0.7);
   opacity: 0;
   transform-origin: center;
   transition: opacity 0.12s ease;
 }
 
-.maxios-window-control:hover::before,
-.maxios-window-control:hover::after {
+.maxios-window-controls:hover .maxios-window-control::before,
+.maxios-window-controls:hover .maxios-window-control::after {
   opacity: 1;
 }
 
 .maxios-window-close {
   background: #ff5f57;
+}
+
+.maxios-window-close::before,
+.maxios-window-close::after {
+  background: rgba(80, 20, 20, 0.7);
 }
 
 .maxios-window-close::before {
