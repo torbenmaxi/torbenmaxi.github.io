@@ -34,7 +34,14 @@ async function typeBootText() {
   let output = "";
 
   for (const line of lines) {
-    output += `${line}\n`;
+    for (const character of line) {
+      output += character;
+      bootText.innerHTML = `${output}<span class="boot-cursor"></span>`;
+
+      await wait(25);
+    }
+
+    output += "\n";
     bootText.innerHTML = `${output}<span class="boot-cursor"></span>`;
 
     await wait(line === "" ? 120 : 260);
