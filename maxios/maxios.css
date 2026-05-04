@@ -81,14 +81,15 @@ a:focus-visible {
 /* Desktop icons */
 
 .maxios-icons {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 3;
-  width: 96px;
-  display: grid;
-  gap: 22px;
 }
 
 .maxios-icon {
+  position: absolute;
+  left: var(--icon-x, 28px);
+  top: var(--icon-y, 64px);
   width: 88px;
   min-height: 86px;
   padding: 0;
@@ -98,9 +99,20 @@ a:focus-visible {
   border: 0;
   background: transparent;
   color: #fff;
-  cursor: pointer;
+  cursor: grab;
   text-align: center;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+  user-select: none;
+  touch-action: none;
+}
+
+.maxios-icon:active {
+  cursor: grabbing;
+}
+
+.maxios-icon.is-dragging {
+  z-index: 50;
+  opacity: 0.92;
 }
 
 .maxios-icon:hover .maxios-icon-symbol {
@@ -752,17 +764,5 @@ html.maxios-light .maxios-window-resize::before,
 
   .maxios-app-grid {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 760px) {
-  .maxios-icons {
-    width: 100%;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-  }
-
-  .maxios-icon {
-    width: auto;
   }
 }
