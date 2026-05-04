@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>MaxiOS · Maxi by Torben</title>
+
+  <meta
+    name="description"
+    content="MaxiOS – ein interaktiver Desktop von Maxi by Torben."
+  />
+
+  <script>
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.classList.add("dark");
+    }
+  </script>
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/style.css?v=13" />
+  <link rel="stylesheet" href="/maxios/maxios.css?v=1" />
+</head>
+
+<body class="maxios-body">
+  <main class="maxios" id="maxios">
+    <header class="maxios-topbar">
+      <div class="maxios-topbar-left">
+        <a class="maxios-brand" href="/" aria-label="Zurück zur Startseite">
+          <span class="maxios-brand-dot"></span>
+          MaxiOS
+        </a>
+
+        <span>Datei</span>
+        <span>Bearbeiten</span>
+        <span>Darstellung</span>
+        <span>Gehe zu</span>
+        <span>Hilfe</span>
+      </div>
+
+      <div class="maxios-topbar-right">
+        <span aria-hidden="true">⌁</span>
+        <span aria-hidden="true">◐</span>
+        <span id="maxiosClock">--:--</span>
+      </div>
+    </header>
+
+    <section class="maxios-desktop" aria-label="MaxiOS Desktop">
+      <div class="maxios-icons" aria-label="Apps">
+        <button class="maxios-icon" type="button" data-app="welcome">
+          <span class="maxios-icon-symbol">🥑</span>
+          <span>Willkommen</span>
+        </button>
+
+        <button class="maxios-icon" type="button" data-app="projects">
+          <span class="maxios-icon-symbol">🕹️</span>
+          <span>Projekte</span>
+        </button>
+
+        <button class="maxios-icon" type="button" data-app="music">
+          <span class="maxios-icon-symbol">🎵</span>
+          <span>Musik</span>
+        </button>
+
+        <button class="maxios-icon" type="button" data-app="stats">
+          <span class="maxios-icon-symbol">📊</span>
+          <span>Stats</span>
+        </button>
+
+        <button class="maxios-icon" type="button" data-app="terminal">
+          <span class="maxios-icon-symbol">⌨️</span>
+          <span>Terminal</span>
+        </button>
+
+        <a class="maxios-icon" href="/tic-tac-toe/">
+          <span class="maxios-icon-symbol">❌</span>
+          <span>Tic Tac Toe</span>
+        </a>
+
+        <a class="maxios-icon" href="/memory/">
+          <span class="maxios-icon-symbol">🧠</span>
+          <span>Memory</span>
+        </a>
+      </div>
+
+      <div class="maxios-window-layer" id="maxiosWindowLayer"></div>
+
+      <nav class="maxios-dock" aria-label="Dock">
+        <button class="maxios-dock-item" type="button" data-app="welcome">🥑</button>
+        <button class="maxios-dock-item" type="button" data-app="projects">🕹️</button>
+        <button class="maxios-dock-item" type="button" data-app="music">🎵</button>
+        <button class="maxios-dock-item" type="button" data-app="stats">📊</button>
+        <button class="maxios-dock-item" type="button" data-app="terminal">⌨️</button>
+        <a class="maxios-dock-item" href="/tic-tac-toe/">❌</a>
+        <a class="maxios-dock-item" href="/memory/">🧠</a>
+      </nav>
+    </section>
+  </main>
+
+  <script src="/maxios/maxios.js?v=1" defer></script>
+</body>
+</html>
