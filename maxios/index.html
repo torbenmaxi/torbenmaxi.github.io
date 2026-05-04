@@ -18,32 +18,20 @@
   </script>
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/maxios/boot.css?v=1" />
+  <link rel="stylesheet" href="/maxios/maxios.css?v=2" />
 </head>
 
 <body>
-  <main class="boot-shell" id="bootShell">
-    <section class="boot-editor" aria-label="Live Code">
-      <header class="boot-editor-header">
-        <span class="boot-dot boot-dot-red"></span>
-        <span class="boot-dot boot-dot-yellow"></span>
-        <span class="boot-dot boot-dot-green"></span>
-        <strong id="bootFileName">boot.maxios</strong>
-      </header>
+  <main class="maxios is-booting" id="maxios">
+    <header class="maxios-topbar" id="maxiosTopbar"></header>
 
-      <pre class="boot-code"><code id="bootCode"></code><span class="boot-cursor"></span></pre>
-    </section>
-
-    <section class="boot-preview" aria-label="MaxiOS Preview">
-      <div class="boot-preview-header">
-        <span>MaxiOS Preview</span>
-        <span id="bootStatus">waiting...</span>
-      </div>
-
-      <div class="boot-preview-stage" id="bootPreview"></div>
+    <section class="maxios-desktop" aria-label="MaxiOS Desktop">
+      <div class="maxios-icons" id="maxiosIcons" aria-label="Apps"></div>
+      <div class="maxios-window-layer" id="maxiosWindowLayer"></div>
+      <nav class="maxios-dock" id="maxiosDock" aria-label="Dock"></nav>
     </section>
   </main>
 
-  <script src="/maxios/boot.js?v=1" defer></script>
+  <script src="/maxios/maxios.js?v=2" defer></script>
 </body>
 </html>
