@@ -186,7 +186,7 @@ html.minios-light .minios::before,
 }
 
 .minios-wifi span:nth-child(3) {
-  top: 7.5px;
+  top: 7px;
   width: 6px;
   height: 6px;
 }
@@ -195,9 +195,9 @@ html.minios-light .minios::before,
   content: "";
   position: absolute;
   left: 50%;
-  bottom: 0;
-  width: 3.5px;
-  height: 3.5px;
+  bottom: 0.5px;
+  width: 2.6px;
+  height: 2.6px;
   border-radius: 999px;
   background: currentColor;
   transform: translateX(-50%);
