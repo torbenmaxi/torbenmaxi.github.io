@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>miniOS · Maxi by Torben</title>
+
+  <meta
+    name="description"
+    content="miniOS – ein kleines System im Internet."
+  />
+
+  <script>
+    const savedMiniOSTheme =
+      localStorage.getItem("miniosTheme") || localStorage.getItem("maxiosTheme");
+
+    if (savedMiniOSTheme === "light") {
+      document.documentElement.classList.add("minios-light");
+    }
+  </script>
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/minios/minios.css?v=1" />
+</head>
+
+<body>
+  <main class="minios" id="minios">
+    <section class="minios-phone" aria-label="miniOS Oberfläche">
+      <header class="minios-statusbar">
+        <span id="miniosClock">--:--</span>
+
+        <div class="minios-status-icons" aria-hidden="true">
+          <span>●●●</span>
+          <span>⌁</span>
+          <span class="minios-battery"></span>
+        </div>
+      </header>
+
+      <section class="minios-home" aria-labelledby="miniosTitle">
+        <div class="minios-home-head">
+          <p class="minios-eyebrow">miniOS</p>
+          <h1 id="miniosTitle">Maxi by Torben</h1>
+        </div>
+
+        <div class="minios-app-grid" aria-label="Apps">
+          <button
+            class="minios-app-icon"
+            type="button"
+            data-app="music"
+            aria-label="Musik öffnen"
+          >
+            <span class="minios-icon-symbol minios-icon-music" aria-hidden="true">
+              <span class="minios-music-note">♪</span>
+            </span>
+            <span>Musik</span>
+          </button>
+        </div>
+
+        <div class="minios-dock" aria-label="Dock">
+          <button
+            class="minios-dock-item"
+            type="button"
+            data-app="music"
+            aria-label="Musik öffnen"
+          >
+            <span class="minios-dock-music" aria-hidden="true">
+              <span class="minios-music-note">♪</span>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <section
+        class="minios-app-screen"
+        id="musicApp"
+        aria-hidden="true"
+        aria-labelledby="musicAppTitle"
+      >
+        <header class="minios-app-header">
+          <button class="minios-back-button" id="musicAppClose" type="button">
+            Zurück
+          </button>
+
+          <h2 id="musicAppTitle">Musik</h2>
+
+          <button
+            class="minios-theme-button"
+            id="themeToggle"
+            type="button"
+            aria-label="Darstellung wechseln"
+          >
+            Darstellung
+          </button>
+        </header>
+
+        <div class="minios-app-content">
+          <p class="minios-app-intro">
+            Eine Playlist für nebenbei.
+          </p>
+
+          <iframe
+            class="minios-music-frame"
+            id="musicFrame"
+            allow="autoplay *; encrypted-media *;"
+            title="Apple Music Playlist Seventeen"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+            src="https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x?theme=dark"
+          ></iframe>
+        </div>
+
+        <button
+          class="minios-home-indicator"
+          id="musicHomeIndicator"
+          type="button"
+          aria-label="Zurück zum Homescreen"
+        ></button>
+      </section>
+    </section>
+  </main>
+
+  <script src="/minios/minios.js?v=1" defer></script>
+</body>
+</html>
