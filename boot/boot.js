@@ -16,14 +16,14 @@ if (prefersMiniOS) {
 }
 
 const lines = [
-  "Maxi by Torben Boot Manager",
+  "Maxi by Torben",
   "",
-  "detecting environment...",
-  prefersMiniOS ? "recommended system: miniOS" : "recommended system: MaxiOS",
-  "desktop runtime: available",
-  "mobile runtime: available",
+  "Systemstart wird vorbereitet...",
+  "Anzeigeprofil wird erkannt...",
+  prefersMiniOS ? "empfohlenes System: miniOS" : "empfohlenes System: MaxiOS",
+  "verfügbare Systeme geladen",
   "",
-  "choose operating system:"
+  "System auswählen:"
 ];
 
 function wait(milliseconds) {
