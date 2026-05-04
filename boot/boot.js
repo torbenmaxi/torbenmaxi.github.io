@@ -1,40 +1,23 @@
 "use strict";
 
 const bootText = document.getElementById("bootText");
-const recommendedSystemLink = document.getElementById("recommendedSystemLink");
-const recommendedSystemIcon = document.getElementById("recommendedSystemIcon");
-const recommendedSystemName = document.getElementById("recommendedSystemName");
+const bootOptions = document.getElementById("bootOptions");
+const bootFooter = document.getElementById("bootFooter");
+const bootSwitchButton = document.getElementById("bootSwitchButton");
 
 const prefersMiniOS = window.matchMedia("(max-width: 820px)").matches;
 const recommendedSystemUrl = prefersMiniOS ? "/minios/" : "/maxios/";
+const recommendedSystemName = prefersMiniOS ? "miniOS" : "MaxiOS";
+
+let autoStartEnabled = true;
 
 const lines = [
   "Maxi by Torben",
   "",
-  "Systemstart wird vorbereitet...",
-  "Anzeigeprofil wird erkannt...",
-  prefersMiniOS ? "empfohlenes System: miniOS" : "empfohlenes System: MaxiOS",
-  "verfügbare Systeme geladen",
-  "",
-  "System auswählen:"
+  "System wird erkannt...",
+  `${recommendedSystemName} ausgewählt`,
+  "Start wird vorbereitet..."
 ];
-
-/* Recommended system */
-
-function updateRecommendedSystem() {
-  if (!recommendedSystemLink || !recommendedSystemIcon || !recommendedSystemName) return;
-
-  recommendedSystemLink.href = recommendedSystemUrl;
-
-  if (prefersMiniOS) {
-    recommendedSystemIcon.textContent = "📱";
-    recommendedSystemName.textContent = "miniOS";
-    return;
-  }
-
-  recommendedSystemIcon.textContent = "🖥️";
-  recommendedSystemName.textContent = "MaxiOS";
-}
 
 /* Terminal typing */
 
@@ -54,25 +37,43 @@ async function typeBootText() {
       output += character;
       bootText.innerHTML = `${output}<span class="boot-cursor"></span>`;
 
-      await wait(25);
+      await wait(24);
     }
 
     output += "\n";
     bootText.innerHTML = `${output}<span class="boot-cursor"></span>`;
 
-    await wait(line === "" ? 120 : 260);
+    await wait(line === "" ? 100 : 220);
   }
 }
 
-/* Keyboard shortcuts */
+/* System selection */
+
+function showSystemOptions() {
+  autoStartEnabled = false;
+
+  bootOptions?.classList.remove("is-hidden");
+  bootFooter?.classList.remove("is-hidden");
+  bootSwitchButton?.setAttribute("aria-expanded", "true");
+}
+
+function startRecommendedSystem() {
+  if (!autoStartEnabled) return;
+
+  window.location.href = recommendedSystemUrl;
+}
+
+bootSwitchButton?.addEventListener("click", showSystemOptions);
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "1") {
+    autoStartEnabled = false;
     window.location.href = "/maxios/";
     return;
   }
 
   if (event.key === "2") {
+    autoStartEnabled = false;
     window.location.href = "/minios/";
     return;
   }
@@ -80,9 +81,13 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     window.location.href = recommendedSystemUrl;
   }
+
+  if (event.key === "Escape") {
+    showSystemOptions();
+  }
 });
 
 /* Init */
 
-updateRecommendedSystem();
 typeBootText();
+window.setTimeout(startRecommendedSystem, 3200);
