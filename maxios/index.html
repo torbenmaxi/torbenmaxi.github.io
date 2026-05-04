@@ -8,7 +8,7 @@
 
   <meta
     name="description"
-    content="MaxiOS – ein interaktiver Desktop von Maxi by Torben."
+    content="MaxiOS baut sich live im Browser zusammen."
   />
 
   <script>
@@ -18,85 +18,32 @@
   </script>
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/style.css?v=13" />
-  <link rel="stylesheet" href="/maxios/maxios.css?v=1" />
+  <link rel="stylesheet" href="/maxios/boot.css?v=1" />
 </head>
 
-<body class="maxios-body">
-  <main class="maxios" id="maxios">
-    <header class="maxios-topbar">
-      <div class="maxios-topbar-left">
-        <a class="maxios-brand" href="/" aria-label="Zurück zur Startseite">
-          <span class="maxios-brand-dot"></span>
-          MaxiOS
-        </a>
+<body>
+  <main class="boot-shell" id="bootShell">
+    <section class="boot-editor" aria-label="Live Code">
+      <header class="boot-editor-header">
+        <span class="boot-dot boot-dot-red"></span>
+        <span class="boot-dot boot-dot-yellow"></span>
+        <span class="boot-dot boot-dot-green"></span>
+        <strong id="bootFileName">boot.maxios</strong>
+      </header>
 
-        <span>Datei</span>
-        <span>Bearbeiten</span>
-        <span>Darstellung</span>
-        <span>Gehe zu</span>
-        <span>Hilfe</span>
+      <pre class="boot-code"><code id="bootCode"></code><span class="boot-cursor"></span></pre>
+    </section>
+
+    <section class="boot-preview" aria-label="MaxiOS Preview">
+      <div class="boot-preview-header">
+        <span>MaxiOS Preview</span>
+        <span id="bootStatus">waiting...</span>
       </div>
 
-      <div class="maxios-topbar-right">
-        <span aria-hidden="true">⌁</span>
-        <span aria-hidden="true">◐</span>
-        <span id="maxiosClock">--:--</span>
-      </div>
-    </header>
-
-    <section class="maxios-desktop" aria-label="MaxiOS Desktop">
-      <div class="maxios-icons" aria-label="Apps">
-        <button class="maxios-icon" type="button" data-app="welcome">
-          <span class="maxios-icon-symbol">🥑</span>
-          <span>Willkommen</span>
-        </button>
-
-        <button class="maxios-icon" type="button" data-app="projects">
-          <span class="maxios-icon-symbol">🕹️</span>
-          <span>Projekte</span>
-        </button>
-
-        <button class="maxios-icon" type="button" data-app="music">
-          <span class="maxios-icon-symbol">🎵</span>
-          <span>Musik</span>
-        </button>
-
-        <button class="maxios-icon" type="button" data-app="stats">
-          <span class="maxios-icon-symbol">📊</span>
-          <span>Stats</span>
-        </button>
-
-        <button class="maxios-icon" type="button" data-app="terminal">
-          <span class="maxios-icon-symbol">⌨️</span>
-          <span>Terminal</span>
-        </button>
-
-        <a class="maxios-icon" href="/tic-tac-toe/">
-          <span class="maxios-icon-symbol">❌</span>
-          <span>Tic Tac Toe</span>
-        </a>
-
-        <a class="maxios-icon" href="/memory/">
-          <span class="maxios-icon-symbol">🧠</span>
-          <span>Memory</span>
-        </a>
-      </div>
-
-      <div class="maxios-window-layer" id="maxiosWindowLayer"></div>
-
-      <nav class="maxios-dock" aria-label="Dock">
-        <button class="maxios-dock-item" type="button" data-app="welcome">🥑</button>
-        <button class="maxios-dock-item" type="button" data-app="projects">🕹️</button>
-        <button class="maxios-dock-item" type="button" data-app="music">🎵</button>
-        <button class="maxios-dock-item" type="button" data-app="stats">📊</button>
-        <button class="maxios-dock-item" type="button" data-app="terminal">⌨️</button>
-        <a class="maxios-dock-item" href="/tic-tac-toe/">❌</a>
-        <a class="maxios-dock-item" href="/memory/">🧠</a>
-      </nav>
+      <div class="boot-preview-stage" id="bootPreview"></div>
     </section>
   </main>
 
-  <script src="/maxios/maxios.js?v=1" defer></script>
+  <script src="/maxios/boot.js?v=1" defer></script>
 </body>
 </html>
