@@ -13,6 +13,11 @@ const maxiosStatsPageViews = document.getElementById("maxiosStatsPageViews");
 const maxiosStatsActiveVisitors = document.getElementById("maxiosStatsActiveVisitors");
 const maxiosStatsUpdated = document.getElementById("maxiosStatsUpdated");
 
+const windowLayer = document.getElementById("maxiosWindowLayer");
+const appTriggers = document.querySelectorAll("[data-app]");
+
+let topZIndex = 10;
+
 /* Clock */
 
 function updateClock() {
@@ -63,6 +68,132 @@ function applyMaxiosTheme(theme) {
     button.setAttribute("aria-pressed", String(isActive));
   });
 }
+
+/* Windows */
+
+const apps = {
+  music: {
+    title: "Musik",
+    x: 220,
+    y: 82,
+    width: 620,
+    content: `
+      <h2>Musik</h2>
+      <p>Eine Playlist für nebenbei.</p>
+
+      <iframe
+        class="maxios-music-frame"
+        allow="autoplay *; encrypted-media *;"
+        title="Apple Music Playlist Seventeen"
+        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+        src="https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x?theme=dark"
+      ></iframe>
+    `
+  }
+};
+
+function bringToFront(windowElement) {
+  topZIndex += 1;
+  windowElement.style.zIndex = String(topZIndex);
+}
+
+function createWindow(appKey) {
+  const app = apps[appKey];
+
+  if (!app || !windowLayer) return;
+
+  const existingWindow = windowLayer.querySelector(`[data-window="${appKey}"]`);
+
+  if (existingWindow) {
+    bringToFront(existingWindow);
+    return;
+  }
+
+  const windowElement = document.createElement("article");
+
+  windowElement.className = "maxios-window";
+  windowElement.dataset.window = appKey;
+  windowElement.style.left = `${app.x}px`;
+  windowElement.style.top = `${app.y}px`;
+  windowElement.style.width = `${app.width}px`;
+
+  windowElement.innerHTML = `
+    <div class="maxios-window-bar">
+      <div class="maxios-window-controls">
+        <button class="maxios-window-control maxios-window-close" type="button" aria-label="Fenster schließen"></button>
+        <button class="maxios-window-control maxios-window-minimize" type="button" aria-label="Fenster minimieren"></button>
+        <button class="maxios-window-control maxios-window-zoom" type="button" aria-label="Fenster maximieren"></button>
+      </div>
+
+      <strong class="maxios-window-title">${app.title}</strong>
+      <span></span>
+    </div>
+
+    <div class="maxios-window-content">
+      ${app.content}
+    </div>
+  `;
+
+  windowLayer.appendChild(windowElement);
+  bringToFront(windowElement);
+  makeWindowDraggable(windowElement);
+
+  windowElement.querySelector(".maxios-window-close")?.addEventListener("click", () => {
+    windowElement.remove();
+  });
+
+  windowElement.addEventListener("pointerdown", () => {
+    bringToFront(windowElement);
+  });
+}
+
+function makeWindowDraggable(windowElement) {
+  const dragHandle = windowElement.querySelector(".maxios-window-bar");
+
+  if (!dragHandle) return;
+
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let initialLeft = 0;
+  let initialTop = 0;
+
+  dragHandle.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("button")) return;
+
+    isDragging = true;
+    startX = event.clientX;
+    startY = event.clientY;
+    initialLeft = windowElement.offsetLeft;
+    initialTop = windowElement.offsetTop;
+
+    bringToFront(windowElement);
+    dragHandle.setPointerCapture(event.pointerId);
+  });
+
+  dragHandle.addEventListener("pointermove", (event) => {
+    if (!isDragging) return;
+
+    const nextLeft = initialLeft + event.clientX - startX;
+    const nextTop = initialTop + event.clientY - startY;
+    const maxLeft = window.innerWidth - windowElement.offsetWidth - 12;
+    const maxTop = window.innerHeight - windowElement.offsetHeight - 96;
+
+    windowElement.style.left = `${Math.max(12, Math.min(nextLeft, maxLeft))}px`;
+    windowElement.style.top = `${Math.max(12, Math.min(nextTop, maxTop))}px`;
+  });
+
+  dragHandle.addEventListener("pointerup", (event) => {
+    isDragging = false;
+    dragHandle.releasePointerCapture(event.pointerId);
+  });
+}
+
+appTriggers.forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    createWindow(trigger.dataset.app);
+  });
+});
 
 /* Stats */
 
