@@ -159,10 +159,10 @@ html.maxios-light .maxios-icon-symbol,
 
 .maxios-music-note {
   color: #fff;
-  font-size: 46px;
+  font-size: 52px;
   font-weight: 900;
   line-height: 1;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   text-shadow: 0 2px 10px rgba(120, 0, 40, 0.28);
 }
 
