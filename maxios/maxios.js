@@ -2,7 +2,6 @@
 
 const clockElement = document.getElementById("maxiosClock");
 const windowLayer = document.getElementById("maxiosWindowLayer");
-const appTriggers = document.querySelectorAll("[data-app]");
 const maxiosElement = document.getElementById("maxios");
 const appearanceMenuButton = document.getElementById("appearanceMenuButton");
 const appearanceMenu = document.getElementById("appearanceMenu");
@@ -316,8 +315,3 @@ document.addEventListener("click", (event) => {
 
 updateClock();
 window.setInterval(updateClock, 1000);
-
-createWindow("welcome");
-createWindow("music");
-createWindow("stats");
-createWindow("terminal");
