@@ -88,16 +88,20 @@ const apps = {
       const theme = getSavedMaxiosTheme() === "light" ? "light" : "dark";
   
       return `
-        <h2>Musik</h2>
-        <p>Eine Playlist für nebenbei.</p>
-  
-        <iframe
-          class="maxios-music-frame"
-          allow="autoplay *; encrypted-media *;"
-          title="Apple Music Playlist Seventeen"
-          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-          src="https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x?theme=${theme}"
-        ></iframe>
+        <div class="maxios-music-app">
+          <div class="maxios-music-head">
+            <h2>Musik</h2>
+            <p>Eine Playlist für nebenbei.</p>
+          </div>
+      
+          <iframe
+            class="maxios-music-frame"
+            allow="autoplay *; encrypted-media *;"
+            title="Apple Music Playlist Seventeen"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+            src="https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x?theme=${theme}"
+          ></iframe>
+        </div>
       `;
     }
   }
