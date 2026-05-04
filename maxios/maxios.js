@@ -84,6 +84,7 @@ const apps = {
     x: 220,
     y: 82,
     width: 620,
+    height: 820,
     content: () => {
       const theme = getSavedMaxiosTheme() === "light" ? "light" : "dark";
   
