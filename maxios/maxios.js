@@ -18,6 +18,8 @@ const appTriggers = document.querySelectorAll("[data-app]");
 
 let topZIndex = 10;
 
+const desktopIconButtons = document.querySelectorAll("[data-desktop-icon]");
+
 /* Clock */
 
 function updateClock() {
@@ -277,11 +279,138 @@ function makeWindowResizable(windowElement) {
   });
 }
 
-appTriggers.forEach((trigger) => {
-  trigger.addEventListener("click", () => {
-    createWindow(trigger.dataset.app);
+desktopIconButtons.forEach((icon) => {
+  makeDesktopIconDraggable(icon);
+
+  icon.addEventListener("dblclick", () => {
+    createWindow(icon.dataset.app);
   });
 });
+
+function makeDesktopIconDraggable(icon) {
+  const gridSizeX = 112;
+  const gridSizeY = 112;
+  const desktopPadding = 24;
+  const topPadding = 24;
+
+  let isDragging = false;
+  let pointerMoved = false;
+  let startX = 0;
+  let startY = 0;
+  let initialLeft = 0;
+  let initialTop = 0;
+  let holdTimer = null;
+
+  function getIconPosition() {
+    const computedStyle = window.getComputedStyle(icon);
+
+    return {
+      left: parseFloat(computedStyle.left) || 0,
+      top: parseFloat(computedStyle.top) || 0
+    };
+  }
+
+  function snapToGrid(value, gridSize, offset = 0) {
+    return Math.round((value - offset) / gridSize) * gridSize + offset;
+  }
+
+  function clampIconPosition(left, top) {
+    const desktop = icon.closest(".maxios-desktop");
+    const desktopRect = desktop.getBoundingClientRect();
+
+    const maxLeft = desktopRect.width - icon.offsetWidth - desktopPadding;
+    const maxTop = desktopRect.height - icon.offsetHeight - desktopPadding;
+
+    return {
+      left: Math.max(desktopPadding, Math.min(left, maxLeft)),
+      top: Math.max(topPadding, Math.min(top, maxTop))
+    };
+  }
+
+  icon.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+
+    const position = getIconPosition();
+
+    startX = event.clientX;
+    startY = event.clientY;
+    initialLeft = position.left;
+    initialTop = position.top;
+    pointerMoved = false;
+
+    holdTimer = window.setTimeout(() => {
+      isDragging = true;
+      icon.classList.add("is-dragging");
+      icon.setPointerCapture(event.pointerId);
+    }, 180);
+  });
+
+  icon.addEventListener("pointermove", (event) => {
+    const distanceX = event.clientX - startX;
+    const distanceY = event.clientY - startY;
+    const distance = Math.hypot(distanceX, distanceY);
+
+    if (distance > 4) {
+      pointerMoved = true;
+    }
+
+    if (!isDragging && pointerMoved && holdTimer) {
+      window.clearTimeout(holdTimer);
+      holdTimer = null;
+
+      isDragging = true;
+      icon.classList.add("is-dragging");
+      icon.setPointerCapture(event.pointerId);
+    }
+
+    if (!isDragging) return;
+
+    const nextPosition = clampIconPosition(
+      initialLeft + distanceX,
+      initialTop + distanceY
+    );
+
+    icon.style.left = `${nextPosition.left}px`;
+    icon.style.top = `${nextPosition.top}px`;
+  });
+
+  icon.addEventListener("pointerup", (event) => {
+    if (holdTimer) {
+      window.clearTimeout(holdTimer);
+      holdTimer = null;
+    }
+
+    if (!isDragging) return;
+
+    const currentPosition = getIconPosition();
+
+    const snappedPosition = clampIconPosition(
+      snapToGrid(currentPosition.left, gridSizeX, desktopPadding),
+      snapToGrid(currentPosition.top, gridSizeY, topPadding)
+    );
+
+    icon.style.left = `${snappedPosition.left}px`;
+    icon.style.top = `${snappedPosition.top}px`;
+
+    icon.style.setProperty("--icon-x", `${snappedPosition.left}px`);
+    icon.style.setProperty("--icon-y", `${snappedPosition.top}px`);
+
+    icon.classList.remove("is-dragging");
+    isDragging = false;
+
+    icon.releasePointerCapture(event.pointerId);
+  });
+
+  icon.addEventListener("pointercancel", () => {
+    if (holdTimer) {
+      window.clearTimeout(holdTimer);
+      holdTimer = null;
+    }
+
+    icon.classList.remove("is-dragging");
+    isDragging = false;
+  });
+}
 
 /* Stats */
 
