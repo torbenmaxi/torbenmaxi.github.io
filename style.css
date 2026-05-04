@@ -541,6 +541,34 @@ h2 {
   display: flex;
 }
 
+/* Music */
+
+.music-layout {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.music-intro {
+  max-width: 420px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.music-embed iframe {
+  width: 100%;
+  max-width: 660px;
+  height: 450px;
+  display: block;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+}
+
 /* Footer */
 
 footer {
@@ -1462,6 +1490,7 @@ footer {
 
   .grid,
   .contact-layout,
+  .music-layout,
   .ttt-layout,
   .memory-layout {
     grid-template-columns: 1fr;
