@@ -68,29 +68,32 @@ a:focus-visible {
 }
 
 .maxios.theme-light {
-  --maxios-bg: #f7f7f4;
+  --maxios-bg: #edeae2;
   --maxios-text: #151515;
   --maxios-muted: rgba(21, 21, 21, 0.62);
-  --maxios-line: rgba(21, 21, 21, 0.14);
-  --maxios-glass: rgba(255, 255, 255, 0.62);
+  --maxios-line: rgba(21, 21, 21, 0.13);
+  --maxios-glass: rgba(255, 255, 255, 0.48);
   --maxios-green: #2f7d52;
 
   color: var(--maxios-text);
   background:
-    radial-gradient(circle at 18% 10%, rgba(145, 189, 198, 0.52), transparent 28%),
-    radial-gradient(circle at 78% 20%, rgba(197, 178, 210, 0.5), transparent 32%),
-    linear-gradient(180deg, #f7f7f4 0%, #ecece6 100%);
+    radial-gradient(circle at 18% 12%, rgba(136, 192, 196, 0.45), transparent 30%),
+    radial-gradient(circle at 78% 18%, rgba(210, 174, 199, 0.5), transparent 34%),
+    radial-gradient(circle at 45% 84%, rgba(226, 214, 172, 0.38), transparent 36%),
+    linear-gradient(180deg, #e9e8e0 0%, #dcd8cc 100%);
 }
 
 .maxios.theme-light::before {
   background:
-    linear-gradient(to top, rgba(255, 255, 255, 0.32), transparent 56%),
-    radial-gradient(circle at 50% 115%, rgba(21, 21, 21, 0.08), transparent 44%);
+    linear-gradient(to top, rgba(255, 255, 255, 0.26), transparent 54%),
+    radial-gradient(circle at 50% 118%, rgba(21, 21, 21, 0.1), transparent 46%),
+    rgba(255, 255, 255, 0.18);
 }
 
 .maxios.theme-light .maxios-topbar {
-  background: rgba(247, 247, 244, 0.74);
-  border-bottom-color: rgba(21, 21, 21, 0.1);
+  background: rgba(248, 247, 242, 0.7);
+  border-bottom-color: rgba(21, 21, 21, 0.08);
+  box-shadow: 0 1px 18px rgba(21, 21, 21, 0.06);
 }
 
 .maxios.theme-light .maxios-menu-panel,
@@ -128,16 +131,39 @@ a:focus-visible {
 }
 
 .maxios.theme-light .maxios-icon-symbol,
-.maxios.theme-light .maxios-dock,
 .maxios.theme-light .maxios-dock-item,
 .maxios.theme-light .maxios-app-card {
-  background: rgba(255, 255, 255, 0.54);
-  border-color: rgba(21, 21, 21, 0.12);
+  background: rgba(255, 255, 255, 0.58);
+  border-color: rgba(21, 21, 21, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 14px 32px rgba(21, 21, 21, 0.12);
+}
+
+.maxios.theme-light .maxios-dock {
+  background: rgba(255, 255, 255, 0.42);
+  border-color: rgba(21, 21, 21, 0.1);
+  box-shadow:
+    0 20px 70px rgba(21, 21, 21, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .maxios.theme-light .maxios-terminal,
 .maxios.theme-light .maxios-terminal p {
   color: var(--maxios-green);
+}
+
+.maxios.theme-light .maxios-menu-panel {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(21, 21, 21, 0.1);
+  box-shadow:
+    0 22px 70px rgba(21, 21, 21, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.maxios.theme-light .maxios-menu-panel button:hover,
+.maxios.theme-light .maxios-menu-panel button[aria-pressed="true"] {
+  background: rgba(21, 21, 21, 0.08);
 }
 
 .maxios-topbar {
@@ -224,8 +250,9 @@ a:focus-visible {
 }
 
 .maxios-menu-panel button {
-  min-height: 34px;
-  padding: 0 10px;
+  position: relative;
+  min-height: 36px;
+  padding: 0 12px 0 32px;
   border: 0;
   border-radius: 10px;
   background: transparent;
@@ -233,6 +260,19 @@ a:focus-visible {
   cursor: pointer;
   text-align: left;
   font-size: 14px;
+  font-weight: 650;
+}
+
+.maxios-menu-panel button::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  opacity: 0;
+}
+
+.maxios-menu-panel button[aria-pressed="true"]::before {
+  content: "✓";
+  opacity: 1;
 }
 
 .maxios-menu-panel button:hover,
