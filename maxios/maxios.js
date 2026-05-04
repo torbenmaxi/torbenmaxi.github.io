@@ -20,6 +20,8 @@ let topZIndex = 10;
 
 const desktopIconButtons = document.querySelectorAll("[data-desktop-icon]");
 
+const minimizedBar = document.getElementById("maxiosMinimizedBar");
+
 /* Clock */
 
 function updateClock() {
@@ -124,10 +126,17 @@ function createWindow(appKey) {
 
   const existingWindow = windowLayer.querySelector(`[data-window="${appKey}"]`);
 
-  if (existingWindow) {
-    bringToFront(existingWindow);
+if (existingWindow) {
+  const minimizedItem = minimizedBar?.querySelector(`[data-minimized-window="${appKey}"]`);
+
+  if (existingWindow.classList.contains("is-minimized")) {
+    restoreWindow(existingWindow, minimizedItem);
     return;
   }
+
+  bringToFront(existingWindow);
+  return;
+}
 
   const windowElement = document.createElement("article");
 
@@ -178,7 +187,12 @@ function createWindow(appKey) {
   makeWindowResizable(windowElement);
 
   windowElement.querySelector(".maxios-window-close")?.addEventListener("click", () => {
+    removeMinimizedItem(appKey);
     windowElement.remove();
+  });
+  
+  windowElement.querySelector(".maxios-window-minimize")?.addEventListener("click", () => {
+    minimizeWindow(windowElement, appKey);
   });
 
   windowElement.addEventListener("pointerdown", () => {
@@ -410,6 +424,54 @@ function makeDesktopIconDraggable(icon) {
     icon.classList.remove("is-dragging");
     isDragging = false;
   });
+}
+
+function getAppIcon(appKey) {
+  if (appKey === "music") return "♪";
+
+  return "•";
+}
+
+function minimizeWindow(windowElement, appKey) {
+  if (!minimizedBar) return;
+
+  windowElement.classList.add("is-minimized");
+
+  const existingItem = minimizedBar.querySelector(`[data-minimized-window="${appKey}"]`);
+
+  if (existingItem) return;
+
+  const item = document.createElement("button");
+
+  item.className = "maxios-minimized-item";
+  item.type = "button";
+  item.dataset.minimizedWindow = appKey;
+  item.setAttribute("aria-label", `${apps[appKey].title} wiederherstellen`);
+
+  item.innerHTML = `
+    <span class="maxios-minimized-icon" aria-hidden="true">
+      ${getAppIcon(appKey)}
+    </span>
+    <span>${apps[appKey].title}</span>
+  `;
+
+  item.addEventListener("click", () => {
+    restoreWindow(windowElement, item);
+  });
+
+  minimizedBar.appendChild(item);
+}
+
+function restoreWindow(windowElement, minimizedItem) {
+  windowElement.classList.remove("is-minimized");
+  minimizedItem?.remove();
+  bringToFront(windowElement);
+}
+
+function removeMinimizedItem(appKey) {
+  minimizedBar
+    ?.querySelector(`[data-minimized-window="${appKey}"]`)
+    ?.remove();
 }
 
 /* Stats */
