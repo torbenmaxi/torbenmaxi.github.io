@@ -7,7 +7,6 @@
   --muted: rgba(244, 241, 234, 0.62);
   --green: #a7f59d;
   --radius-sm: 18px;
-  --radius-md: 22px;
   --radius-lg: 28px;
   --transition: 0.18s ease;
 }
@@ -61,6 +60,20 @@ select {
   font: inherit;
 }
 
+button {
+  color: inherit;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(244, 241, 234, 0.9);
+  outline-offset: 3px;
+}
+
+.is-hidden {
+  display: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -75,7 +88,7 @@ select {
 .boot-manager {
   position: relative;
   z-index: 1;
-  width: min(760px, 100%);
+  width: min(640px, 100%);
   max-height: calc(100vh - 40px);
   overflow: hidden;
   border: 1px solid var(--line);
@@ -129,7 +142,7 @@ select {
 }
 
 .boot-line {
-  min-height: 218px;
+  min-height: 150px;
   color: var(--green);
   font-size: clamp(14px, 2vw, 16px);
   line-height: 1.7;
@@ -152,108 +165,51 @@ select {
   }
 }
 
-/* Recommended system */
+/* Autostart */
 
-.recommended-system {
-  margin-top: 28px;
-}
-
-.recommended-label {
-  margin-bottom: 10px;
+.boot-autostart {
+  margin-top: 24px;
+  display: grid;
+  gap: 14px;
   color: var(--muted);
   font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  line-height: 1.6;
 }
 
-.recommended-card {
-  width: 100%;
-  min-height: 112px;
-  padding: 20px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 18px;
-  border: 1px solid rgba(167, 245, 157, 0.32);
-  border-radius: var(--radius-md);
-  background:
-    radial-gradient(circle at top right, rgba(167, 245, 157, 0.14), transparent 42%),
-    rgba(255, 255, 255, 0.085);
-  box-shadow:
-    0 18px 60px rgba(0, 0, 0, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+.boot-switch-button {
+  width: fit-content;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.075);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 800;
   transition:
     transform var(--transition),
     background var(--transition),
     border-color var(--transition);
 }
 
-.recommended-card:hover,
-.recommended-card:focus-visible,
-.boot-option:hover,
-.boot-option:focus-visible {
-  transform: translateY(-2px);
+.boot-switch-button:hover,
+.boot-switch-button:focus-visible {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.24);
   outline: none;
-}
-
-.recommended-card:hover,
-.recommended-card:focus-visible {
-  background:
-    radial-gradient(circle at top right, rgba(167, 245, 157, 0.18), transparent 42%),
-    rgba(255, 255, 255, 0.115);
-  border-color: rgba(167, 245, 157, 0.48);
-}
-
-.recommended-icon {
-  width: 58px;
-  height: 58px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.08);
-  font-size: 30px;
-}
-
-.recommended-card strong,
-.boot-option strong {
-  display: block;
-  color: var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  letter-spacing: -0.03em;
-}
-
-.recommended-card strong {
-  margin-bottom: 4px;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-
-.recommended-card span span,
-.boot-option span span {
-  color: var(--muted);
-  line-height: 1.4;
-}
-
-.recommended-card span span {
-  font-size: 14px;
-}
-
-.recommended-arrow {
-  color: var(--green);
-  font-size: 13px;
-  font-weight: 800;
-  white-space: nowrap;
 }
 
 /* System options */
 
 .boot-options {
-  margin-top: 20px;
+  margin-top: 24px;
   display: grid;
   gap: 12px;
+}
+
+.boot-options.is-hidden {
+  display: none;
 }
 
 .boot-option {
@@ -276,8 +232,10 @@ select {
 
 .boot-option:hover,
 .boot-option:focus-visible {
+  transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.11);
   border-color: rgba(255, 255, 255, 0.24);
+  outline: none;
 }
 
 .boot-option-number {
@@ -286,12 +244,18 @@ select {
 }
 
 .boot-option strong {
+  display: block;
   margin-bottom: 3px;
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 18px;
+  letter-spacing: -0.03em;
 }
 
 .boot-option span span {
+  color: var(--muted);
   font-size: 13px;
+  line-height: 1.4;
 }
 
 .boot-option-arrow {
@@ -301,10 +265,14 @@ select {
 /* Footer */
 
 .boot-footer {
-  margin-top: 22px;
+  margin-top: 18px;
   color: var(--muted);
   font-size: 13px;
   line-height: 1.6;
+}
+
+.boot-footer.is-hidden {
+  display: none;
 }
 
 .mobile-hint {
@@ -330,16 +298,16 @@ select {
   }
 
   .boot-line {
-    min-height: 200px;
+    min-height: 138px;
   }
 
-  .recommended-card {
-    min-height: 132px;
-    grid-template-columns: auto 1fr;
+  .boot-autostart {
+    margin-top: 20px;
   }
 
-  .recommended-arrow {
-    grid-column: 1 / -1;
+  .boot-switch-button {
+    width: 100%;
+    justify-content: center;
   }
 
   .boot-options {
