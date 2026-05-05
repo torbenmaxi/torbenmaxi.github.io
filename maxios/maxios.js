@@ -18,6 +18,8 @@ const windowLayer = document.getElementById("maxiosWindowLayer");
 const minimizedBar = document.getElementById("maxiosMinimizedBar");
 const desktopIconButtons = document.querySelectorAll("[data-desktop-icon]");
 
+const formspreeEndpoint = "https://formspree.io/f/xvzdlego";
+
 let topZIndex = 10;
 
 /* Clock */
@@ -66,7 +68,6 @@ function applyMaxiosTheme(theme) {
 
   themeOptionButtons.forEach((button) => {
     const isActive = button.dataset.themeOption === normalizedTheme;
-
     button.setAttribute("aria-pressed", String(isActive));
   });
 
@@ -120,7 +121,12 @@ const apps = {
     maxWidth: 760,
     maxHeight: 680,
     content: `
-      <form class="maxios-mail-app" id="maxiosMailForm">
+      <form
+        class="maxios-mail-app"
+        id="maxiosMailForm"
+        action="https://formspree.io/f/xvzdlego"
+        method="POST"
+      >
         <div class="maxios-mail-toolbar">
           <button type="submit">Senden</button>
         </div>
@@ -128,22 +134,43 @@ const apps = {
         <div class="maxios-mail-fields">
           <label>
             <span>An</span>
-            <input type="text" value="Torben Maximilian" readonly />
+            <input
+              type="text"
+              name="to"
+              value="Torben Maximilian"
+              readonly
+            />
           </label>
 
           <label>
             <span>Von</span>
-            <input name="name" type="text" placeholder="Dein Name" required />
+            <input
+              name="name"
+              type="text"
+              placeholder="Dein Name"
+              autocomplete="name"
+              required
+            />
           </label>
 
           <label>
             <span>E-Mail</span>
-            <input name="email" type="email" placeholder="deine@mail.de" required />
+            <input
+              name="email"
+              type="email"
+              placeholder="deine@mail.de"
+              autocomplete="email"
+              required
+            />
           </label>
 
           <label>
             <span>Betreff</span>
-            <input name="subject" type="text" placeholder="Worum geht es?" />
+            <input
+              name="subject"
+              type="text"
+              placeholder="Worum geht es?"
+            />
           </label>
         </div>
 
@@ -153,6 +180,8 @@ const apps = {
           placeholder="Schreib deine Nachricht..."
           required
         ></textarea>
+
+        <input type="hidden" name="source" value="maxios" />
 
         <p class="maxios-mail-status" data-mail-status aria-live="polite"></p>
       </form>
@@ -235,7 +264,7 @@ function createWindow(appKey) {
   makeWindowResizable(windowElement);
 
   if (appKey === "mail") {
-    setupMailForm(windowElement, "maxios");
+    setupMailForm(windowElement);
   }
 
   windowElement.querySelector(".maxios-window-close")?.addEventListener("click", () => {
@@ -256,50 +285,55 @@ function createWindow(appKey) {
   });
 }
 
-function setupMailForm(windowElement, source) {
-  const form = windowElement.querySelector("form");
-  const status = windowElement.querySelector("[data-mail-status]");
+/* Mail */
 
-  if (!form || !status) return;
+function setupMailForm(windowElement) {
+  const form = windowElement.querySelector("#maxiosMailForm");
+  const status = windowElement.querySelector("[data-mail-status]");
+  const submitButton = form?.querySelector('button[type="submit"]');
+
+  if (!form || !status || !submitButton) return;
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (!supabaseClient) {
-      status.textContent = "Senden ist gerade nicht verfügbar.";
-      return;
-    }
-
     const formData = new FormData(form);
+    const name = String(formData.get("name") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const message = String(formData.get("message") || "").trim();
 
-    const payload = {
-      name: String(formData.get("name") || "").trim(),
-      email: String(formData.get("email") || "").trim(),
-      subject: String(formData.get("subject") || "").trim(),
-      message: String(formData.get("message") || "").trim(),
-      source
-    };
-
-    if (!payload.name || !payload.email || !payload.message) {
+    if (!name || !email || !message) {
       status.textContent = "Bitte fülle Name, E-Mail und Nachricht aus.";
       return;
     }
 
     status.textContent = "Wird gesendet...";
+    submitButton.disabled = true;
 
-    const { error } = await supabaseClient
-      .from("contact_messages")
-      .insert(payload);
+    try {
+      const response = await fetch(formspreeEndpoint, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json"
+        }
+      });
 
-    if (error) {
+      if (!response.ok) {
+        throw new Error("Formspree request failed");
+      }
+
+      form.reset();
+      status.textContent = "Nachricht gesendet. Danke!";
+    } catch {
       status.textContent = "Nachricht konnte nicht gesendet werden.";
-      return;
+    } finally {
+      submitButton.disabled = false;
     }
-
-    form.reset();
-    status.textContent = "Nachricht gesendet. Danke!";
   });
 }
+
+/* Window controls */
 
 function toggleWindowZoom(windowElement) {
   const isZoomed = windowElement.classList.contains("is-zoomed");
@@ -443,7 +477,7 @@ function minimizeWindow(windowElement, appKey) {
 
   item.innerHTML = `
     <span class="maxios-app-symbol maxios-minimized-icon" aria-hidden="true">
-     <img src="/assets/icons/${appKey}.svg" alt="" />
+      <img src="/assets/icons/${appKey}.svg" alt="" draggable="false" />
     </span>
     <span>${apps[appKey].title}</span>
   `;
