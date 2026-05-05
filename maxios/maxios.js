@@ -2,6 +2,7 @@
 
 const clockElement = document.getElementById("maxiosClock");
 const maxiosElement = document.getElementById("maxios");
+
 const appearanceMenuButton = document.getElementById("appearanceMenuButton");
 const appearanceMenu = document.getElementById("appearanceMenu");
 const themeOptionButtons = document.querySelectorAll("[data-theme-option]");
@@ -14,13 +15,10 @@ const maxiosStatsActiveVisitors = document.getElementById("maxiosStatsActiveVisi
 const maxiosStatsUpdated = document.getElementById("maxiosStatsUpdated");
 
 const windowLayer = document.getElementById("maxiosWindowLayer");
-const appTriggers = document.querySelectorAll("[data-app]");
-
-let topZIndex = 10;
-
+const minimizedBar = document.getElementById("maxiosMinimizedBar");
 const desktopIconButtons = document.querySelectorAll("[data-desktop-icon]");
 
-const minimizedBar = document.getElementById("maxiosMinimizedBar");
+let topZIndex = 10;
 
 /* Clock */
 
@@ -71,16 +69,16 @@ function applyMaxiosTheme(theme) {
 
     button.setAttribute("aria-pressed", String(isActive));
   });
-  
+
   const musicFrame = document.querySelector(".maxios-music-frame");
-  
+
   if (musicFrame) {
     musicFrame.src =
       `https://embed.music.apple.com/de/playlist/seventeen/pl.u-8aAVXG9hmx2x65x?theme=${normalizedTheme}`;
   }
 }
 
-/* Windows */
+/* Apps */
 
 const apps = {
   music: {
@@ -93,14 +91,14 @@ const apps = {
     maxHeight: 620,
     content: () => {
       const theme = getSavedMaxiosTheme() === "light" ? "light" : "dark";
-  
+
       return `
         <div class="maxios-music-app">
           <div class="maxios-music-head">
             <h2>Musik</h2>
             <p>Eine Playlist für nebenbei.</p>
           </div>
-      
+
           <iframe
             class="maxios-music-frame"
             allow="autoplay *; encrypted-media *;"
@@ -114,6 +112,8 @@ const apps = {
   }
 };
 
+/* Windows */
+
 function bringToFront(windowElement) {
   topZIndex += 1;
   windowElement.style.zIndex = String(topZIndex);
@@ -126,17 +126,17 @@ function createWindow(appKey) {
 
   const existingWindow = windowLayer.querySelector(`[data-window="${appKey}"]`);
 
-if (existingWindow) {
-  const minimizedItem = minimizedBar?.querySelector(`[data-minimized-window="${appKey}"]`);
+  if (existingWindow) {
+    const minimizedItem = minimizedBar?.querySelector(`[data-minimized-window="${appKey}"]`);
 
-  if (existingWindow.classList.contains("is-minimized")) {
-    restoreWindow(existingWindow, minimizedItem);
+    if (existingWindow.classList.contains("is-minimized")) {
+      restoreWindow(existingWindow, minimizedItem);
+      return;
+    }
+
+    bringToFront(existingWindow);
     return;
   }
-
-  bringToFront(existingWindow);
-  return;
-}
 
   const windowElement = document.createElement("article");
 
@@ -150,12 +150,12 @@ if (existingWindow) {
     windowElement.style.height = `${app.height}px`;
   }
 
-  if (app.maxHeight) {
-    windowElement.dataset.maxHeight = String(app.maxHeight);
-  }
-
   if (app.maxWidth) {
     windowElement.dataset.maxWidth = String(app.maxWidth);
+  }
+
+  if (app.maxHeight) {
+    windowElement.dataset.maxHeight = String(app.maxHeight);
   }
 
   windowElement.innerHTML = `
@@ -173,7 +173,7 @@ if (existingWindow) {
     <div class="maxios-window-content">
       ${typeof app.content === "function" ? app.content() : app.content}
     </div>
-    
+
     <button
       class="maxios-window-resize"
       type="button"
@@ -190,14 +190,45 @@ if (existingWindow) {
     removeMinimizedItem(appKey);
     windowElement.remove();
   });
-  
+
   windowElement.querySelector(".maxios-window-minimize")?.addEventListener("click", () => {
     minimizeWindow(windowElement, appKey);
+  });
+
+  windowElement.querySelector(".maxios-window-zoom")?.addEventListener("click", () => {
+    toggleWindowZoom(windowElement);
   });
 
   windowElement.addEventListener("pointerdown", () => {
     bringToFront(windowElement);
   });
+}
+
+function toggleWindowZoom(windowElement) {
+  const isZoomed = windowElement.classList.contains("is-zoomed");
+
+  if (isZoomed) {
+    windowElement.classList.remove("is-zoomed");
+
+    windowElement.style.left = windowElement.dataset.previousLeft || windowElement.style.left;
+    windowElement.style.top = windowElement.dataset.previousTop || windowElement.style.top;
+    windowElement.style.width = windowElement.dataset.previousWidth || windowElement.style.width;
+    windowElement.style.height = windowElement.dataset.previousHeight || windowElement.style.height;
+
+    return;
+  }
+
+  windowElement.dataset.previousLeft = windowElement.style.left;
+  windowElement.dataset.previousTop = windowElement.style.top;
+  windowElement.dataset.previousWidth = windowElement.style.width;
+  windowElement.dataset.previousHeight = windowElement.style.height;
+
+  windowElement.classList.add("is-zoomed");
+
+  windowElement.style.left = "24px";
+  windowElement.style.top = "24px";
+  windowElement.style.width = "calc(100vw - 48px)";
+  windowElement.style.height = "calc(100vh - 110px)";
 }
 
 function makeWindowDraggable(windowElement) {
@@ -213,6 +244,7 @@ function makeWindowDraggable(windowElement) {
 
   dragHandle.addEventListener("pointerdown", (event) => {
     if (event.target.closest("button")) return;
+    if (windowElement.classList.contains("is-zoomed")) return;
 
     isDragging = true;
     startX = event.clientX;
@@ -272,10 +304,11 @@ function makeWindowResizable(windowElement) {
 
     const minWidth = 320;
     const minHeight = 240;
+
     const windowMaxWidth = window.innerWidth - windowElement.offsetLeft - 12;
     const appMaxWidth = Number(windowElement.dataset.maxWidth || windowMaxWidth);
     const maxWidth = Math.min(windowMaxWidth, appMaxWidth);
-    
+
     const windowMaxHeight = window.innerHeight - windowElement.offsetTop - 12;
     const appMaxHeight = Number(windowElement.dataset.maxHeight || windowMaxHeight);
     const maxHeight = Math.min(windowMaxHeight, appMaxHeight);
@@ -292,6 +325,52 @@ function makeWindowResizable(windowElement) {
     resizeHandle.releasePointerCapture(event.pointerId);
   });
 }
+
+/* Minimized windows */
+
+function minimizeWindow(windowElement, appKey) {
+  if (!minimizedBar) return;
+
+  windowElement.classList.add("is-minimized");
+
+  const existingItem = minimizedBar.querySelector(`[data-minimized-window="${appKey}"]`);
+
+  if (existingItem) return;
+
+  const item = document.createElement("button");
+
+  item.className = "maxios-minimized-item";
+  item.type = "button";
+  item.dataset.minimizedWindow = appKey;
+  item.setAttribute("aria-label", `${apps[appKey].title} wiederherstellen`);
+
+  item.innerHTML = `
+    <span class="maxios-app-symbol maxios-minimized-icon" aria-hidden="true">
+      <img src="/assets/icons/music.svg" alt="" />
+    </span>
+    <span>${apps[appKey].title}</span>
+  `;
+
+  item.addEventListener("click", () => {
+    restoreWindow(windowElement, item);
+  });
+
+  minimizedBar.appendChild(item);
+}
+
+function restoreWindow(windowElement, minimizedItem) {
+  windowElement.classList.remove("is-minimized");
+  minimizedItem?.remove();
+  bringToFront(windowElement);
+}
+
+function removeMinimizedItem(appKey) {
+  minimizedBar
+    ?.querySelector(`[data-minimized-window="${appKey}"]`)
+    ?.remove();
+}
+
+/* Desktop icon dragging */
 
 desktopIconButtons.forEach((icon) => {
   makeDesktopIconDraggable(icon);
@@ -424,48 +503,6 @@ function makeDesktopIconDraggable(icon) {
     icon.classList.remove("is-dragging");
     isDragging = false;
   });
-}
-
-function minimizeWindow(windowElement, appKey) {
-  if (!minimizedBar) return;
-
-  windowElement.classList.add("is-minimized");
-
-  const existingItem = minimizedBar.querySelector(`[data-minimized-window="${appKey}"]`);
-
-  if (existingItem) return;
-
-  const item = document.createElement("button");
-
-  item.className = "maxios-minimized-item";
-  item.type = "button";
-  item.dataset.minimizedWindow = appKey;
-  item.setAttribute("aria-label", `${apps[appKey].title} wiederherstellen`);
-
-  item.innerHTML = `
-    <span class="maxios-app-symbol maxios-app-symbol-music maxios-minimized-icon" aria-hidden="true">
-      <span class="maxios-music-note">♪</span>
-    </span>
-    <span>${apps[appKey].title}</span>
-  `;
-
-  item.addEventListener("click", () => {
-    restoreWindow(windowElement, item);
-  });
-
-  minimizedBar.appendChild(item);
-}
-
-function restoreWindow(windowElement, minimizedItem) {
-  windowElement.classList.remove("is-minimized");
-  minimizedItem?.remove();
-  bringToFront(windowElement);
-}
-
-function removeMinimizedItem(appKey) {
-  minimizedBar
-    ?.querySelector(`[data-minimized-window="${appKey}"]`)
-    ?.remove();
 }
 
 /* Stats */
@@ -603,7 +640,7 @@ function openAppearanceMenu() {
   if (!menu || !appearanceMenuButton || !appearanceMenu) return;
 
   closeStatsMenu();
-  
+
   menu.classList.add("is-open");
   appearanceMenuButton.setAttribute("aria-expanded", "true");
   appearanceMenu.setAttribute("aria-hidden", "false");
@@ -640,20 +677,6 @@ themeOptionButtons.forEach((button) => {
     applyMaxiosTheme(button.dataset.themeOption);
     closeAppearanceMenu();
   });
-});
-
-document.addEventListener("click", (event) => {
-  if (!event.target.closest(".maxios-menu")) {
-    closeAppearanceMenu();
-    closeStatsMenu();
-  }
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    closeAppearanceMenu();
-    closeStatsMenu();
-  }
 });
 
 /* Stats menu */
@@ -696,6 +719,22 @@ function toggleStatsMenu() {
 statsMenuButton?.addEventListener("click", (event) => {
   event.stopPropagation();
   toggleStatsMenu();
+});
+
+/* Global events */
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".maxios-menu")) {
+    closeAppearanceMenu();
+    closeStatsMenu();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeAppearanceMenu();
+    closeStatsMenu();
+  }
 });
 
 /* Init */
