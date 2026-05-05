@@ -109,6 +109,54 @@ const apps = {
         </div>
       `;
     }
+  },
+
+  mail: {
+    title: "Mail",
+    x: 280,
+    y: 110,
+    width: 640,
+    height: 560,
+    maxWidth: 760,
+    maxHeight: 680,
+    content: `
+      <form class="maxios-mail-app" id="maxiosMailForm">
+        <div class="maxios-mail-toolbar">
+          <button type="submit">Senden</button>
+        </div>
+
+        <div class="maxios-mail-fields">
+          <label>
+            <span>An</span>
+            <input type="text" value="Torben Maximilian" readonly />
+          </label>
+
+          <label>
+            <span>Von</span>
+            <input name="name" type="text" placeholder="Dein Name" required />
+          </label>
+
+          <label>
+            <span>E-Mail</span>
+            <input name="email" type="email" placeholder="deine@mail.de" required />
+          </label>
+
+          <label>
+            <span>Betreff</span>
+            <input name="subject" type="text" placeholder="Worum geht es?" />
+          </label>
+        </div>
+
+        <textarea
+          class="maxios-mail-message"
+          name="message"
+          placeholder="Schreib deine Nachricht..."
+          required
+        ></textarea>
+
+        <p class="maxios-mail-status" data-mail-status aria-live="polite"></p>
+      </form>
+    `
   }
 };
 
@@ -346,7 +394,7 @@ function minimizeWindow(windowElement, appKey) {
 
   item.innerHTML = `
     <span class="maxios-app-symbol maxios-minimized-icon" aria-hidden="true">
-      <img src="/assets/icons/music.svg" alt="" />
+     <img src="/assets/icons/${appKey}.svg" alt="" />
     </span>
     <span>${apps[appKey].title}</span>
   `;
