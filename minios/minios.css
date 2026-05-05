@@ -237,21 +237,6 @@ html.minios-light .minios::before,
   transform: scale(1.05);
 }
 
-.minios-icon-symbol {
-  width: 62px;
-  height: 62px;
-  display: grid;
-  place-items: center;
-  border-radius: 19px;
-  transition:
-    transform var(--minios-transition),
-    box-shadow var(--minios-transition);
-}
-
-.minios-app-icon:hover .minios-icon-symbol {
-  transform: translateY(-2px) scale(1.03);
-}
-
 .minios-app-icon span:last-child {
   color: var(--minios-text);
   font-size: 12px;
@@ -260,57 +245,29 @@ html.minios-light .minios::before,
 
 /* App icons */
 
-.minios-icon-music {
-  background:
-    radial-gradient(circle at 26% 22%, rgba(255, 255, 255, 0.56), transparent 17%),
-    linear-gradient(135deg, #ff6f9f 0%, #ff2d55 45%, #8b5cf6 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.42),
-    0 16px 36px rgba(255, 45, 85, 0.28);
+.minios-app-symbol {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 19px;
+  transition:
+    transform var(--minios-transition),
+    box-shadow var(--minios-transition);
 }
 
-.minios-icon-music .minios-music-note {
-  color: #fff;
-  font-size: 52px;
-  font-weight: 900;
-  line-height: 1;
-  transform: translateY(-3px);
-  text-shadow: 0 2px 10px rgba(120, 0, 40, 0.28);
+.minios-app-symbol img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-html.minios-light .minios-icon-music,
-.minios.theme-light .minios-icon-music {
-  background:
-    radial-gradient(circle at 26% 22%, rgba(255, 255, 255, 0.62), transparent 17%),
-    linear-gradient(135deg, #ff7faa 0%, #ff2d55 45%, #9b6cff 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 14px 32px rgba(255, 45, 85, 0.22);
-}
-
-html.minios-light .minios-icon-music .minios-music-note,
-.minios.theme-light .minios-icon-music .minios-music-note {
-  color: #fff;
-  text-shadow: 0 2px 10px rgba(120, 0, 40, 0.24);
-}
-
-.minios-icon-settings {
-  background:
-    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.5), transparent 18%),
-    linear-gradient(135deg, #d7dce2 0%, #8d99a8 48%, #4b5563 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.42),
-    0 16px 36px rgba(0, 0, 0, 0.22);
-  color: #fff;
-  font-size: 34px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.26);
-}
-
-html.minios-light .minios-icon-settings,
-.minios.theme-light .minios-icon-settings {
-  background:
-    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.72), transparent 18%),
-    linear-gradient(135deg, #f0f2f4 0%, #b7bec8 48%, #6b7280 100%);
+.minios-app-icon:hover .minios-app-symbol {
+  transform: translateY(-2px) scale(1.03);
 }
 
 /* App screens */
