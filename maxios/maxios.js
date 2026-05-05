@@ -426,12 +426,6 @@ function makeDesktopIconDraggable(icon) {
   });
 }
 
-function getAppIcon(appKey) {
-  if (appKey === "music") return "♪";
-
-  return "•";
-}
-
 function minimizeWindow(windowElement, appKey) {
   if (!minimizedBar) return;
 
