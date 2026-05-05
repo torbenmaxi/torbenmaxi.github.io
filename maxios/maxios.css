@@ -88,8 +88,8 @@ a:focus-visible {
 
 .maxios-icon {
   position: absolute;
-  left: var(--icon-x, 28px);
-  top: var(--icon-y, 64px);
+  left: var(--icon-x, 24px);
+  top: var(--icon-y, 24px);
   width: 88px;
   min-height: 86px;
   padding: 0;
@@ -98,10 +98,9 @@ a:focus-visible {
   gap: 7px;
   border: 0;
   background: transparent;
-  color: #fff;
+  color: var(--maxios-text);
   cursor: grab;
   text-align: center;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
   user-select: none;
   touch-action: none;
 }
@@ -115,52 +114,36 @@ a:focus-visible {
   opacity: 0.92;
 }
 
-.maxios-icon:hover .maxios-icon-symbol {
-  transform: translateY(-3px) scale(1.04);
+.maxios-icon span:last-child {
+  color: var(--maxios-text);
+  font-size: 13px;
+  font-weight: 650;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
 }
 
-.maxios-icon-symbol {
+html.maxios-light .maxios-icon span:last-child,
+.maxios.theme-light .maxios-icon span:last-child {
+  text-shadow: none;
+}
+
+/* Shared app icons */
+
+.maxios-app-symbol {
   width: 56px;
   height: 56px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--maxios-line);
   border-radius: 18px;
-  background: var(--maxios-glass);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 14px 35px rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(16px);
-  font-size: 30px;
-  transition: transform 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
-.maxios-icon span:last-child {
-  font-size: 13px;
-  font-weight: 650;
+.maxios-icon:hover .maxios-app-symbol {
+  transform: translateY(-3px) scale(1.04);
 }
 
-/* Desktop icons: light mode */
-
-html.maxios-light .maxios-icon,
-.maxios.theme-light .maxios-icon {
-  color: var(--maxios-text);
-  text-shadow: none;
-}
-
-html.maxios-light .maxios-icon-symbol,
-.maxios.theme-light .maxios-icon-symbol {
-  background: rgba(255, 255, 255, 0.58);
-  border-color: rgba(21, 21, 21, 0.1);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 14px 32px rgba(21, 21, 21, 0.12);
-}
-
-/* Music icon */
-
-.maxios-icon-music {
-  border: 0;
+.maxios-app-symbol-music {
   background:
     radial-gradient(circle at 26% 22%, rgba(255, 255, 255, 0.56), transparent 17%),
     linear-gradient(135deg, #ff6f9f 0%, #ff2d55 45%, #8b5cf6 100%);
@@ -178,21 +161,14 @@ html.maxios-light .maxios-icon-symbol,
   text-shadow: 0 2px 10px rgba(120, 0, 40, 0.28);
 }
 
-html.maxios-light .maxios-icon-music,
-.maxios.theme-light .maxios-icon-music {
-  border: 0;
+html.maxios-light .maxios-app-symbol-music,
+.maxios.theme-light .maxios-app-symbol-music {
   background:
     radial-gradient(circle at 26% 22%, rgba(255, 255, 255, 0.62), transparent 17%),
     linear-gradient(135deg, #ff7faa 0%, #ff2d55 45%, #9b6cff 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
     0 14px 32px rgba(255, 45, 85, 0.22);
-}
-
-html.maxios-light .maxios-icon-music .maxios-music-note,
-.maxios.theme-light .maxios-icon-music .maxios-music-note {
-  color: #fff;
-  text-shadow: 0 2px 10px rgba(120, 0, 40, 0.24);
 }
 
 /* Light mode */
@@ -710,17 +686,16 @@ html.maxios-light .maxios-window-resize::before,
 }
 
 .maxios-minimized-icon {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-  background:
-    radial-gradient(circle at 26% 22%, rgba(255, 255, 255, 0.56), transparent 17%),
-    linear-gradient(135deg, #ff6f9f 0%, #ff2d55 45%, #8b5cf6 100%);
-  color: #fff;
-  font-size: 22px;
-  line-height: 1;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 10px;
+  flex: 0 0 auto;
+}
+
+.maxios-minimized-icon .maxios-music-note {
+  font-size: 30px;
+  transform: translateY(-2px);
 }
 
 .maxios-window.is-minimized {
