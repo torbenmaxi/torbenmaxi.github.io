@@ -784,6 +784,106 @@ html.maxios-light .maxios-minimized-item:hover,
   color: var(--maxios-green);
 }
 
+/* Mail app */
+
+.maxios-mail-app {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--maxios-line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.maxios-mail-toolbar {
+  min-height: 50px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-bottom: 1px solid var(--maxios-line);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.maxios-mail-toolbar button {
+  min-height: 34px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--maxios-text);
+  color: var(--maxios-bg);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.maxios-mail-fields {
+  display: grid;
+  border-bottom: 1px solid var(--maxios-line);
+}
+
+.maxios-mail-fields label {
+  min-height: 44px;
+  padding: 0 14px;
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--maxios-line);
+}
+
+.maxios-mail-fields label:last-child {
+  border-bottom: 0;
+}
+
+.maxios-mail-fields span {
+  color: var(--maxios-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.maxios-mail-fields input,
+.maxios-mail-message {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--maxios-text);
+  outline: none;
+}
+
+.maxios-mail-fields input::placeholder,
+.maxios-mail-message::placeholder {
+  color: var(--maxios-muted);
+}
+
+.maxios-mail-fields input[readonly] {
+  color: var(--maxios-muted);
+}
+
+.maxios-mail-message {
+  flex: 1;
+  min-height: 180px;
+  padding: 18px 14px;
+  resize: none;
+  line-height: 1.55;
+}
+
+.maxios-mail-status {
+  min-height: 32px;
+  padding: 0 14px 12px;
+  color: var(--maxios-muted);
+  font-size: 13px;
+}
+
+html.maxios-light .maxios-mail-app,
+.maxios.theme-light .maxios-mail-app,
+html.maxios-light .maxios-mail-toolbar,
+.maxios.theme-light .maxios-mail-toolbar {
+  background: rgba(255, 255, 255, 0.52);
+}
+
 /* Responsive */
 
 @media (max-width: 760px) {
