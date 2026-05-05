@@ -117,9 +117,9 @@ const apps = {
     x: 280,
     y: 110,
     width: 640,
-    height: 560,
+    height: 590,
     maxWidth: 760,
-    maxHeight: 680,
+    maxHeight: 720,
     content: `
       <form
         class="maxios-mail-app"
@@ -182,6 +182,12 @@ const apps = {
         ></textarea>
 
         <input type="hidden" name="source" value="maxios" />
+
+        <div
+          class="maxios-turnstile"
+          data-turnstile
+          data-sitekey="0x4AAAAAADDEUylFGy2boS8x"
+        ></div>
 
         <p class="maxios-mail-status" data-mail-status aria-live="polite"></p>
       </form>
@@ -291,8 +297,11 @@ function setupMailForm(windowElement) {
   const form = windowElement.querySelector("#maxiosMailForm");
   const status = windowElement.querySelector("[data-mail-status]");
   const submitButton = form?.querySelector('button[type="submit"]');
+  const turnstileElement = windowElement.querySelector("[data-turnstile]");
 
   if (!form || !status || !submitButton) return;
+
+  renderTurnstile(turnstileElement);
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -301,9 +310,15 @@ function setupMailForm(windowElement) {
     const name = String(formData.get("name") || "").trim();
     const email = String(formData.get("email") || "").trim();
     const message = String(formData.get("message") || "").trim();
+    const turnstileToken = String(formData.get("cf-turnstile-response") || "").trim();
 
     if (!name || !email || !message) {
       status.textContent = "Bitte fülle Name, E-Mail und Nachricht aus.";
+      return;
+    }
+
+    if (!turnstileToken) {
+      status.textContent = "Bitte bestätige kurz, dass du kein Bot bist.";
       return;
     }
 
@@ -319,18 +334,52 @@ function setupMailForm(windowElement) {
         }
       });
 
+      const result = await response.json().catch(() => null);
+
       if (!response.ok) {
-        throw new Error("Formspree request failed");
+        const formspreeError =
+          result?.errors?.[0]?.message ||
+          result?.error ||
+          "Formspree hat die Nachricht abgelehnt.";
+
+        throw new Error(formspreeError);
       }
 
       form.reset();
+      resetTurnstile(turnstileElement);
+
       status.textContent = "Nachricht gesendet. Danke!";
-    } catch {
-      status.textContent = "Nachricht konnte nicht gesendet werden.";
+    } catch (error) {
+      console.error("Mail konnte nicht gesendet werden:", error);
+      status.textContent =
+        error.message || "Nachricht konnte nicht gesendet werden.";
     } finally {
       submitButton.disabled = false;
     }
   });
+}
+
+function renderTurnstile(turnstileElement) {
+  if (!turnstileElement) return;
+
+  const render = () => {
+    if (!window.turnstile || turnstileElement.dataset.rendered === "true") return;
+
+    window.turnstile.render(turnstileElement, {
+      sitekey: turnstileElement.dataset.sitekey
+    });
+
+    turnstileElement.dataset.rendered = "true";
+  };
+
+  render();
+  window.setTimeout(render, 350);
+}
+
+function resetTurnstile(turnstileElement) {
+  if (!turnstileElement || !window.turnstile) return;
+
+  window.turnstile.reset(turnstileElement);
 }
 
 /* Window controls */
