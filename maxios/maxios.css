@@ -144,6 +144,9 @@ html.maxios-light .maxios-icon span:last-child,
   width: 100%;
   height: 100%;
   display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .maxios-icon:hover .maxios-app-symbol {
