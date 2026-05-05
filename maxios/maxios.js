@@ -449,8 +449,8 @@ function minimizeWindow(windowElement, appKey) {
   item.setAttribute("aria-label", `${apps[appKey].title} wiederherstellen`);
 
   item.innerHTML = `
-    <span class="maxios-minimized-icon" aria-hidden="true">
-      ${getAppIcon(appKey)}
+    <span class="maxios-app-symbol maxios-app-symbol-music maxios-minimized-icon" aria-hidden="true">
+      <span class="maxios-music-note">♪</span>
     </span>
     <span>${apps[appKey].title}</span>
   `;
