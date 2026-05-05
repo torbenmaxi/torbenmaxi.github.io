@@ -234,6 +234,10 @@ function createWindow(appKey) {
   makeWindowDraggable(windowElement);
   makeWindowResizable(windowElement);
 
+  if (appKey === "mail") {
+    setupMailForm(windowElement, "maxios");
+  }
+
   windowElement.querySelector(".maxios-window-close")?.addEventListener("click", () => {
     removeMinimizedItem(appKey);
     windowElement.remove();
@@ -249,6 +253,51 @@ function createWindow(appKey) {
 
   windowElement.addEventListener("pointerdown", () => {
     bringToFront(windowElement);
+  });
+}
+
+function setupMailForm(windowElement, source) {
+  const form = windowElement.querySelector("form");
+  const status = windowElement.querySelector("[data-mail-status]");
+
+  if (!form || !status) return;
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!supabaseClient) {
+      status.textContent = "Senden ist gerade nicht verfügbar.";
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    const payload = {
+      name: String(formData.get("name") || "").trim(),
+      email: String(formData.get("email") || "").trim(),
+      subject: String(formData.get("subject") || "").trim(),
+      message: String(formData.get("message") || "").trim(),
+      source
+    };
+
+    if (!payload.name || !payload.email || !payload.message) {
+      status.textContent = "Bitte fülle Name, E-Mail und Nachricht aus.";
+      return;
+    }
+
+    status.textContent = "Wird gesendet...";
+
+    const { error } = await supabaseClient
+      .from("contact_messages")
+      .insert(payload);
+
+    if (error) {
+      status.textContent = "Nachricht konnte nicht gesendet werden.";
+      return;
+    }
+
+    form.reset();
+    status.textContent = "Nachricht gesendet. Danke!";
   });
 }
 
